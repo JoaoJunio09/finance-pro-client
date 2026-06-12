@@ -1,30 +1,29 @@
-import React, { useState, useMemo } from 'react';
 import {
-  LayoutDashboard,
-  ArrowUpRight,
-  ArrowDownRight,
-  TrendingUp,
-  PiggyBank,
-  Menu,
-  X,
-  Plus,
-  Bell,
-  Search,
-  CheckCircle,
-  Target,
-  Coins,
   Activity,
+  ArrowDownRight,
+  ArrowUpRight,
+  Bell,
   Briefcase,
-  Utensils,
-  Home,
   Car,
-  HeartPulse,
+  CheckCircle,
+  ChevronRight,
   Coffee,
+  Coins,
+  HeartPulse,
+  Home,
+  LayoutDashboard,
+  Menu,
   MoreHorizontal,
+  PiggyBank,
+  Plus,
+  Search,
+  Target,
+  TrendingUp,
+  Utensils,
   Wallet,
-  TrendingDown,
-  ChevronRight
+  X
 } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 
 // ==========================================
 // INTERFACES & CONTRATOS
