@@ -1,6 +1,7 @@
 import { Landmark, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 
 export type Month = 
   | 'Janeiro' | 'Fevereiro' | 'Março' | 'Abril' | 'Maio' | 'Junho' 
@@ -54,12 +55,6 @@ interface TooltipEntry {
     entradas: number;
     saidas: number;
   };
-}
-
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: TooltipEntry[];
-  label?: string;
 }
 
 // ==========================================================================
@@ -164,7 +159,7 @@ const formatCurrency = (val: number): string => {
 
 interface WalletBalanceCardProps {
 	total: number;
-	wallets: WalletType[];
+	wallets: WalletResponse[];
 }
 
 const WalletBalanceCard = ({ total, wallets }: WalletBalanceCardProps) => {
@@ -218,10 +213,10 @@ const WalletBalanceCard = ({ total, wallets }: WalletBalanceCardProps) => {
   );
 };
 
-interface FinancialEvolutionCardProps {
-	currentMonth: Month;
-	onMonthChange: (month: Month) => void;
-	data: WeeklyData[];
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipEntry[];
+  label?: string;
 }
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
@@ -252,6 +247,12 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 	}
 	return null;
 };
+
+interface FinancialEvolutionCardProps {
+	currentMonth: Month;
+	onMonthChange: (month: Month) => void;
+	data: WeeklyData[];
+}
 
 const FinancialEvolutionCard: React.FC<FinancialEvolutionCardProps> = ({
 	currentMonth,
@@ -329,13 +330,20 @@ const FinancialEvolutionCard: React.FC<FinancialEvolutionCardProps> = ({
 	);
 };
 
+interface OverviewProps {
+	total: number,
+	wallets: WalletResponse[]
+}
 
-function Overview() {
+function Overview({ total, wallets }: OverviewProps) {
 	const [selectedMonth, setSelectedMonth] = useState<Month>('Junho');
 
 	return (
 		<section className="grid grid-cols-1 lg:grid-cols-[3fr_7fr] gap-6 items-stretch w-full">
-			<WalletBalanceCard total={WALLET_BALANCE_TOTAL} wallets={MOCK_WALLETS} />
+			<WalletBalanceCard
+				total={total}
+				wallets={wallets}
+			/>
 			
 			<FinancialEvolutionCard 
 				currentMonth={selectedMonth} 

@@ -1,30 +1,17 @@
 import { ShoppingCart, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import type { MetricData } from "../hooks/useDashboard";
 
-export interface MetricData {
-  title: string;
-  value: number;
-  type: 'income' | 'expense' | 'net' | 'max_expense';
-  subtitle?: string;
-}
-
-const MOCK_METRICS: MetricData[] = [
-	{ title: 'Entrou', value: 9400.00, type: 'income' },
-	{ title: 'Saiu', value: 4280.00, type: 'expense' },
-	{ title: 'Sobrou', value: 5120.00, type: 'net' },
-	{ title: 'Maior Gasto', value: 2800.00, type: 'max_expense', subtitle: 'Alimentação' }
-];
-
-interface MetricCardProps {
-  metric: MetricData;
-}
-
-const formatCurrency = (val: number): string => {
+const formatCurrency = (val: number | string): string => {
   return val.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
     minimumFractionDigits: 2
   });
 };
+
+interface MetricCardProps {
+  metric: MetricData;
+}
 
 const MetricCard = ({ metric }: MetricCardProps) => {
   const isPositive = metric.type === 'income' || metric.type === 'net';
@@ -71,22 +58,20 @@ const MetricCard = ({ metric }: MetricCardProps) => {
       </div>
 
       <span className="text-xs text-[#71717A] mt-1 block font-sans">
-        Total de receitas
+        {metric.subtitle}
       </span>
-      
-      {/* {metric.type === 'max_expense' && metric.subtitle && (
-        <span className="text-xs text-[#71717A] mt-1 block font-sans">
-          {metric.subtitle}
-        </span>
-      )} */}
     </div>
   );
 };
 
-function Metrics() {
+interface MetricsProps {
+  metrics: MetricData[]
+}
+
+function Metrics({ metrics }: MetricsProps) {
 	return (
 		<section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 w-full">
-			{MOCK_METRICS.map((metric) => (
+			{metrics.map((metric) => (
 				<MetricCard key={metric.title} metric={metric} />
 			))}
 		</section>
