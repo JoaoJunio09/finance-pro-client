@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import App from "../App2";
 import { ThemeProvider } from "../context/ThemeContext";
 import DashboardPage from "../pages/DashboardPage";
 
@@ -8,7 +7,7 @@ function RoutesApp() {
 		<BrowserRouter>
 			<ThemeProvider>
 				<Routes>
-					<Route path="/" element={<App />} />
+					<Route path="/" element={<DashboardPage />} />
 					<Route path="/dashboard" element={<DashboardPage />} />
 				</Routes>
 			</ThemeProvider>
