@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+.font-money {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.font-sans {
+	font-family: 'Inter', sans-serif;
+}
+body {
+	overflow-x: hidden !important;
+}

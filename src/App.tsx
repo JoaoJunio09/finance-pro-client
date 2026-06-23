@@ -1,9 +1,9 @@
 import RoutesApp from "./routes/routes";
 
 function App() {
-	return (
-		<RoutesApp />
-	)
+  return (
+    <RoutesApp />
+  )
 }
 
 export default App;

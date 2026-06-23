@@ -1,48 +1,50 @@
-import { useThemeContext } from "../../../context/ThemeContext";
-import CurrentBalance from "./CurrentBalance";
-import DashboardBrand from "./DashboardBrand";
-import FinancialMetrics from "./FinancialMetrics";
-import FinancialInsights from "./FinancialInsights";
-import FinancialOverview from "./FinancialOverview";
+import Insights from "./Insights";
+import Metrics from "./Metrics";
+import Overview from "./Overview";
+import RecentActivities from "./RecentActivities";
 
-function Dashboard() {
-	const { currentTheme } = useThemeContext();
-
+const TopHeader = () => {
 	return (
-		<main className="flex-1 overflow-y-auto">
-			<div className="p-4 md:p-8 max-w-[1500px] w-[92%] mx-auto flex flex-col gap-8">		
-				{/* SEÇÃO HERO FINANCIAL (Primeira Dobra) */}
-				<DashboardBrand />
+		<header className="px-4 lg:px-8 pt-8 pb-6 flex flex-row justify-between items-center w-full max-w-[1440px] mx-auto flex-shrink-0">
+			<div>
+				<h1 className="text-xl font-semibold tracking-tight bg-gradient-to-r from-[#EDEDED] to-[#A1A1AA] bg-clip-text text-transparent font-sans">
+					FinancePro
+				</h1>
+				<p className="text-xs text-[#A1A1AA] mt-1 font-sans">Olá, Arthur. Visualize sua vida financeira em segundos.</p>
+			</div>
+			
+			<div className="text-xs text-[#71717A] font-medium tracking-wider uppercase select-none hidden sm:block font-sans">
+				{new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
+			</div>
+		</header>
+	)
+}
 
-				<div className="flex flex-wrap items-center">
-					{/* Seletor de Período Premium, Minimalista e Integrado */}
-					<select
-						// value={selectedPeriod}
-						// onChange={(e) => setSelectedPeriod(e.target.value)}
-						className="px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer focus:outline-none hover:opacity-90"
-						style={{
-							backgroundColor: currentTheme.hover,
-							borderColor: currentTheme.border,
-							color: currentTheme.textPrimary,
-						}}
-					>
-						<option value="Junho 2026">Junho 2026</option>
-						<option value="Maio 2026">Maio 2026</option>
-						<option value="Abril 2026">Abril 2026</option>
-					</select>
-				</div>
+interface DashboardProps {
+	isSidebarExpanded: boolean
+}
 
-				{/* GRID DE CARDS PRINCIPAIS */}
-				<FinancialMetrics />
+function Dashboard({ isSidebarExpanded }: DashboardProps) {
+	return (
+		<main 
+			className="flex-1 flex flex-col overflow-y-auto mt-14 lg:mt-0"
+			style={{
+				marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 
+					? (isSidebarExpanded ? '240px' : '68px') 
+					: '0px',
+				transition: 'margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1)'
+			}}
+		>
+			<TopHeader />
 
-				{/* SALDO ATUAL CONSOLIDADO */}
-				<CurrentBalance />
-				
-				{/* GRID DE INFORMAÇÕES SECUNDÁRIAS */}
-				<FinancialInsights />
+			<div className="px-4 lg:px-8 pb-12 flex flex-col gap-8 max-w-[1440px] w-full mx-auto overflow-x-hidden">
+				<Metrics />
 
-				{/* TERCEIRA DOBRA: EVOLUÇÃO FINANCEIRA & ATIVIDADES RECENTES */}
-				<FinancialOverview />
+				<Overview />
+
+				<Insights />
+
+				<RecentActivities />
 			</div>
 		</main>
 	)
