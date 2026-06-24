@@ -40,7 +40,7 @@ class AccountService {
 					'Authorization': `Bearer ${this.accessToken}`
 				}
 			});
-
+			
 			return response.data
 		}
 		catch (err: any) {

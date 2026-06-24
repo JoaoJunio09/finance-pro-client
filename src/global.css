@@ -1,11 +1,26 @@
 @import "tailwindcss";
 
+body {
+	overflow-x: hidden !important;
+}
+
 .font-money {
 	font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
 .font-sans {
 	font-family: 'Inter', sans-serif;
 }
-body {
-	overflow-x: hidden !important;
+
+@theme {
+	--animate-toast: animate-toast 3s linear forwards;
+
+	@keyframes animate-toast {
+		0% {
+			width: 0%
+		}
+		100% {
+			width: 100%
+		}
+	}
 }

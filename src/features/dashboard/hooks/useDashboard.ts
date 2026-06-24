@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import { useAuthContext } from "../../../context/AuthContext";
 import useAccountService from "../../../hooks/useAccountService";
 import type { AccountResponse } from "../../../models/account/AccountResponse";
-import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 
 export interface MetricData {
   title: string;
