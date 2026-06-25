@@ -71,7 +71,7 @@ function useDashboard() {
 		account: queryAccount.data ?? null,
 		error: queryAccount.error,
 		loading: queryAccount.isLoading,
-		metrics,
+		metrics
 	}
 }
 

@@ -1,4 +1,5 @@
-import SignIn from "../features/dashboard/auth/components/SignIn";
+import SignIn from "../features/auth/components/SignIn";
+
 
 function SignInPage() {
 	return (

@@ -78,11 +78,15 @@ function Sidebar({
         	DRAWER MOBILE (< 1024px) — CORREÇÃO 3 (Inverter Posições no Header do Drawer)
         ──────────────────────────────────────────────────────────────────────────
 			*/}
-      <div className="lg:hidden fixed inset-0 z-50 pointer-events-none transition-all duration-250">
+      <div
+        className={`lg:hidden fixed inset-0 z-50 transition-all duration-250 ${
+          isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`
+        }
+      >
         {/* Overlay escuro de fundo */}
         <div 
-          className={`absolute inset-0 bg-black/75 pointer-events-auto transition-opacity duration-250 ${
-            isDrawerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          className={`absolute inset-0 bg-black/75 transition-opacity duration-250 ${
+            isDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           onClick={() => setIsDrawerOpen(false)}
         />
@@ -200,7 +204,7 @@ function Sidebar({
                 key={item.id}
                 onClick={() => handleItemClick(item.id)}
                 title={!isExpanded ? item.label : undefined}
-                className={`w-full flex items-center py-2.5 rounded-xl text-left font-medium transition-colors duration-150 font-sans relative ${
+                className={`cursor-pointer w-full flex items-center py-2.5 rounded-xl text-left font-medium transition-colors duration-150 font-sans relative ${
                   isExpanded ? 'px-3' : 'justify-center px-0'
                 } ${
                   isActive 
@@ -234,7 +238,7 @@ function Sidebar({
         {/* Rodapé Desktop (Perfil) — Sem conditional rendering */}
         <div className="px-2">
           <div 
-            className={`flex items-center rounded-xl p-2 transition-colors duration-150 ${
+            className={`flex items-center rounded-xl p-2 transition-colors duration-150 cursor-pointer ${
               isExpanded ? 'hover:bg-[#1E1E1E]' : ''
             }`}
           >

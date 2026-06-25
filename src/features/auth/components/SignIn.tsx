@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  User, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  Check, 
-  TrendingUp 
+import {
+  Check,
+  Eye,
+  EyeOff,
+  Lock,
+  TrendingUp,
+  User
 } from 'lucide-react';
-import useSignIn from '../hooks/useSignIn';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import useSignIn from '../hooks/useSignIn';
 
 // ==========================================================================
 // COMPONENTE EXPORT DEFAULT: Login
 // ==========================================================================
 
-export default function Login() {
+function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   
 	const {
@@ -290,3 +290,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default SignIn;

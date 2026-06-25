@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useAuthContext } from "../../../../context/AuthContext";
-import AuthenticationError from "../../../../exceptions/AuthenticationError";
-import InternalServerError from "../../../../exceptions/InternalServerError";
-import type { AccountCredentials } from "../../../../models/auth/AccountCredentials";
+import { useAuthContext } from "../../../context/AuthContext";
+import AuthenticationError from "../../../exceptions/AuthenticationError";
+import InternalServerError from "../../../exceptions/InternalServerError";
+import type { AccountCredentials } from "../../../models/auth/AccountCredentials";
+
 
 interface Form {
 	username: string,

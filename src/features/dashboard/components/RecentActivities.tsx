@@ -1,4 +1,13 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
+
+const formatCurrency = (val: number): string => {
+  return val.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2
+  });
+};
 
 export interface Transaction {
   id: string | number;
@@ -11,27 +20,8 @@ export interface Transaction {
 }
 
 interface RecentActivitiesTableProps {
-  transactions: Transaction[];
+  transactions: TransactionResponse[];
 }
-
-const MOCK_TRANSACTIONS: Transaction[] = [
-	{ id: 1, description: 'Assinatura AWS Cloud', category: 'Tecnologia', wallet: 'Conta Corrente', date: 'hoje', amount: 180.00, type: 'expense' },
-	{ id: 2, description: 'Supermercado Empório', category: 'Alimentação', wallet: 'Conta Corrente', date: 'hoje', amount: 620.00, type: 'expense' },
-	{ id: 3, description: 'Desenvolvimento Frontend Freelance', category: 'Salário', wallet: 'Conta Corrente', date: 'ontem', amount: 3500.00, type: 'income' },
-	{ id: 4, description: 'Parcela Apartamento', category: 'Moradia', wallet: 'Reserva de Emergência', date: '18 jun', amount: 2800.00, type: 'expense' },
-	{ id: 5, description: 'Uber Viagem', category: 'Transporte', wallet: 'Conta Corrente', date: '15 jun', amount: 48.00, type: 'expense' },
-	{ id: 6, description: 'Assinatura Vercel Pro', category: 'Tecnologia', wallet: 'Conta Corrente', date: '12 jun', amount: 100.00, type: 'expense' },
-	{ id: 7, description: 'Rendimento de Aplicação', category: 'Investimentos', wallet: 'Reserva de Emergência', date: '10 jun', amount: 200.00, type: 'income' },
-	{ id: 8, description: 'Restaurante Japa', category: 'Alimentação', wallet: 'Conta Corrente', date: '08 jun', amount: 210.00, type: 'expense' }
-];
-
-const formatCurrency = (val: number): string => {
-  return val.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2
-  });
-};
 
 const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
   return (
@@ -57,8 +47,8 @@ const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {transactions.slice(0, 8).map((tx) => {
-            const isIncome = tx.type === 'income';
+          {transactions.map((tx) => {
+            const isIncome = tx.type === 'CREDIT';
             
             const iconBgClass = isIncome ? 'bg-[#4ADE8014]' : 'bg-[#F8717114]';
             const iconColorClass = isIncome ? 'text-[#4ADE80]' : 'text-[#F87171]';
@@ -90,12 +80,12 @@ const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
                 
                 {/* Coluna Carteira */}
                 <td className="py-4 text-xs text-[#71717A] font-sans hidden lg:table-cell">
-                  {tx.wallet}
+                  Conta Corrente
                 </td>
                 
                 {/* Coluna Data */}
                 <td className="py-4 text-xs text-[#71717A] font-sans whitespace-nowrap hidden lg:table-cell">
-                  {tx.date}
+                  {tx.registeredAt}
                 </td>
                 
                 {/* Coluna Valor formatado em Plus Jakarta Sans */}
@@ -113,7 +103,11 @@ const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
   );
 };
 
-function RecentActivities() {
+interface RecentActivitiesProps {
+  transactions: TransactionResponse[]
+}
+
+function RecentActivities({ transactions }: RecentActivitiesProps) {
 	return (
 		<section className="bg-[#141414] border border-[#2A2A2A] rounded-3xl p-6 flex flex-col gap-5 shadow-[0_1px_3px_rgba(0,0,0,0.5)] w-full overflow-hidden">
 			<div className="flex justify-between items-center">
@@ -127,7 +121,9 @@ function RecentActivities() {
 				</a>
 			</div>
 			
-			<RecentActivitiesTable transactions={MOCK_TRANSACTIONS} />
+			<RecentActivitiesTable
+        transactions={transactions}
+      />
 		</section>
 	)
 }

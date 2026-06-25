@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "../pages/DashboardPage";
 import { AuthProvider } from "../context/AuthContext";
-import SignIn from "../features/dashboard/auth/components/SignIn";
+import SignInPage from "../pages/SignInPage";
 
 function RoutesApp() {
 	return (
 		<BrowserRouter>
 			<AuthProvider>
 				<Routes>
-					<Route path="/" element={<SignIn />} />
+					<Route path="/" element={<SignInPage />} />
 					<Route path="/dashboard" element={<DashboardPage />} />
 				</Routes>
 			</AuthProvider>
