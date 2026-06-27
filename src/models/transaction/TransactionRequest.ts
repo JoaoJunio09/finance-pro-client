@@ -2,8 +2,10 @@ import type { TransactionType } from "../../enums/TransactionType";
 
 export interface TransactionRequest {
 	amount: number,
+	description: string,
+	observation?: string,
 	type: TransactionType,
-	category: string,
 	registeredAt: string,
+	categoryId: string,
 	accountId: string
 }

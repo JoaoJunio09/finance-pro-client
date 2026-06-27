@@ -74,7 +74,7 @@ const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
                 {/* Coluna Categoria */}
                 <td className="py-4">
                   <span className="inline-flex items-center text-xs text-[#A1A1AA] bg-white/[0.08] rounded-lg px-2.5 py-0.5 font-sans select-none">
-                    {tx.category}
+                    {tx.category.name}
                   </span>
                 </td>
                 

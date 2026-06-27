@@ -23,7 +23,7 @@ function NewTransactionModal({
 
   const [shouldRender, setShouldRender] = useState(false);
 
-  const { form, handleOnChange, setType, error, loading, registerTransaction } = useNewTransaction();
+  const { categories, form, handleOnChange, setType, error, loading, registerTransaction } = useNewTransaction(onClose);
 
   const { account } = useAccountContext();
 
@@ -70,6 +70,7 @@ function NewTransactionModal({
         <Apresentation config={config} onClose={onClose} />
 
         <Form
+          categories={categories}
           account={account}
           form={form}
           setType={setType}

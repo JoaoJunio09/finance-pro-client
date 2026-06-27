@@ -1,4 +1,5 @@
 import type { TransactionType } from "../../enums/TransactionType";
+import type { CategoryResponse } from "../category/CategoryResponse";
 
 export interface TransactionResponse {
 	id: number,
@@ -6,6 +7,6 @@ export interface TransactionResponse {
 	description: string,
 	observation: string,
 	type: TransactionType,
-	category: string,
+	category: CategoryResponse,
 	registeredAt: string
 }

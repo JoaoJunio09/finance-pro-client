@@ -26,18 +26,7 @@ function useDashboard() {
 	
 	const account = useMemo<AccountResponse | undefined>(() => {
 		if (!queryAccount.data) return;
-		return {
-			id: queryAccount.data.id,
-			currentBalance: queryAccount.data?.currentBalance,
-			income: queryAccount.data?.income,
-			expenses: queryAccount.data?.expenses,
-			netIncome: queryAccount.data?.netIncome,
-			biggestExpense: {
-				value: queryAccount.data?.biggestExpense.value,
-				category: queryAccount.data?.biggestExpense.category,
-			},
-			wallets: queryAccount.data.wallets
-		}
+		return queryAccount.data
 	}, [queryAccount.data]);
 
 	const metrics = useMemo<MetricData[]>(() => {

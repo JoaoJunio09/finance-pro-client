@@ -1,5 +1,5 @@
 import { Calendar, ChevronDown, FileText, Tag, Wallet } from "lucide-react";
-import { useEffect, type ChangeEvent } from "react";
+import { useEffect, useRef, type ChangeEvent } from "react";
 import Input from "../../../components/ui/Input/Input";
 import Select from "../../../components/ui/Select/Select";
 import TextArea from "../../../components/ui/TextArea/TextArea";
@@ -7,15 +7,7 @@ import type { TransactionType } from "../../../enums/TransactionType";
 import type { FormData } from "../types/FormData";
 import { type NEW_TRANSACTION_MODAL_CONFIG_TYPE } from "../types/NewTransactionModalConfigs";
 import type { AccountResponse } from "../../../models/account/AccountResponse";
-
-const MOCK_CATEGORIES = [
-  "Alimentação",
-  "Transporte",
-  "Moradia",
-  "Tecnologia",
-  "Salário",
-  "Investimentos",
-];
+import type { CategoryResponse } from "../../../models/category/CategoryResponse";
 
 const FieldLabel = ({ children }: { children: React.ReactNode }) => (
   <label className="text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] block mb-2 font-sans">
@@ -29,6 +21,7 @@ const inputCls =
 const selectCls = inputCls + " appearance-none pr-9 cursor-pointer";
 
 interface FormProps {
+  categories: CategoryResponse[],
   account: AccountResponse,
   form: FormData,
   setType: (type: TransactionType) => void,
@@ -41,6 +34,7 @@ interface FormProps {
 }
 
 function Form({
+  categories,
   account,
   form,
   setType,
@@ -51,6 +45,8 @@ function Form({
   config,
   type
 }: FormProps) {
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  
   const Icon = config.icon;
 
   useEffect(() => {
@@ -113,18 +109,18 @@ function Form({
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#52525B] pointer-events-none"
               />
               <Select
-                id="category"
-                name="category"
-                value={form.category}
+                id="categoryId"
+                name="categoryId"
+                value={form.categoryId}
                 onChange={handleOnChange}
                 className={selectCls + " pl-10"}
               >
                 <option value="" disabled>
                   Selecionar
                 </option>
-                {MOCK_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
                   </option>
                 ))}
               </Select>
@@ -136,17 +132,24 @@ function Form({
           </div>
           <div>
             <FieldLabel>Data</FieldLabel>
-            <div className="relative">
+            <div
+              className="relative cursor-pointer"
+              onClick={() => {
+                dateInputRef.current?.showPicker?.();
+                dateInputRef.current?.focus();
+              }}
+            >
               <Calendar
                 size={15}
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#52525B] pointer-events-none"
               />
               <Input
+                ref={dateInputRef}
                 id="registeredAt"
                 name="registeredAt"
                 value={form.registeredAt}
                 onChange={handleOnChange}
-                type="date"
+                type="datetime-local"
                 className={inputCls + " pl-10"}
               />
             </div>

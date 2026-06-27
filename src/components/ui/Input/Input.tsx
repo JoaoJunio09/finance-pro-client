@@ -1,4 +1,4 @@
-import { type ChangeEvent, type InputHTMLAttributes } from "react";
+import { forwardRef, type ChangeEvent, type InputHTMLAttributes } from "react";
 import type { NEW_TRANSACTION_MODAL_CONFIG_TYPE } from "../../../features/newTransaction/types/NewTransactionModalConfigs";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -13,34 +13,42 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	config?: NEW_TRANSACTION_MODAL_CONFIG_TYPE
 }
 
-function Input({
-	id,
-  name,
-  type,
-  inputMode,
-  placeholder,
-  value,
-  onChange,
-  config,
-	className
-}: InputProps) {
-	return (
-		<input
-			id={id}
-			name={name}
-			type={type}
-			inputMode={inputMode}
-			placeholder={placeholder}
-			value={value}
-			onChange={onChange}
-			className={`
-				${className ? className : 'w-full text-black px-1 bg-gray-200 h-10'}
-			`}
-			style={{
-				caretColor: config?.color,
-			}}
-		/>
-	)
-}
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      id,
+      name,
+      type,
+      inputMode,
+      placeholder,
+      value,
+      onChange,
+      config,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <input
+        ref={ref}
+        id={id}
+        name={name}
+        type={type}
+        inputMode={inputMode}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={className || "w-full text-black px-1 bg-gray-200 h-10"}
+        style={{
+          caretColor: config?.color,
+        }}
+        {...props}
+      />
+    );
+  }
+);
+
+Input.displayName = "Input";
 
 export default Input;

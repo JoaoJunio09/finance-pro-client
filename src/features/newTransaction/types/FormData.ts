@@ -3,7 +3,7 @@ import type { TransactionType } from "../../../enums/TransactionType";
 export interface FormData {
 	amount: number,
 	description: string,
-	category: string,
+	categoryId: string,
 	registeredAt: string,
 	type: TransactionType,
 	walletId?: string,
