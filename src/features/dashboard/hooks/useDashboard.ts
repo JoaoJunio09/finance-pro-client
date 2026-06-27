@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useAuthContext } from "../../../context/AuthContext";
 import useAccountService from "../../../hooks/useAccountService";
+import useTransactionService from "../../../hooks/useTransactionService";
 import type { AccountResponse } from "../../../models/account/AccountResponse";
 
 export interface MetricData {
@@ -15,11 +16,12 @@ function useDashboard() {
 	const { username } = useAuthContext();
 
 	const accountService = useAccountService();
+	const transactionService = useTransactionService();
 
 	const queryAccount = useQuery({
 		queryKey: ['account'],
 		queryFn: () => accountService.getByUsername(username ?? ''),
-		retry: 2
+		retry: 3
 	});
 	
 	const account = useMemo<AccountResponse | undefined>(() => {
@@ -67,10 +69,23 @@ function useDashboard() {
 		]
 	}, [account]);
 
+	const queryTransactions = useQuery({
+		queryKey: [
+			'transactions',
+			account?.id
+		],
+		queryFn: () => transactionService.getAll({ accountId: account?.id }),
+		enabled: !!account?.id,
+		retry: 3
+	});
+
 	return {
 		account: queryAccount.data ?? null,
-		error: queryAccount.error,
-		loading: queryAccount.isLoading,
+		errorAccount: queryAccount.error,
+		loadingAccount: queryAccount.isLoading,
+		transactions: queryTransactions.data ?? [],
+		errorTransactions: queryTransactions.error,
+		loadingTransactions: queryTransactions.isLoading,
 		metrics
 	}
 }

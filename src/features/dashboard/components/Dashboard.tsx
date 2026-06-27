@@ -8,8 +8,10 @@ import Insights from "./Insights";
 import Metrics from "./Metrics";
 import Overview from "./Overview";
 import RecentActivities from "./RecentActivities";
-import TransactionModal, { type TransactionType } from "./TransactionModal";
-import useTransactions from "../hooks/useTransactions";
+
+import { useAccountContext } from "../../../context/AccountContext";
+import type { TransactionType } from "../../../enums/TransactionType";
+import NewTransactionModal from "../../newTransaction/components/NewTransactionModal";
 
 interface TopActionsProps {
 	openModal: (isOpen: boolean) => void
@@ -37,7 +39,7 @@ const TopActions = ({
 				<Button
 					onClick={() => {
 						openModal(true);
-						setType('income')
+						setType('CREDIT')
 					}}
 					className={styleForButton}
 					style={{
@@ -53,7 +55,7 @@ const TopActions = ({
 				<Button
 					onClick={() => {
 						openModal(true);
-						setType('expense')
+						setType('DEBIT')
 					}}
 					className={styleForButton}
 					style={{
@@ -64,22 +66,6 @@ const TopActions = ({
 				>
 					<ArrowUpRight size={15} />
 					<span className="hidden lg:inline">Despesa</span>
-				</Button>
-
-				<Button
-					onClick={() => {
-						openModal(true);
-						setType('transfer')
-					}}
-					className={styleForButton}
-					style={{
-						backgroundColor: '#A78BFA14',
-						color: '#A78BFA',
-						borderColor: '#A78BFA30',
-					}}
-				>
-					<ArrowLeftRight size={15} />
-					<span className="hidden lg:inline">Movimentar</span>
 				</Button>
 			</div>
 			{/* <div className="text-xs text-[#71717A] font-medium tracking-wider uppercase select-none hidden sm:block font-sans">
@@ -95,23 +81,38 @@ interface DashboardProps {
 
 function Dashboard({ isSidebarExpanded }: DashboardProps) {
 	const [openTransantionModal, setOpenTransactionModal] = useState(false);
-	const [typeTransaction, setTypeTransaction] = useState<TransactionType>('income');
+	const [typeTransaction, setTypeTransaction] = useState<TransactionType>('CREDIT');
+	const { 
+		account,
+		errorAccount,
+		loadingAccount,
+		transactions,
+		errorTransactions,
+		loadingTransactions,
+		metrics
+	} = useDashboard();
 
-	const { account, error: errorAccount, loading: loadingAccount, metrics, } = useDashboard();
-	const { transactions } = useTransactions(account);
+	const { setAccount } = useAccountContext();
 
 	useEffect(() => {
+		if (account) {
+			setAccount(account);
+		}
+
 		if (errorAccount) {
 			showToast({ title: 'Erro ao carregar', message: 'Não foi possível carregar os dados da conta', type: 'error' });
 		}
-	}, [errorAccount]);
+		if (errorTransactions) {
+			showToast({ title: 'Erro ao carregar', message: 'Não foi possível carregar as Transações', type: 'error' });
+		}
+	}, [errorAccount, account]);
 
 	return (
 		<main 
 			className="flex-1 flex flex-col overflow-y-auto mt-14 lg:mt-0"
 			style={{
-				marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 
-					? (isSidebarExpanded ? '240px' : '68px') 
+				marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024
+					? (isSidebarExpanded ? '240px' : '68px')
 					: '0px',
 				transition: 'margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1)'
 			}}
@@ -137,7 +138,8 @@ function Dashboard({ isSidebarExpanded }: DashboardProps) {
 					transactions={transactions}
 				/>
 			</div>
-			<TransactionModal
+
+			<NewTransactionModal
 				open={openTransantionModal}
 				type={typeTransaction}
 				onClose={() => setOpenTransactionModal(false)}

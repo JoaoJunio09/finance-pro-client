@@ -1,4 +1,4 @@
-import type { TransactionType } from "../../types/TransactionType";
+import type { TransactionType } from "../../enums/TransactionType";
 
 export interface TransactionResponse {
 	id: number,
