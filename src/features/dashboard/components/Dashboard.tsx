@@ -89,7 +89,8 @@ function Dashboard({ isSidebarExpanded }: DashboardProps) {
 		transactions,
 		errorTransactions,
 		loadingTransactions,
-		metrics
+		metrics,
+		overview
 	} = useDashboard();
 
 	const { setAccount } = useAccountContext();
@@ -128,6 +129,7 @@ function Dashboard({ isSidebarExpanded }: DashboardProps) {
 				/>
 
 				<Overview
+					overviewData={overview}
 					total={account?.currentBalance ?? 0}
 					wallets={account?.wallets ?? []}
 				/>

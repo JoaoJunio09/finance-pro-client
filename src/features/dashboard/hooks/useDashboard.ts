@@ -68,6 +68,15 @@ function useDashboard() {
 		retry: 3
 	});
 
+	const queryOverview = useQuery({
+		queryKey: [
+			'overview',
+			account?.id
+		],
+		queryFn: () => transactionService.overview(account?.id),
+		enabled: !!account?.id
+	});
+
 	return {
 		account: queryAccount.data ?? null,
 		errorAccount: queryAccount.error,
@@ -75,7 +84,8 @@ function useDashboard() {
 		transactions: queryTransactions.data ?? [],
 		errorTransactions: queryTransactions.error,
 		loadingTransactions: queryTransactions.isLoading,
-		metrics
+		metrics,
+		overview: queryOverview.data ?? null
 	}
 }
 
