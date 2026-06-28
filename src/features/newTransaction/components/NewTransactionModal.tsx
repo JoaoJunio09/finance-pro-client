@@ -23,7 +23,7 @@ function NewTransactionModal({
 
   const [shouldRender, setShouldRender] = useState(false);
 
-  const { categories, form, handleOnChange, setType, error, loading, registerTransaction } = useNewTransaction(onClose);
+  const { categories, form, success, handleOnChange, setType, error, loading, registerTransaction } = useNewTransaction(onClose);
 
   const { account } = useAccountContext();
 

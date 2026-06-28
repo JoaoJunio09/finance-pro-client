@@ -195,7 +195,7 @@ function Overview({ overviewData, total, wallets }: OverviewProps) {
   }, [overviewData]);
 
   const chartData: WeeklyData[] = (overviewData?.overview[selectedMonth] ?? []).map((w) => ({
-    name: `Week ${w.week}`,
+    name: `Semana ${w.week}`,
     income: Number(w.income),
     expenses: Number(w.expenses),
   }));

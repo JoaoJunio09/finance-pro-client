@@ -68,15 +68,28 @@ function useNewTransaction(
 			setError(null);
 
 			if (!form.amount || form.amount === 0) {
-				setError('Preencha um valor maior que 0');
+				showToast({ title: 'Dados inválidos', message: 'Preencha um valor maior que 0', type: 'error' });
+				return;
+			}
+
+			if (!form.description || form.description === '') {
+				showToast({ title: 'Dados inválidos', message: 'Informe uma descrição para a transação', type: 'error' });
+				return;
+			}
+
+			if (!form.registeredAt || form.registeredAt === '') {
+				showToast({ title: 'Dados inválidos', message: 'Informe a data da transação', type: 'error' });
+				return;
 			}
 
 			if (!form.categoryId || form.categoryId === '') {
-				setError('Informe a categoria da transação');
+				showToast({ title: 'Dados inválidos', message: 'Selecione uma categoria', type: 'error' });
+				return;
 			}
 
 			if (!form.walletId || form.walletId === '') {
-				setError('Escolha uma carteira para efeturar a transação');
+				showToast({ title: 'Dados inválidos', message: 'Escolha uma carteira para efeturar a transação.', type: 'error' });
+				return;
 			}
 
 			const transaction:TransactionRequest = {
@@ -91,25 +104,25 @@ function useNewTransaction(
 
 			newTransactionMutation.mutate(transaction);
 
+			onClose();
+
 			if (form.type === 'CREDIT') {
 				showToast({ title: 'Aumentando sua renda!!', message: 'Receita adicionada com sucesso.', type: 'finance' });
 			} else {
 				showToast({ title: 'Despesa adicionada', message: 'Saldo da conta atualizado.', type: 'success' });
 			}
-
-			onClose();
 		}
 		catch (err) {
-			throw err;
+			setError('Não foi possível registrar a Transação');
 		}
 		finally {
 			setLoading(false);
-			setError(null);
 		}
 	}
 
 	return {
 		categories: queryCategories.data ?? [],
+		success: newTransactionMutation.isSuccess,
 		form,
 		handleOnChange,
 		setType,

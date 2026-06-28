@@ -1,4 +1,4 @@
-import { ShoppingCart, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { MailQuestionMarkIcon, ShoppingCart, Summary, SummaryIcon, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import type { MetricData } from "../hooks/useDashboard";
 
 const formatCurrency = (val: number | string): string => {
@@ -32,7 +32,7 @@ const MetricCard = ({ metric }: MetricCardProps) => {
       case 'net':
         return { icon: Wallet, color: 'text-[#6366F1]', bg: 'bg-[#6366F118]' };
       case 'max_expense':
-        return { icon: ShoppingCart, color: 'text-[#FCD34D]', bg: 'bg-[#FCD34D18]' };
+        return { icon: SummaryIcon, color: 'text-[#FCD34D]', bg: 'bg-[#FCD34D18]' };
     }
   };
 

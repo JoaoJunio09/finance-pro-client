@@ -50,7 +50,7 @@ function useDashboard() {
 				subtitle: 'Receitas menos Despesas'
 			},
 			{
-				title: account?.biggestExpense.category ?? 'Nenhum',
+				title: account?.biggestExpense.category.name ?? 'Nenhum',
 				type: 'max_expense',
 				value: account?.biggestExpense.value ?? 0,
 				subtitle: 'Maior gasto'

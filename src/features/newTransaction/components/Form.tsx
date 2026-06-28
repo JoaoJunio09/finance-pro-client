@@ -202,6 +202,7 @@ function Form({
         <div className="pt-5 border-t border-[#1F1F1F] flex items-center gap-2.5 bg-[#0C0C0C] bg-transparent">
           <button
             onClick={onClose}
+            type="button"
             className="h-10 px-4 rounded-xl text-[13px] font-semibold font-sans text-[#A1A1AA] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition-colors duration-150 cursor-pointer"
           >
             Cancelar
