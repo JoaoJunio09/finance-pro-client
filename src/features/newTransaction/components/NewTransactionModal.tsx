@@ -1,90 +1,67 @@
-import { useEffect, useState } from "react";
-import { createPortal } from 'react-dom';
-import type { TransactionType } from "../../../enums/TransactionType";
-import { NEW_TRANSACTION_MODAL_CONFIG } from "../types/NewTransactionModalConfigs";
-import Apresentation from "./Apresentation";
-import Form from "./Form";
-import { useAccountContext } from "../../../context/AccountContext";
+import { useEffect } from "react";
+import type { TransactionType } from "../../../types/TransactionType";
 import useNewTransaction from "../hooks/useNewTransaction";
-import showToast from "../../../components/ui/Toast/Toast";
+import Body from "./Body";
+import Header from "./Header";
+import FooterActions from "./FooterActions";
+import { useAccountContext } from "../../../context/AccountContext";
 
 interface TransactionModalProps {
-  open: boolean;
-  type: TransactionType;
+  isOpen: boolean;
   onClose: () => void;
+  type: TransactionType;
 }
 
-function NewTransactionModal({
-  open,
-  type,
+function TransactionModal({
+  isOpen,
   onClose,
+  type
 }: TransactionModalProps) {
-  const config = NEW_TRANSACTION_MODAL_CONFIG[type];
-
-  const [shouldRender, setShouldRender] = useState(false);
-
-  const { categories, form, success, handleOnChange, setType, error, loading, registerTransaction } = useNewTransaction(onClose);
-
   const { account } = useAccountContext();
-
-	useEffect(() => {
-    if (error) {
-      showToast({ title: 'Erro ao registrar', message: error, type: 'error' });
+  const { form, handleOnChange, categories } = useNewTransaction(onClose);
+  
+  // Reseta o estado quando o modal fecha/abre
+  useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {}, 300); // Aguarda a animação de saída (se houvesse)
     }
+  }, [isOpen]);
 
-		if (open) {
-			setShouldRender(true);
-		} else {
-			const timer = setTimeout(() => {
-				setShouldRender(false);
-			}, 300);
+  if (!isOpen) return null;
 
-			return () => clearTimeout(timer);
-		}
-	}, [open, error]);
+  const isIncome = type === 'CREDIT';
+  const colorBase = isIncome ? 'emerald' : 'rose';
 
-	if (!shouldRender) return null;
-
-  return createPortal(
-    <div
-			className={`
-				fixed inset-0 z-50 flex items-center justify-center
-				transition-opacity duration-300 ease-out
-				${open ? "opacity-100" : "opacity-0"}
-			`}
-    	onClick={onClose}
-    >
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full sm:max-w-[480px] bg-[#0F0F0F] border border-[#2A2A2A] rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] overflow-hidden animate-(--animate-fade-in) max-h-[92vh] flex flex-col"
-      >
-        {/* Top accent line */}
-        <div
-          className="h-[2px] w-full"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${config.color}, transparent)`,
-          }}
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-overlay bg-black/70">
+      
+      {/* Background clicável para fechar */}
+      <div className="absolute inset-0" onClick={onClose}></div>
+      
+      {/* Container Principal do Modal */}
+      <div className="relative w-full max-w-[680px] bg-[#09090B] border border-white/[0.06] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex flex-col animate-modal max-h-[80vh]">
+        <Header
+          isIncome={isIncome}
+          colorBase={colorBase}
+          onClose={onClose}
         />
 
-        <Apresentation config={config} onClose={onClose} />
-
-        <Form
-          categories={categories}
-          account={account}
+        <Body
           form={form}
-          setType={setType}
+          categories={categories}
+          wallets={account.wallets}
+          colorBase={colorBase}
           handleOnChange={handleOnChange}
-          registerTransaction={registerTransaction}
+          isIncome={isIncome}
+        />
+
+        <FooterActions
+          isIncome={isIncome}
           onClose={onClose}
-          loading={loading}
-          config={config}
-          type={type}
         />
       </div>
-    </div>,
-    document.body
+    </div>
   );
-}
+};
 
-export default NewTransactionModal;
+export default TransactionModal;

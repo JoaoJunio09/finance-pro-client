@@ -3,15 +3,21 @@ import { AccountProvider } from "../context/AccountContext";
 import { AuthProvider } from "../context/AuthContext";
 import DashboardPage from "../pages/DashboardPage";
 import SignInPage from "../pages/SignInPage";
+import ActivitiesPage from "../pages/ActivitiesPage";
+import RecurrencesPage from "../pages/RecurrencesPage";
+import ScrollToTop from "./ScrollToTop";
 
 function RoutesApp() {
 	return (
 		<BrowserRouter>
 			<AuthProvider>
 				<AccountProvider>
+					<ScrollToTop />
 					<Routes>
 						<Route path="/" element={<SignInPage />} />
 						<Route path="/dashboard" element={<DashboardPage />} />
+						<Route path="/activities" element={<ActivitiesPage />} />
+						<Route path="/recurrences" element={<RecurrencesPage />} />
 					</Routes>
 				</AccountProvider>
 			</AuthProvider>

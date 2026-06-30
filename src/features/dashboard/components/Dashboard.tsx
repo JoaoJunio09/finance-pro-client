@@ -1,153 +1,78 @@
-import { ArrowDownLeft, ArrowLeftRight, ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import Button from "../../../components/ui/Button/Button";
-import showToast from "../../../components/ui/Toast/Toast";
-import { useAuthContext } from "../../../context/AuthContext";
-import useDashboard from "../hooks/useDashboard";
-import Insights from "./Insights";
-import Metrics from "./Metrics";
-import Overview from "./Overview";
-import RecentActivities from "./RecentActivities";
+import { useState } from 'react';
+import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
+import TransactionModal from '../../newTransaction/components/NewTransactionModal';
+import useDashboard from '../hooks/useDashboard';
+import Apresentation from './Apresentation';
+import CurrentBalance from './CurrentBalance';
+import Insights from './Insights';
+import MonthOverview from './MonthOverview';
+import PerfomTransaction from './PerfomTransaction';
+import RecentActivities from './RecentActivities';
+import type { TransactionType } from '../../../types/TransactionType';
 
-import { useAccountContext } from "../../../context/AccountContext";
-import type { TransactionType } from "../../../enums/TransactionType";
-import NewTransactionModal from "../../newTransaction/components/NewTransactionModal";
+// PRÓXIMOS PASSOS - DASHBOARD:
+// 1. Adicionar uma Transação: Receita e Despesa.
+// 2. Cada categoria deve ter um ícone referente a mesma (implementar no back-end).
+// 3. Formatar data e hora das movimentações no front-end.
+// 4. Back-end deve gerar Insights automáticos de acordo com as ações do usuário:
+//    1º Insight: Fala sobre o saldo atual do usuário (ex: Você economizou 18% em alimentação neste mês. Excelente trabalho.)
+//    2º Insight: Fala sobre as despesas do usuário (ex: Sua conta de energia aumentou em relação ao mês passado)
+//    Esses Insights serão gerados de acordo com uma análise completa de todas as movimentações do usuário.
 
-interface TopActionsProps {
-	openModal: (isOpen: boolean) => void
-	setType: (type: TransactionType) => void
-}
+function Dashboard() {
+  const [openModal, setOpenModal] = useState(false);
+  const [type, setType] = useState<TransactionType>('CREDIT');
+  const { account, transactions, loading } = useDashboard();
+  if (!account) return;
 
-const TopActions = ({
-	openModal,
-	setType
-}: TopActionsProps) => {
-	const { fullName } = useAuthContext();
+  return (
+    <main className="flex-1 w-full min-w-0 relative z-10 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+      <div className="w-full max-w-[1700px] mx-auto px-6 md:px-12 lg:px-16 xl:px-20 2xl:px-24 py-12 md:py-16 lg:py-20 flex flex-col flex-1">
+        {loading && (
+          <TopProgressBar />
+        )}
 
-	const styleForButton = 'h-9 px-3.5 rounded-xl text-[13px] font-semibold font-sans border shrink-0 lg:w-auto w-16 p-0';
-	
-	return (
-		<header className="px-4 lg:px-8 pt-8 pb-6 flex flex-row flex-wrap gap-4 justify-between items-center w-full max-w-[1440px] mx-auto flex-shrink-0">
-			<div>
-				<h1 className="text-xl font-semibold tracking-tight bg-gradient-to-r from-[#EDEDED] to-[#A1A1AA] bg-clip-text text-transparent font-sans">
-					Olá, {fullName?.split(' ')[0]}!
-				</h1>
-				<p className="text-xs text-[#A1A1AA] mt-1 font-sans">Visualize sua vida financeira em segundos.</p>
-			</div>
-			
-			<div className="flex items-center gap-2">
-				<Button
-					onClick={() => {
-						openModal(true);
-						setType('CREDIT')
-					}}
-					className={styleForButton}
-					style={{
-						backgroundColor: '#4ADE8014',
-						color: '#4ADE80',
-						borderColor: '#4ADE8030',
-					}}
-				>
-					<ArrowDownLeft size={15} />
-					<span className="hidden lg:inline">Receita</span>
-				</Button>
+        <Apresentation
+          income={account?.income}
+          expense={account?.expenses}
+        />
+        
+        <CurrentBalance
+          currentBalance={account.currentBalance}
+        />
 
-				<Button
-					onClick={() => {
-						openModal(true);
-						setType('DEBIT')
-					}}
-					className={styleForButton}
-					style={{
-						backgroundColor: '#F8717114',
-						color: '#F87171',
-						borderColor: '#F8717130',
-					}}
-				>
-					<ArrowUpRight size={15} />
-					<span className="hidden lg:inline">Despesa</span>
-				</Button>
-			</div>
-			{/* <div className="text-xs text-[#71717A] font-medium tracking-wider uppercase select-none hidden sm:block font-sans">
-				{new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
-			</div> */}
-		</header>
-	)
-}
+        <div className="mt-16 md:mt-20 lg:mt-28 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 w-full min-w-0">  
+          <div className="flex flex-col gap-16 lg:gap-20 min-w-0 w-full">
+            <PerfomTransaction
+              setOpenModal={setOpenModal}
+              setType={setType}
+            />
+            <RecentActivities
+              transactions={transactions}
+            />
+          </div>
 
-interface DashboardProps {
-	isSidebarExpanded: boolean
-}
+          <div className="flex flex-col gap-16 lg:gap-20 min-w-0 w-full">
+            <MonthOverview
+              income={account.income}
+              expense={account.expenses}
+              netIncome={account.netIncome}
+              biggestExpense={account.biggestExpense}
+            />
+            <Insights />
+          </div>
+        </div>
 
-function Dashboard({ isSidebarExpanded }: DashboardProps) {
-	const [openTransantionModal, setOpenTransactionModal] = useState(false);
-	const [typeTransaction, setTypeTransaction] = useState<TransactionType>('CREDIT');
-	const { 
-		account,
-		errorAccount,
-		loadingAccount,
-		transactions,
-		errorTransactions,
-		loadingTransactions,
-		metrics,
-		overview
-	} = useDashboard();
-
-	const { setAccount } = useAccountContext();
-
-	useEffect(() => {
-		if (account) {
-			setAccount(account);
-		}
-
-		if (errorAccount) {
-			showToast({ title: 'Erro ao carregar', message: 'Não foi possível carregar os dados da conta', type: 'error' });
-		}
-		if (errorTransactions) {
-			showToast({ title: 'Erro ao carregar', message: 'Não foi possível carregar as Transações', type: 'error' });
-		}
-	}, [errorAccount, account]);
-
-	return (
-		<main 
-			className="flex-1 flex flex-col overflow-y-auto mt-14 lg:mt-0"
-			style={{
-				marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024
-					? (isSidebarExpanded ? '240px' : '68px')
-					: '0px',
-				transition: 'margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1)'
-			}}
-		>
-			<TopActions
-				openModal={setOpenTransactionModal}
-				setType={setTypeTransaction}
-			/>
-
-			<div className="px-4 lg:px-8 pb-12 flex flex-col gap-8 max-w-[1440px] w-full mx-auto overflow-x-hidden">
-				<Metrics
-					metrics={metrics}
-				/>
-
-				<Overview
-					overviewData={overview}
-					total={account?.currentBalance ?? 0}
-					wallets={account?.wallets ?? []}
-				/>
-
-				<Insights />
-
-				<RecentActivities
-					transactions={transactions}
-				/>
-			</div>
-
-			<NewTransactionModal
-				open={openTransantionModal}
-				type={typeTransaction}
-				onClose={() => setOpenTransactionModal(false)}
-			/>
-		</main>
-	)
+        <TransactionModal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+          type={type}
+        />
+      </div>
+      <div className="h-28 md:h-0"></div>
+ 
+    </main>
+  );
 }
 
 export default Dashboard;

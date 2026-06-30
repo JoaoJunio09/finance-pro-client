@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Sidebar from "../components/layout/sidebar/Sidebar";
-import Dashboard from "../features/dashboard/components/Dashboard";
 import MobileNav from "../components/layout/mobileNav/MobileNav";
+import Sidebar from "../components/layout/sidebar/Sidebar";
+import Activities from "../features/activities/components/Activities";
 
-function DashboardPage() {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+function ActivitiesPage() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	return (
 		<div className="min-h-screen flex bg-[#0c0b0d] text-zinc-100 selection:bg-[#7C3AED]/30 font-sans">
@@ -12,13 +12,13 @@ function DashboardPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[100vw] h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.08)_0%,_rgba(9,9,11,0)_60%)]"></div>
       </div>
 
-			<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="dashboard" />
+			<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="activities" />
 
-			<Dashboard />
+			<Activities />
 
 			<MobileNav setIsOpen={setIsSidebarOpen} />
 		</div>
 	)
 }
 
-export default DashboardPage;
+export default ActivitiesPage;

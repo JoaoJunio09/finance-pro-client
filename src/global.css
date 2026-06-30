@@ -58,10 +58,40 @@ html::-webkit-scrollbar-thumb:hover {
   background: #3730A3;
 }
 
+.animate-slide-up {
+	animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	opacity: 0;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+::-webkit-scrollbar { width: 0px; background: transparent; }
+
+.animate-overlay {
+	animation: overlayFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-modal {
+	animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbar escondida para manter o design ultra limpo */
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.hide-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
 @theme {
 	--animate-toast: animate-toast 3s linear forwards;
 	--animate-slide-up: slideUp 0.3s ease-out forwards;
 	--animate-fade-in: fadeIn 0.3s ease-out forwards;
+	--animate-progresss-bar: progress-bar 1.2s linear infinite;
 
 	@keyframes animate-toast {
 		0% { width: 0% }
@@ -76,5 +106,29 @@ html::-webkit-scrollbar-thumb:hover {
 	@keyframes slideUp {
 		from { transform: translateY(16px); opacity: 0; }
 		to { transform: translateY(0); opacity: 1; }
+	}
+
+	@keyframes slideUpFade {
+		0% { opacity: 0; transform: translateY(20px); }
+		100% { opacity: 1; transform: translateY(0); }
+	}
+
+	@keyframes progress-bar {
+		0% {
+			transform: translateX(-100%);
+		}
+
+		100% {
+			transform: translateX(400%);
+		}
+	}
+
+	@keyframes overlayFadeIn {
+		from { opacity: 0; backdrop-filter: blur(0px); }
+		to { opacity: 1; backdrop-filter: blur(8px); }
+	}
+	@keyframes modalSlideUp {
+		from { opacity: 0; transform: translateY(30px) scale(0.96); }
+		to { opacity: 1; transform: translateY(0) scale(1); }
 	}
 }

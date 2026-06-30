@@ -1,266 +1,114 @@
-import { ArrowLeftRight, LayoutDashboard, Menu, RefreshCw, Target, User, Wallet, X } from "lucide-react";
+import { Activity, LayoutGrid, RotateCw, Settings, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export interface MenuItem {
-	id: string;
-	label: string;
-	icon: React.ComponentType<{ size: number; className?: string }>;
-}
-
-const MENU_ITEMS: MenuItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'transacoes', label: 'Transações', icon: ArrowLeftRight },
-  { id: 'carteiras', label: 'Carteiras', icon: Wallet },
-  { id: 'recorrencias', label: 'Recorrências', icon: RefreshCw },
-  { id: 'metas', label: 'Metas', icon: Target },
-];
+const MENU_ITEMS = [
+  {
+    name: 'Painel de Controle',
+    active: 'dashboard',
+    path: '/dashboard',
+    icon: LayoutGrid,
+  },
+  {
+    name: 'Atividades',
+    active: 'activities',
+    path: '/activities',
+    icon: Activity,
+  },
+  {
+    name: 'Recorrências',
+    active: 'recurrences',
+    path: '/recurrences',
+    icon: RotateCw,
+  },
+  {
+    name: 'Configurações',
+    active: 'configuration',
+    path: '/configurations',
+    icon: Settings,
+  },
+]
 
 interface SidebarProps {
-  isExpanded: boolean;
-  setIsExpanded: (expanded: boolean) => void;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (open: boolean) => void;
-  activeItem?: string;
-  onNavigate?: (id: string) => void;
+  isOpen: boolean;
+  setIsOpen: (val: boolean) => void;
+  active?: string
 }
 
-function Sidebar({
-  isExpanded,
-  setIsExpanded,
-  isDrawerOpen,
-  setIsDrawerOpen,
-  activeItem = 'dashboard',
-  onNavigate
-}: SidebarProps) {
-
-  const handleToggleDesktop = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleItemClick = (id: string) => {
-    if (onNavigate) onNavigate(id);
-    setIsDrawerOpen(false); // Fecha o menu lateral móvel ao clicar
-  };
-
+function Sidebar({ isOpen, setIsOpen, active = 'dashboard' }: SidebarProps) {
   return (
-    <>
-      {/*
-				──────────────────────────────────────────────────────────────────────────
-        	TOPBAR MOBILE (< 1024px)
-         ──────────────────────────────────────────────────────────────────────────
-			*/}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#111111] border-b border-[#2A2A2A] px-4 flex items-center justify-between z-50">
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setIsDrawerOpen(true)}
-            className="p-1 hover:bg-[#1E1E1E] rounded-xl transition-colors text-[#A1A1AA] hover:text-[#EDEDED]"
-            aria-label="Abrir menu"
-          >
-            <Menu size={22} />
-          </button>
-          
-          <div className="flex items-center gap-2 select-none">
-            <span className="w-6 h-6 rounded-md bg-[#6366F1] flex items-center justify-center font-semibold text-white text-xs font-sans">
-              F
-            </span>
-            <span className="text-[#EDEDED] font-semibold text-sm font-sans tracking-tight">
-              FinancePro
-            </span>
-          </div>
-        </div>
-
-        <div className="w-8 h-8 rounded-xl bg-[#6366F1]/10 flex items-center justify-center text-[#6366F1]">
-          <User size={18} />
-        </div>
-      </header>
-
-      {/*
-				──────────────────────────────────────────────────────────────────────────
-        	DRAWER MOBILE (< 1024px) — CORREÇÃO 3 (Inverter Posições no Header do Drawer)
-        ──────────────────────────────────────────────────────────────────────────
-			*/}
+    <div>
+      {/* Mobile Overlay Escuro */}
       <div
-        className={`lg:hidden fixed inset-0 z-50 transition-all duration-250 ${
-          isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`
-        }
-      >
-        {/* Overlay escuro de fundo */}
-        <div 
-          className={`absolute inset-0 bg-black/75 transition-opacity duration-250 ${
-            isDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
-          onClick={() => setIsDrawerOpen(false)}
-        />
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
 
-        {/* Corpo do Drawer lateral */}
+      <aside
+        className={`
+          fixed md:sticky top-0 left-0 h-screen z-50 flex flex-col flex-shrink-0
+          transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden
+          ${isOpen
+            ? 'w-[280px] md:w-[256px] translate-x-0 bg-[#09090B]/95 md:bg-[#09090B]/50 border-r border-white/[0.04] backdrop-blur-md shadow-2xl md:shadow-none'
+            : 'w-[280px] md:w-[90px] -translate-x-full bg-[#09090B]/95 border-r border-transparent md:translate-x-0 md:bg-transparent md:backdrop-blur-none'
+          }
+        `}
+      >
+        {/* Área da Logo (Sempre fixa a pl-4 do canto esquerdo para não mover ao abrir/fechar) */}
+        <div className="flex items-center h-28 pl-6 pr-6 flex-shrink-0">
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-12 h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-[#111113] to-[#18181B] flex items-center justify-center border border-white/[0.08] shadow-lg cursor-pointer hover:border-[#7C3AED]/50 transition-colors duration-500 relative group"
+          >
+            <div className="w-4 h-4 rounded-full bg-[#7C3AED] shadow-[0_0_15px_rgba(124,58,237,0.6)] group-hover:shadow-[0_0_20px_rgba(124,58,237,0.8)] transition-shadow duration-500"></div>
+          </div>
+          
+          {/* Botão de Fechar Exclusivo do Mobile */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="md:hidden ml-auto text-zinc-500 hover:text-zinc-300 p-2 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Container de Conteúdo (Navegação + Perfil) */}
         <div 
-          className={`absolute top-0 left-0 bottom-0 w-[280px] bg-[#111111] border-r border-[#2A2A2A] rounded-r-3xl flex flex-col justify-between py-6 pointer-events-auto transition-transform duration-250 ease-in-out ${
-            isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+          className={`flex-1 flex flex-col w-[280px] md:w-[256px] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'
           }`}
         >
-          <div>
-            {/* Header do Drawer — CORREÇÃO 3 (Nome e Logo na Esquerda, Botão de Fechar na Direita) */}
-            <div className="flex flex-row justify-between items-center px-4 pt-[20px] pb-4 border-b border-[#2A2A2A]">
-              <div className="flex items-center gap-2.5">
-                <span className="w-6 h-6 rounded-md bg-[#6366F1] flex items-center justify-center font-semibold text-white text-xs font-sans">
-                  F
-                </span>
-                <span className="text-[#EDEDED] font-semibold text-base font-sans tracking-tight">
-                  FinancePro
-                </span>
-              </div>
-              
-              <button 
-                onClick={() => setIsDrawerOpen(false)}
-                className="p-1 hover:bg-[#1E1E1E] rounded-xl transition-colors text-[#71717A] hover:text-[#EDEDED]"
-                aria-label="Fechar menu"
+          <nav className="flex-1 w-full flex flex-col gap-3 px-6 pt-4">
+            {MENU_ITEMS.map((menu) => (
+              <Link to={menu.path}
+                className={`
+                  cursor-pointer h-12 w-full rounded-2xl ] flex items-center px-4 transition-all hover:bg-[#7C3AED]/15 group
+                  ${active === menu.active ? 'bg-[#7C3AED]/10 text-[#8B5CF6]' : 'text-zinc-400 hover:text-zinc-100'}
+                `}
               >
-                <X size={20} />
-              </button>
-            </div>
+                <menu.icon className="w-5 h-5 flex-shrink-0" />
+                <span className="ml-4 font-medium whitespace-nowrap">{menu.name}</span>
+              </Link>
+            ))}
+          </nav>
 
-            {/* Itens do Menu Drawer */}
-            <div className="mt-6 px-2">
-              <span className="px-4 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] block mb-2 font-sans">
-                MENU
-              </span>
-              <nav className="flex flex-col space-y-1">
-                {MENU_ITEMS.map((item) => {
-                  const isActive = activeItem === item.id;
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleItemClick(item.id)}
-                      className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-left font-medium transition-all duration-150 font-sans ${
-                        isActive 
-                          ? 'bg-[#6366F1]/10 text-[#6366F1]' 
-                          : 'text-[#A1A1AA] hover:bg-[#1E1E1E] hover:text-[#EDEDED]'
-                      }`}
-                    >
-                      <Icon size={20} className={isActive ? 'text-[#6366F1]' : 'text-[#71717A]'} />
-                      <span className="text-[15px]">{item.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-          </div>
-
-          {/* Rodapé Drawer Mobile */}
-          <div className="px-4 pt-4 border-t border-[#2A2A2A]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#6366F1]/10 flex items-center justify-center text-[#6366F1] shrink-0">
-                <User size={18} />
+          {/* Perfil */}
+          <div className="p-6 mb-4 md:mb-8">
+            <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#111113]/50 border border-white/[0.02] hover:border-white/[0.08] transition-all cursor-pointer">
+              <div className="w-10 h-10 flex-shrink-0 rounded-full border border-white/10 overflow-hidden">
+                <img src="https://i.pravatar.cc/150?img=11" alt="Profile" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
               </div>
-              <div className="overflow-hidden">
-                <div className="text-sm font-semibold text-[#EDEDED] font-sans truncate">João Silva</div>
-                <div className="text-[12px] text-[#71717A] font-sans truncate">joao@financepro.com</div>
+              <div className="flex flex-col flex-1 min-w-0">
+                <span className="text-sm font-medium text-zinc-200 truncate">Admin Avora</span>
+                <span className="text-xs text-zinc-500 truncate">admin@avora.com</span>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ──────────────────────────────────────────────────────────────────────────
-          SIDEBAR DESKTOP (Largura animada) — CORREÇÃO 2 (Estratégia Overflow-Hidden e Sem Unmounting)
-          ────────────────────────────────────────────────────────────────────────── */}
-      <aside 
-        className="hidden lg:flex fixed top-0 left-0 bottom-0 bg-[#111111] border-r border-[#2A2A2A] flex-col justify-between py-6 z-40 select-none overflow-hidden"
-        style={{
-          width: isExpanded ? '240px' : '68px',
-          transition: 'width 250ms cubic-bezier(0.4, 0, 0.2, 1)'
-        }}
-      >
-        {/* Superior: Logo / Gatilho de toggle */}
-        <div className="px-3">
-          <div 
-            onClick={handleToggleDesktop}
-            className="flex items-center rounded-xl p-2.5 cursor-pointer hover:bg-[#1E1E1E] transition-colors duration-150"
-          >
-            <div className="w-6 h-6 rounded-md bg-[#6366F1] flex items-center justify-center font-bold text-white text-xs shrink-0">
-              F
-            </div>
-            
-            <span
-              className={`
-                text-[#EDEDED] font-semibold text-base font-sans tracking-tight
-                overflow-hidden whitespace-nowrap block
-                transition-all duration-300
-                ${isExpanded ? 'opacity-100 max-w-[200px] ml-3' : 'opacity-0 max-w-0 ml-0'}
-              `}
-            >
-              FinancePro
-            </span>
-          </div>
-        </div>
-
-        {/* Links de navegação Desktop — Sem conditional rendering para evitar piscar de ícones */}
-        <nav className="flex flex-col space-y-1.5 px-2">
-          {MENU_ITEMS.map((item) => {
-            const isActive = activeItem === item.id;
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleItemClick(item.id)}
-                title={!isExpanded ? item.label : undefined}
-                className={`cursor-pointer w-full flex items-center py-2.5 rounded-xl text-left font-medium transition-colors duration-150 font-sans relative ${
-                  isExpanded ? 'px-3' : 'justify-center px-0'
-                } ${
-                  isActive 
-                    ? 'bg-[#6366F1]/10 text-[#6366F1]' 
-                    : 'text-[#71717A] hover:bg-[#1E1E1E] hover:text-[#EDEDED]'
-                }`}
-              >
-                {/* Borda indicadora esquerda - Somente no estado expandido */}
-                {isActive && isExpanded && (
-                  <div className="absolute left-0 top-2.5 bottom-2.5 w-0.5 bg-[#6366F1] rounded-r-md" />
-                )}
-
-                <Icon size={20} className={isActive ? 'text-[#6366F1]' : 'text-[#71717A]'} />
-                
-                <span 
-                  className="text-[14px] font-sans overflow-hidden whitespace-nowrap block"
-                  style={{
-                    opacity: isExpanded ? 1 : 0,
-                    maxWidth: isExpanded ? '200px' : '0px',
-                    marginLeft: isExpanded ? '12px' : '0px',
-                    transition: 'opacity 200ms, max-width 250ms cubic-bezier(0.4, 0, 0.2, 1), margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                >
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Rodapé Desktop (Perfil) — Sem conditional rendering */}
-        <div className="px-2">
-          <div 
-            className={`flex items-center rounded-xl p-2 transition-colors duration-150 cursor-pointer ${
-              isExpanded ? 'hover:bg-[#1E1E1E]' : ''
-            }`}
-          >
-            <div className="w-8 h-8 rounded-xl bg-[#6366F1]/10 flex items-center justify-center text-[#6366F1] shrink-0">
-              <User size={16} />
-            </div>
-
-            <div 
-              className="overflow-hidden transition-[opacity,max-width,margin] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] whitespace-nowrap"
-              style={{
-                opacity: isExpanded ? 1 : 0,
-                maxWidth: isExpanded ? '200px' : '0px',
-                marginLeft: isExpanded ? '12px' : '0px'
-              }}
-            >
-              <div className="text-[14px] font-medium text-[#EDEDED] font-sans truncate">João Silva</div>
             </div>
           </div>
         </div>
       </aside>
-    </>
-  );
+    </div>
+  )
 }
 
 export default Sidebar;

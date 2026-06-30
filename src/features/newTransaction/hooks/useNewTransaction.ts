@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type ChangeEvent } from "react";
 import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
-import type { TransactionType } from "../../../enums/TransactionType";
 import useCategoryService from "../../../hooks/useCategoryService";
 import useTransactionService from "../../../hooks/useTransactionService";
 import type { TransactionRequest } from "../../../models/transaction/TransactionRequest";
 import type { FormData } from "../types/FormData";
+import type { TransactionType } from "../../../types/TransactionType";
 
 function useNewTransaction(
 	onClose: () => void

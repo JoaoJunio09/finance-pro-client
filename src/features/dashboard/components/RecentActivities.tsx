@@ -1,130 +1,82 @@
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { Briefcase, Car, Coffee, CreditCard, Icon, ShoppingBag, TransgenderIcon, Wallet } from "lucide-react";
+import { formatCurrency } from "../../../utils/FormatCurrency";
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
-const formatCurrency = (val: number): string => {
-  return val.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2
-  });
-};
 
-export interface Transaction {
-  id: string | number;
-  description: string;
-  category: string;
-  wallet: string;
-  date: string;
-  amount: number;
-  type: 'income' | 'expense';
-}
+const TimelineItem = ({ transaction, isLast }: { transaction: TransactionResponse, isLast: boolean }) => {
+  const isIncome = transaction.type === 'CREDIT';
 
-interface RecentActivitiesTableProps {
-  transactions: TransactionResponse[];
-}
-
-const RecentActivitiesTable= ({ transactions }: RecentActivitiesTableProps) => {
   return (
-    <div className="overflow-x-auto w-full">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="border-b border-[#2A2A2A]">
-            <th className="pb-3 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] font-sans">
-              Descrição
-            </th>
-            <th className="pb-3 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] font-sans">
-              Categoria
-            </th>
-            <th className="pb-3 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] font-sans hidden lg:table-cell">
-              Carteira
-            </th>
-            <th className="pb-3 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] font-sans hidden lg:table-cell">
-              Data
-            </th>
-            <th className="pb-3 text-[11px] font-medium text-[#71717A] uppercase tracking-[0.08em] font-sans text-right">
-              Valor
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map((tx) => {
-            const isIncome = tx.type === 'CREDIT';
-            
-            const iconBgClass = isIncome ? 'bg-[#4ADE8014]' : 'bg-[#F8717114]';
-            const iconColorClass = isIncome ? 'text-[#4ADE80]' : 'text-[#F87171]';
-            const IconComponent = isIncome ? ArrowUpRight : ArrowDownRight;
-
-            return (
-              <tr 
-                key={tx.id} 
-                className="border-b border-[#2A2A2A] last:border-0 hover:bg-white/[0.05] transition-colors duration-150"
-              >
-                {/* Coluna Ícone + Descrição */}
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl ${iconBgClass} flex items-center justify-center ${iconColorClass} shrink-0`}>
-                      <IconComponent size={16} />
-                    </div>
-                    <span className="text-sm font-medium text-[#EDEDED] font-sans truncate max-w-[180px] sm:max-w-[240px]">
-                      {tx.description}
-                    </span>
-                  </div>
-                </td>
-                
-                {/* Coluna Categoria */}
-                <td className="py-4">
-                  <span className="inline-flex items-center text-xs text-[#A1A1AA] bg-white/[0.08] rounded-lg px-2.5 py-0.5 font-sans select-none">
-                    {tx.category.name}
-                  </span>
-                </td>
-                
-                {/* Coluna Carteira */}
-                <td className="py-4 text-xs text-[#71717A] font-sans hidden lg:table-cell">
-                  Conta Corrente
-                </td>
-                
-                {/* Coluna Data */}
-                <td className="py-4 text-xs text-[#71717A] font-sans whitespace-nowrap hidden lg:table-cell">
-                  {tx.registeredAt}
-                </td>
-                
-                {/* Coluna Valor formatado em Plus Jakarta Sans */}
-                <td className="py-4 text-sm font-semibold text-right tabular-nums font-money">
-                  <span className={isIncome ? 'text-[#4ADE80]' : 'text-[#F87171]'}>
-                    {isIncome ? '+' : '−'} {formatCurrency(tx.amount)}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="relative flex gap-4 sm:gap-6 lg:gap-8 group cursor-default w-full min-w-0">
+      {!isLast && (
+        <div className="absolute left-[23px] top-[48px] bottom-[-16px] w-[2px] bg-white/[0.02] group-hover:bg-white/[0.06] transition-colors duration-500"></div>
+      )}
+      
+      <div className="flex flex-col items-center pt-2 relative z-10 flex-shrink-0">
+        <div className="w-12 h-12 rounded-2xl bg-[#111113] border border-white/[0.04] flex items-center justify-center text-zinc-500 group-hover:text-zinc-200 group-hover:border-white/[0.1] group-hover:bg-[#18181B] transition-all duration-300 shadow-sm">
+          <TransgenderIcon className="w-5 h-5" />
+        </div>
+      </div>
+      
+      <div className="flex-1 min-w-0 py-3 lg:py-4 pb-8 lg:pb-10 border-b border-transparent group-hover:border-white/[0.02] transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 w-full min-w-0">
+          
+          <div className="flex-1 min-w-0 pr-4">
+            <h4 className="text-zinc-100 font-medium text-base lg:text-lg mb-1 truncate">
+              {transaction.description}
+            </h4>
+            <div className="flex items-center gap-2 lg:gap-3 text-xs lg:text-sm font-medium uppercase tracking-wider text-zinc-600">
+              <span className="truncate">{transaction.category.name}</span>
+              <span className="w-1 h-1 flex-shrink-0 rounded-full bg-zinc-800"></span>
+              <span className="flex-shrink-0 truncate">{transaction.registeredAt}</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:items-end gap-1 flex-shrink-0">
+            <span className={`text-lg lg:text-xl font-medium tracking-tight ${isIncome ? 'text-emerald-500' : 'text-rose-700'}`}>
+              {isIncome ? '+' : '-'}{formatCurrency(transaction.amount)}
+            </span>
+            <div className="flex items-center gap-1.5 text-xs lg:text-sm text-zinc-600 font-medium">
+              {/* {transaction.wallet.includes('Cartão') ? <CreditCard className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" /> : <Wallet className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" />} */}
+							<Wallet className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" />
+              <span className="truncate max-w-[120px] sm:max-w-none">Conta Corrente</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
     </div>
   );
 };
 
 interface RecentActivitiesProps {
-  transactions: TransactionResponse[]
+	transactions: TransactionResponse[]
 }
 
-function RecentActivities({ transactions }: RecentActivitiesProps) {
+function RecentActivities({
+	transactions
+}: RecentActivitiesProps) {
 	return (
-		<section className="bg-[#141414] border border-[#2A2A2A] rounded-3xl p-6 flex flex-col gap-5 shadow-[0_1px_3px_rgba(0,0,0,0.5)] w-full overflow-hidden">
-			<div className="flex justify-between items-center">
-				<h2 className="text-sm font-medium text-[#EDEDED] font-sans">Atividades Recentes</h2>
-				<a 
-					href="#todas" 
-					onClick={(e) => e.preventDefault()} 
-					className="text-xs text-[#6366F1] hover:text-[#8B5CF6] transition-colors duration-150 font-medium font-sans"
-				>
-					Ver todas →
-				</a>
+		<div className="animate-slide-up delay-300 min-w-0 w-full">
+			<div className="flex items-center justify-between mb-8 lg:mb-10 w-full">
+				<h3 className="text-zinc-600 text-xs sm:text-sm lg:text-base uppercase tracking-[0.15em] font-semibold truncate pr-4">
+					Movimentações Recente
+				</h3>
+				<button className="text-zinc-500 hover:text-zinc-300 flex-shrink-0 text-xs sm:text-sm lg:text-base font-medium transition-colors">
+					Ver tudo
+				</button>
 			</div>
 			
-			<RecentActivitiesTable
-        transactions={transactions}
-      />
-		</section>
+			<div className="flex flex-col w-full min-w-0">
+				{transactions.map((tx, idx) => (
+					<TimelineItem 
+						key={tx.id} 
+						transaction={tx} 
+						isLast={idx === transactions.length - 1} 
+					/>
+				))}
+			</div>
+		</div>
 	)
 }
 
