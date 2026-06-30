@@ -6,7 +6,7 @@ interface MonthOverviewProps {
 	income: number,
 	expense: number,
 	netIncome: number,
-	biggestExpense: BiggestExpense
+	biggestExpense: BiggestExpense | null
 }
 
 function MonthOverview({
@@ -47,9 +47,19 @@ function MonthOverview({
 				<div className="flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-white/[0.04] pb-4 lg:pb-5 group hover:border-white/[0.1] transition-colors gap-2">
 					<span className="text-zinc-400 font-light text-base lg:text-xl">Maior gasto</span>
 					<div className="text-right flex flex-col items-end flex-shrink-0">
-						<span className="text-lg lg:text-2xl font-medium tracking-tight text-white">{formatCurrency(biggestExpense.value)}</span>
+						<span className="text-lg lg:text-2xl font-medium tracking-tight text-white">
+							{biggestExpense ? (
+								formatCurrency(biggestExpense.value)
+							) : (
+								'R$ 0'
+							)}
+						</span>
 						<span className="text-[10px] lg:text-sm text-zinc-500 font-medium uppercase tracking-wider mt-0.5 lg:mt-1 truncate max-w-[120px]">
-							{biggestExpense.category.name}
+							{biggestExpense?.category ? (
+								biggestExpense.category.name
+							) : (
+								''
+							)}
 						</span>
 					</div>
 				</div>

@@ -4,7 +4,6 @@ import AuthenticationError from "../../../exceptions/AuthenticationError";
 import InternalServerError from "../../../exceptions/InternalServerError";
 import type { AccountCredentials } from "../../../models/auth/AccountCredentials";
 
-
 interface Form {
 	username: string,
 	password: string

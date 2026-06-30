@@ -1,10 +1,10 @@
 import { useEffect } from "react";
+import { useAccountContext } from "../../../context/AccountContext";
 import type { TransactionType } from "../../../types/TransactionType";
 import useNewTransaction from "../hooks/useNewTransaction";
 import Body from "./Body";
-import Header from "./Header";
 import FooterActions from "./FooterActions";
-import { useAccountContext } from "../../../context/AccountContext";
+import Header from "./Header";
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -18,19 +18,21 @@ function TransactionModal({
   type
 }: TransactionModalProps) {
   const { account } = useAccountContext();
-  const { form, handleOnChange, categories } = useNewTransaction(onClose);
-  
+  const { form, handleOnChange, categories, registerTransaction, loading, setType } = useNewTransaction(onClose);
+
+  const isIncome = type === 'CREDIT';
+  const colorBase = isIncome ? 'emerald' : 'rose';
+
   // Reseta o estado quando o modal fecha/abre
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => {}, 300); // Aguarda a animação de saída (se houvesse)
     }
-  }, [isOpen]);
+
+    setType(isIncome ? 'CREDIT' : 'DEBIT');
+  }, [isOpen, isIncome]);
 
   if (!isOpen) return null;
-
-  const isIncome = type === 'CREDIT';
-  const colorBase = isIncome ? 'emerald' : 'rose';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-overlay bg-black/70">
@@ -58,6 +60,8 @@ function TransactionModal({
         <FooterActions
           isIncome={isIncome}
           onClose={onClose}
+          onSave={registerTransaction}
+          isLoading={loading}
         />
       </div>
     </div>

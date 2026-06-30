@@ -15,21 +15,27 @@ type AccountProviderProps = {
 export function AccountProvider({ children }: AccountProviderProps) {
 	const [account, setAccount] = useState<AccountResponse>({
 		id: '',
-		currentBalance: 0,
 		income: 0,
 		expenses: 0,
 		netIncome: 0,
+		currentBalance: 0,
+		wallets: [],
 		biggestExpense: {
 			value: 0,
-			category: ''
-		},
-		wallets: []
+			category: {
+				id: '',
+				name: '',
+				type: '',
+				icon: '',
+				system: true,
+			}
+		}
 	});
 
 	return (
 		<AccountContext.Provider
 			value={{
-				account: account,
+				account,
 				setAccount
 			}}
 		>

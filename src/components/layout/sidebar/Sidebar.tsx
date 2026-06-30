@@ -81,7 +81,7 @@ function Sidebar({ isOpen, setIsOpen, active = 'dashboard' }: SidebarProps) {
         >
           <nav className="flex-1 w-full flex flex-col gap-3 px-6 pt-4">
             {MENU_ITEMS.map((menu) => (
-              <Link to={menu.path}
+              <Link key={menu.name} to={menu.path}
                 className={`
                   cursor-pointer h-12 w-full rounded-2xl ] flex items-center px-4 transition-all hover:bg-[#7C3AED]/15 group
                   ${active === menu.active ? 'bg-[#7C3AED]/10 text-[#8B5CF6]' : 'text-zinc-400 hover:text-zinc-100'}

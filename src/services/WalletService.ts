@@ -9,7 +9,7 @@ class WalletService {
 	private accessToken: string = '';
 
 	constructor(accessToken: string) {
-		this.BASE_URL = '/api/transactions/v1';
+		this.BASE_URL = '/api/wallets/v1';
 		this.accessToken = accessToken;
 	}
 

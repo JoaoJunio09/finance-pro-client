@@ -1,4 +1,4 @@
-import type { TransactionType } from "../../../enums/TransactionType";
+import type { TransactionType } from "../../../types/TransactionType";
 
 export interface FormData {
 	amount: number,

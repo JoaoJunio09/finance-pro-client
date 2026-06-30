@@ -126,7 +126,7 @@ function Body({
 						>
 							<option value="" disabled selected>Selecione a carteira</option>
 							{wallets.map((wallet) => (
-								<option value={wallet.id}>{wallet.name}</option>
+								<option key={wallet.id} value={wallet.id}>{wallet.name}</option>
 							))}
 						</Select>
 						<div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">

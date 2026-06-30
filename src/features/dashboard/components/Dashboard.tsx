@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
+import { useAccountContext } from '../../../context/AccountContext';
+import type { TransactionType } from '../../../types/TransactionType';
 import TransactionModal from '../../newTransaction/components/NewTransactionModal';
 import useDashboard from '../hooks/useDashboard';
 import Apresentation from './Apresentation';
@@ -8,7 +10,6 @@ import Insights from './Insights';
 import MonthOverview from './MonthOverview';
 import PerfomTransaction from './PerfomTransaction';
 import RecentActivities from './RecentActivities';
-import type { TransactionType } from '../../../types/TransactionType';
 
 // PRÓXIMOS PASSOS - DASHBOARD:
 // 1. Adicionar uma Transação: Receita e Despesa.
@@ -23,7 +24,13 @@ function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState<TransactionType>('CREDIT');
   const { account, transactions, loading } = useDashboard();
-  if (!account) return;
+  const { setAccount } = useAccountContext();
+
+  useEffect(() => {
+    if (account) {
+      setAccount(account);
+    }
+  }, [account]);
 
   return (
     <main className="flex-1 w-full min-w-0 relative z-10 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
@@ -33,12 +40,12 @@ function Dashboard() {
         )}
 
         <Apresentation
-          income={account?.income}
-          expense={account?.expenses}
+          income={account?.income ?? 0}
+          expense={account?.expenses ?? 0}
         />
         
         <CurrentBalance
-          currentBalance={account.currentBalance}
+          currentBalance={account?.currentBalance ?? 0}
         />
 
         <div className="mt-16 md:mt-20 lg:mt-28 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 w-full min-w-0">  
@@ -54,10 +61,10 @@ function Dashboard() {
 
           <div className="flex flex-col gap-16 lg:gap-20 min-w-0 w-full">
             <MonthOverview
-              income={account.income}
-              expense={account.expenses}
-              netIncome={account.netIncome}
-              biggestExpense={account.biggestExpense}
+              income={account?.income ?? 0}
+              expense={account?.expenses ?? 0}
+              netIncome={account?.netIncome ?? 0}
+              biggestExpense={account?.biggestExpense ?? null}
             />
             <Insights />
           </div>
