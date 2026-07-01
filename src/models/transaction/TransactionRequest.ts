@@ -1,4 +1,4 @@
-import type { TransactionType } from "../../enums/TransactionType";
+import type { TransactionType } from "../../types/TransactionType";
 
 export interface TransactionRequest {
 	amount: number,
@@ -7,5 +7,6 @@ export interface TransactionRequest {
 	type: TransactionType,
 	registeredAt: string,
 	categoryId: string,
+	walletId: string,
 	accountId: string
 }

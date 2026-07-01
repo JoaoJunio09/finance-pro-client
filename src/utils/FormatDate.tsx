@@ -36,3 +36,9 @@ export function formatRelativeDateTime(localDateTime: string): string {
 
   return `${dia} de ${mes} às ${horaTexto}`;
 }
+
+export function formatDateLabel(dateString: string, MONTHS: string[]): string {
+  const [, month, day] = dateString.split('-').map(Number);
+  const dayFormatted = day < 10 ? `0${day}` : `${day}`;
+  return `${dayFormatted} de ${MONTHS[month - 1]}`;
+}

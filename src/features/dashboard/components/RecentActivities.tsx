@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { AlignCenter, Wallet } from "lucide-react";
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 import { formatCurrency } from "../../../utils/FormatCurrency";
@@ -23,7 +23,11 @@ const TimelineItem = ({
       
       <div className="flex flex-col items-center pt-2 relative z-10 flex-shrink-0">
         <div className="w-12 h-12 rounded-2xl bg-[#111113] border border-white/[0.04] flex items-center justify-center text-zinc-500 group-hover:text-zinc-200 group-hover:border-white/[0.1] group-hover:bg-[#18181B] transition-all duration-300 shadow-sm">
-          <DynamicIcon name={transaction.category.icon as IconName} size={15} />
+          {transaction.category ? (
+            <DynamicIcon name={transaction.category.icon as IconName} size={15} />
+          ) : ( 
+            <AlignCenter size={15} />
+          )}
         </div>
       </div>
       
@@ -35,7 +39,13 @@ const TimelineItem = ({
               {transaction.description}
             </h4>
             <div className="flex items-center gap-2 lg:gap-3 text-xs lg:text-sm font-medium uppercase tracking-wider text-zinc-600">
-              <span className="truncate">{transaction.category.name}</span>
+              <span className="truncate">
+                {transaction.category ? (
+                  `${transaction.category.name}`
+                ) : ( 
+                  'Categoria sem nome'
+                )}
+              </span>
               <span className="w-1 h-1 flex-shrink-0 rounded-full bg-zinc-800"></span>
               <span className="flex-shrink-0 truncate">{formatRelativeDateTime(transaction.registeredAt)}</span>
             </div>

@@ -109,13 +109,14 @@ function useNewTransaction(
 		}
 
 		const transaction:TransactionRequest = {
-			accountId: account.id,
+			amount: form.amount,
 			description: form.description,
 			observation: form.observation,
-			amount: form.amount,
 			registeredAt: form.registeredAt,
+			type: form.type,
 			categoryId: form.categoryId,
-			type: form.type
+			walletId: form.walletId,
+			accountId: account.id,
 		}
 		
 		newTransactionMutation.mutate(transaction);
