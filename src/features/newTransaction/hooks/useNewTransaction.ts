@@ -29,9 +29,13 @@ function useNewTransaction(
 	const newTransactionMutation = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.create(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['transactions'] });
+			queryClient.invalidateQueries({
+				queryKey: ['transactions']
+			});
 
-			queryClient.invalidateQueries({ queryKey: ['account'] });
+			queryClient.invalidateQueries({
+				queryKey: ['account']
+			});
 
 			onClose();
 
@@ -42,8 +46,7 @@ function useNewTransaction(
 				showToast({ title: 'Despesa adicionada', message: 'Saldo da conta atualizado.', type: 'success' });
 			}
 		},
-		onError: (e) => {
-			console.log(e)
+		onError: () => {
 			showToast({
 				title: 'Erro',
 				message: 'Não foi possível efetuar a transação.',
@@ -114,9 +117,7 @@ function useNewTransaction(
 			categoryId: form.categoryId,
 			type: form.type
 		}
-
-		console.log(transaction)
-
+		
 		newTransactionMutation.mutate(transaction);
 	}
 

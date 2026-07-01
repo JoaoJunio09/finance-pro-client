@@ -11,15 +11,6 @@ import MonthOverview from './MonthOverview';
 import PerfomTransaction from './PerfomTransaction';
 import RecentActivities from './RecentActivities';
 
-// PRÓXIMOS PASSOS - DASHBOARD:
-// 1. Adicionar uma Transação: Receita e Despesa.
-// 2. Cada categoria deve ter um ícone referente a mesma (implementar no back-end).
-// 3. Formatar data e hora das movimentações no front-end.
-// 4. Back-end deve gerar Insights automáticos de acordo com as ações do usuário:
-//    1º Insight: Fala sobre o saldo atual do usuário (ex: Você economizou 18% em alimentação neste mês. Excelente trabalho.)
-//    2º Insight: Fala sobre as despesas do usuário (ex: Sua conta de energia aumentou em relação ao mês passado)
-//    Esses Insights serão gerados de acordo com uma análise completa de todas as movimentações do usuário.
-
 function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState<TransactionType>('CREDIT');

@@ -2,18 +2,17 @@ import { AlignLeft, CalendarDays, ChevronDown, Tag, Wallet } from "lucide-react"
 import Input from "../../../components/ui/Input/Input";
 import Select from "../../../components/ui/Select/Select";
 import TextArea from "../../../components/ui/TextArea/TextArea";
-import type { FormData } from "../types/FormData";
 import type { CategoryResponse } from "../../../models/category/CategoryResponse";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
-
+import type { FormData } from "../types/FormData";
 
 interface BodyProps {
-	form: FormData,
-	categories: CategoryResponse[],
-	wallets: WalletResponse[],
-	isIncome: boolean,
-	colorBase: "emerald" | "rose",
-	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void
+	form: FormData;
+	categories: CategoryResponse[];
+	wallets: WalletResponse[];
+	isIncome: boolean;
+	colorBase: "emerald" | "rose";
+	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 
 function Body({

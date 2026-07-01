@@ -23,7 +23,6 @@ function Select({
 			name={name}
 			value={value}
 			onChange={onChange}
-			defaultValue=""
 			className={className}
 		>
 			{children}

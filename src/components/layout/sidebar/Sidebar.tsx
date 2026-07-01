@@ -1,4 +1,4 @@
-import { Activity, LayoutGrid, RotateCw, Settings, X } from "lucide-react";
+import { Activity, LayoutGrid, Settings, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MENU_ITEMS = [
@@ -13,12 +13,6 @@ const MENU_ITEMS = [
     active: 'activities',
     path: '/activities',
     icon: Activity,
-  },
-  {
-    name: 'Recorrências',
-    active: 'recurrences',
-    path: '/recurrences',
-    icon: RotateCw,
   },
   {
     name: 'Configurações',

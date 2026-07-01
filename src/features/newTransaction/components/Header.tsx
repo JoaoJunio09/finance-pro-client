@@ -1,9 +1,13 @@
-import { ArrowDownRight, ArrowUpRight, X } from "lucide-react";
+import {
+	ArrowDownRight,
+	ArrowUpRight,
+	X
+} from "lucide-react";
 
 interface HeaderProps {
-	isIncome: boolean,
-	colorBase: "emerald" | "rose",
-	onClose: () => void
+	isIncome: boolean;
+	colorBase: "emerald" | "rose";
+	onClose: () => void;
 }
 
 function Header({

@@ -4,7 +4,15 @@ import type { TransactionResponse } from "../../../models/transaction/Transactio
 import { formatCurrency } from "../../../utils/FormatCurrency";
 import { formatRelativeDateTime } from "../../../utils/FormatDate";
 
-const TimelineItem = ({ transaction, isLast }: { transaction: TransactionResponse, isLast: boolean }) => {
+interface TimelineItemProps {
+  transaction: TransactionResponse;
+  isLast: boolean;
+}
+
+const TimelineItem = ({
+  transaction,
+  isLast
+}: TimelineItemProps) => {
   const isIncome = transaction.type === 'CREDIT';
 
   return (

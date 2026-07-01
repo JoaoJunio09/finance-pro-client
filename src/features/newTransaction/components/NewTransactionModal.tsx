@@ -18,7 +18,14 @@ function TransactionModal({
   type
 }: TransactionModalProps) {
   const { account } = useAccountContext();
-  const { form, handleOnChange, categories, registerTransaction, loading, setType } = useNewTransaction(onClose);
+  const {
+    form,
+    handleOnChange,
+    categories,
+    registerTransaction,
+    loading,
+    setType
+  } = useNewTransaction(onClose);
 
   const isIncome = type === 'CREDIT';
   const colorBase = isIncome ? 'emerald' : 'rose';
@@ -36,11 +43,9 @@ function TransactionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-overlay bg-black/70">
-      
       {/* Background clicável para fechar */}
       <div className="absolute inset-0" onClick={onClose}></div>
       
-      {/* Container Principal do Modal */}
       <div className="relative w-full max-w-[680px] bg-[#09090B] border border-white/[0.06] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex flex-col animate-modal max-h-[80vh]">
         <Header
           isIncome={isIncome}

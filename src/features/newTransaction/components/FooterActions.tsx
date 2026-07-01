@@ -1,9 +1,8 @@
-
 interface FooterActionsProps {
-	onClose: () => void,
-	isIncome: boolean,
-	onSave: () => void,
-	isLoading: boolean
+	onClose: () => void;
+	isIncome: boolean;
+	onSave: () => void;
+	isLoading: boolean;
 }
 
 function FooterActions({
@@ -29,7 +28,7 @@ function FooterActions({
 				}`}
 			>
 				{isLoading ? (
-					'Carregando'
+					'Salvando...'
 				): (
 					`Salvar ${isIncome ? 'Receita' : 'Despesa'}`
 				)}

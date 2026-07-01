@@ -3,10 +3,10 @@ import type { BiggestExpense } from "../../../models/account/BiggestExpense";
 import { formatCurrency } from "../../../utils/FormatCurrency";
 
 interface MonthOverviewProps {
-	income: number,
-	expense: number,
-	netIncome: number,
-	biggestExpense: BiggestExpense | null
+	income: number;
+	expense: number;
+	netIncome: number;
+	biggestExpense: BiggestExpense | null;
 }
 
 function MonthOverview({
