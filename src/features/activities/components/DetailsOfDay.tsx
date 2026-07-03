@@ -71,32 +71,24 @@ function DetailsOfDay({
 						) : null}
 
 						{/* Futuras */}
-						{/* {selectedDateInfo.transactions?.filter(tx => tx.status === 'future').length > 0 ? (
+						{selectedDateInfo.recurrences?.length > 0 ? (
 							<div className="space-y-4">
 								<h4 className="text-xs uppercase tracking-widest text-amber-500 font-bold mb-4 flex items-center gap-2">
-									<div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div> Recorrências Futuras
+									<div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div> Recorrências Previstas
 								</h4>
-								{selectedDateInfo.transactions.filter(tx => tx.status === 'future').map(tx => {
-									const Icon = tx.icon;
-									return (
-										<div key={tx.id} className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex items-center justify-between gap-4">
-											<div className="flex items-center gap-3">
-												<div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-													<Icon className="w-4 h-4" />
-												</div>
-												<div>
-													<h4 className="text-sm font-medium text-amber-100/90">{tx.description}</h4>
-													<span className="text-xs text-amber-500/70">Previsto • {tx.category}</span>
-												</div>
-											</div>
-											<span className={`text-base font-bold tracking-tight text-amber-400`}>
-												{tx.type === 'in' ? '+' : '-'}{formatCurrency(tx.amount)}
-											</span>
+								{selectedDateInfo.recurrences.map(rec => (
+									<div key={rec.id} className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex items-center justify-between gap-4">
+										<div>
+											<h4 className="text-sm font-medium text-amber-100/90">{rec.description}</h4>
+											<span className="text-xs text-amber-500/70">Previsto</span>
 										</div>
-									);
-								})}
+										<span className="text-base font-bold tracking-tight text-amber-400">
+											{rec.type === 'CREDIT' ? '+' : '-'}{formatCurrency(rec.amount)}
+										</span>
+									</div>
+								))}
 							</div>
-						) : null} */}
+						) : null}
 
 						{selectedDateInfo.transactions?.length === 0 ? (
 							<div className="py-12 text-center flex flex-col items-center justify-center">
