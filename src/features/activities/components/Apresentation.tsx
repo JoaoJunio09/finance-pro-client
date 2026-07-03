@@ -5,7 +5,6 @@ interface ApresentationProps {
 	activeYear: number;
 	goToPreviousMonth: () => void;
 	goToNextMonth: () => void;
-	isCurrentMonthView: boolean;
 	MONTHS: string[];
 }
 
@@ -14,7 +13,6 @@ function Apresentation({
 	activeYear,
 	goToPreviousMonth,
 	goToNextMonth,
-	isCurrentMonthView,
 	MONTHS
 }: ApresentationProps) {
 	return (
@@ -45,9 +43,6 @@ function Apresentation({
 						<ChevronRight className="w-5 h-5" />
 					</button>
 				</div>
-				<span className="text-xs text-zinc-500 font-medium tracking-wide uppercase mt-2">
-					{isCurrentMonthView ? 'Movimentações do mês atual' : 'Mês arquivado'}
-				</span>
 			</div>
 		</section>
 	)

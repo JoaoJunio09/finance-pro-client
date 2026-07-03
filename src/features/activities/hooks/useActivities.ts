@@ -1,8 +1,52 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
+import useRecurrenceService from "../../../hooks/useRecurrenceService";
 import useTransactionService from "../../../hooks/useTransactionService";
 import type { CalendarDay } from "../types/CalendarDay";
+import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
+
+function getRecurrenceDaysInMonth(
+  recurrence: RecurrenceResponse,
+  month: number, // 0-indexed (padrão JS)
+  year: number
+): number[] {
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const monthNumber = month + 1; // backend é 1-indexed
+
+  switch (recurrence.frequencyType) {
+    case 'MONTHLY': {
+      if (!recurrence.dayOne) return [];
+      return [Math.min(recurrence.dayOne, daysInMonth)];
+    }
+
+    case 'BIWEEKLY': {
+      const days: number[] = [];
+      if (recurrence.dayOne) days.push(Math.min(recurrence.dayOne, daysInMonth));
+      if (recurrence.dayTwo) days.push(Math.min(recurrence.dayTwo, daysInMonth));
+      return days;
+    }
+
+    case 'YEARLY': {
+      if (!recurrence.dayOne || !recurrence.monthOfTheYear) return [];
+      if (recurrence.monthOfTheYear !== monthNumber) return [];
+      return [Math.min(recurrence.dayOne, daysInMonth)];
+    }
+
+    default:
+      return [];
+  }
+}
+
+function isPastMonth(month: number, year: number): boolean {
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+
+  if (year < currentYear) return true;
+  if (year === currentYear && month < currentMonth) return true;
+  return false;
+}
 
 function useActivities() {
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -14,6 +58,7 @@ function useActivities() {
 	const { account } = useAccountContext();
 
 	const transactionService = useTransactionService();
+  const recurrenceService = useRecurrenceService();
 
 	const queryTransactions = useQuery({
 		queryKey: [
@@ -25,6 +70,16 @@ function useActivities() {
 		retry: 3
 	});
 
+  const queryRecurrences = useQuery({
+    queryKey: [
+      'recurrences',
+      account.id
+    ],
+    queryFn: () => recurrenceService.getAll({ accountId: account.id }),
+    enabled: !!account.id,
+    retry: 3
+  });
+
 	function goToPreviousMonth() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   }
@@ -34,20 +89,44 @@ function useActivities() {
   }
 
 	const transactions = useMemo(() => {
-		return queryTransactions.data ?? []
+		return queryTransactions.data ?? [];
 	}, [queryTransactions.data]);
+
+  const recurrences = useMemo(() => {
+    return queryRecurrences.data ?? [];
+  }, [queryRecurrences.data]);
+
+  const recurrencesByDate = useMemo(() => {
+    const map = new Map<string, RecurrenceResponse[]>();
+
+    if (isPastMonth(month, year)) return map;
+
+    for (const rec of recurrences) {
+      if (!rec.active) continue;
+
+      const days = getRecurrenceDaysInMonth(rec, month, year);
+      for (const day of days) {
+        const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        if (!map.has(dateString)) map.set(dateString, []);
+        map.get(dateString)!.push(rec);
+      }
+    }
+
+    return map;
+  }, [recurrences, month, year]);
 
 	const calendarDays = useMemo<CalendarDay[]>(() => {
     const days: CalendarDay[] = [];
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOffset = new Date(year, month, 1).getDay();
+    const firstDayOffset = new Date(year, month, 1).getDay(); 
 
     const totalCells = Math.ceil((daysInMonth + firstDayOffset) / 7) * 7;
 
     for (let i = 0; i < totalCells; i++) {
       if (i < firstDayOffset || i >= daysInMonth + firstDayOffset) {
-        days.push({ date: null, transactions: [] });
-      } else {
+        days.push({ date: null, transactions: [], recurrences: [] });
+      }
+      else {
         const dayNumber = i - firstDayOffset + 1;
         const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayNumber).padStart(2, "0")}`;
 
@@ -55,20 +134,20 @@ function useActivities() {
           const txDateOnly = tx.registeredAt.split('T')[0]; // "2026-07-15"
           return txDateOnly === dateString;
         });
+        const dayRecurrences = recurrencesByDate.get(dateString) ?? [];
         
-        let inTotal = 0, outTotal = 0, futureTotal = 0;
-
+        let inTotal = 0, outTotal = 0;
         dayTxs.forEach(tx => {
-          if (tx.type === 'CREDIT') {
-            inTotal += tx.amount;
-          } else {
-            outTotal += tx.amount;
-          }
+          if (tx.type === 'CREDIT') inTotal += tx.amount;
+          else outTotal += tx.amount;
         });
+
+        const futureTotal = dayRecurrences.reduce((sum, r) => sum + r.amount, 0);
 
         days.push({
           date: dateString,
           transactions: dayTxs,
+          recurrences: dayRecurrences,
           inTotal,
           outTotal,
           futureTotal
@@ -76,7 +155,7 @@ function useActivities() {
       }
     }
     return days;
-  }, [month, year, transactions]);
+  }, [month, year, transactions, recurrencesByDate]);
 
 	const selectedDateInfo = useMemo<CalendarDay | null | undefined>(() => {
     if (!selectedDate) return null;
@@ -87,7 +166,7 @@ function useActivities() {
 		calendarDays,
 		transactions,
 		error: queryTransactions.error,
-		loading: queryTransactions.isLoading,
+		loading: queryTransactions.isLoading || queryRecurrences.isLoading,
 		selectedDate,
 		setSelectedDate,
 		selectedDateInfo,

@@ -8,5 +8,6 @@ export interface TransactionResponse {
 	observation: string,
 	type: TransactionType,
 	category: CategoryResponse,
-	registeredAt: string
+	registeredAt: string,
+	recurrenceId: string
 }

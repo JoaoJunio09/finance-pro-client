@@ -2,19 +2,17 @@ import type { CalendarDay } from "../types/CalendarDay";
 
 interface CalendarProps {
 	calendarDays: CalendarDay[];
-	isCurrentMonthView: boolean;
 	selectedDate: string | null;
 	setSelectedDate: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 function Calendar({
 	calendarDays,
-	isCurrentMonthView,
 	selectedDate,
 	setSelectedDate
 }: CalendarProps) {
 	const currentDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
-
+	console.log(currentDate)
 	return (
 		<div className="w-full flex flex-col min-w-0 animate-slide-up delay-100 flex-1 mb-16">
 			<div className="w-full border border-white/[0.06] rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#0e0e11]/80 backdrop-blur-xl shadow-2xl flex flex-col">
@@ -68,14 +66,46 @@ function Calendar({
 								{/* Conteúdo Desktop/Tablet */}
 								<div className="hidden sm:flex flex-col gap-1 flex-1 w-full min-w-0 mt-2">
 									{item.transactions.slice(0, 2).map(tx => (
-										<div key={tx.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
-											<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
-												${tx.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
-											/>	
-											<span className={`truncate font-medium ${tx.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
-												{tx.description}
-											</span>
-										</div>
+										<>
+										{tx.recurrenceId !== null ? (
+											// Recorrência que já aconteceu, e registrou uma transação.
+											<div key={tx.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
+												<div className="absolute top-0 left-0 right-0 h-[2px] bg-[#b2d406]"></div>
+												<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
+													${tx.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
+												/>	
+												<span className={`truncate font-medium ${tx.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
+													{tx.description}
+												</span>
+											</div>
+										) : (
+											<div key={tx.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
+												
+												<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
+													${tx.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
+												/>	
+												<span className={`truncate font-medium ${tx.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
+													{tx.description}
+												</span>
+											</div>
+										)}
+										</>
+									))}
+									{item.recurrences.slice(0, 2).map(rec => (
+										<>
+											{item.date !== null && item.date <= rec.lastExecutionDate ? (
+												null
+											) : (
+												<div key={rec.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
+													<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
+														${rec.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
+													/>	
+													<span className={`truncate font-medium ${rec.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
+														{rec.description}
+													</span>
+												</div>
+											)}
+										</>
 									))}
 									{item.transactions.length > 2 ? (
 										<div className="text-[9px] md:text-[10px] text-[#8B5CF6] font-semibold pl-3 mt-0.5">
@@ -95,6 +125,7 @@ function Calendar({
 				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div>Receita Concluída</div>
 				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-rose-500"></div>Despesa Concluída</div>
 				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-amber-500"></div>Recorrência Futura</div>
+				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#b2d406]"></div>Recorrência Concluída</div>
 				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#8B5CF6]"></div>Dia Atual</div>
 			</div>
 		</div>

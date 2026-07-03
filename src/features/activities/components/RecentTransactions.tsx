@@ -1,4 +1,4 @@
-import { ALargeSmall, CalendarDays, Clock } from "lucide-react";
+import { AdIcon, ALargeSmall, CalendarDays, Clock } from "lucide-react";
 import { formatCurrency } from "../../../utils/FormatCurrency";
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
@@ -36,7 +36,7 @@ function RecentTransactions({
 										${isFuture ? 'bg-amber-500/5 border-amber-500/10 text-amber-500/70 group-hover:text-amber-400 group-hover:bg-amber-500/10' : 
 										'bg-white/[0.02] border-white/[0.04] text-zinc-500 group-hover:text-zinc-300'}`}
 									>
-										<Icon className="w-5 h-5" />
+										<AdIcon className="w-5 h-5" />
 									</div>
 									<div className="flex flex-col gap-1 min-w-0">
 										<h4 className={`text-sm sm:text-base font-medium truncate ${isFuture ? 'text-amber-100/90' : 'text-zinc-200'}`}>
