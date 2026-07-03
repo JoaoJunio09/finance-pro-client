@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
 import useActivities from '../hooks/useActivities';
 import Apresentation from './Apresentation';
 import Calendar from './Calendar';
@@ -21,11 +23,19 @@ function Activities() {
     year
   } = useActivities();
 
-  console.log(calendarDays)
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
   return (
     <main className="flex-1 w-full min-w-0 flex flex-col transition-all duration-300 relative z-10">
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex flex-col flex-1">
+        {loading && (
+          <TopProgressBar />
+        )}
+
         <Apresentation
           activeMonth={month}
           activeYear={year}
@@ -40,11 +50,7 @@ function Activities() {
           setSelectedDate={setSelectedDate}
         />
 
-        <RecentTransactions
-          transactions={transactions}
-          activeMonth={month}
-          MONTHS={MONTHS}
-        />
+        <RecentTransactions transactions={transactions} />
 
         {selectedDateInfo && (
           <DetailsOfDay

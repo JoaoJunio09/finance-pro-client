@@ -114,10 +114,13 @@ function useNewTransaction(
 			observation: form.observation,
 			registeredAt: form.registeredAt,
 			type: form.type,
+			status: "COMPLETED",
 			categoryId: form.categoryId,
 			walletId: form.walletId,
 			accountId: account.id,
 		}
+
+		console.log(transaction)
 		
 		newTransactionMutation.mutate(transaction);
 	}

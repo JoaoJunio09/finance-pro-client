@@ -90,7 +90,7 @@ function DetailsOfDay({
 							</div>
 						) : null}
 
-						{selectedDateInfo.transactions?.length === 0 ? (
+						{selectedDateInfo.transactions?.length === 0 && selectedDateInfo.recurrences?.length === 0 ? (
 							<div className="py-12 text-center flex flex-col items-center justify-center">
 								<div className="w-12 h-12 rounded-full bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-zinc-600 mb-4">
 									<Activity className="w-5 h-5" />

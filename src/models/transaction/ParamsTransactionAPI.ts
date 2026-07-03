@@ -1,3 +1,5 @@
 export interface ParamsTransactionAPI {
-	accountId?: string | undefined
+	accountId?: string | undefined,
+	month?: number,
+	year?: number
 }

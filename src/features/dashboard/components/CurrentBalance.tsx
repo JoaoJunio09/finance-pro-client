@@ -27,8 +27,13 @@ const useAnimatedNumber = (end: number, duration: number = 1500) => {
   return value;
 };
 
-function CurrentBalance({ currentBalance }: { currentBalance: number }) {
-	const balance = useAnimatedNumber(currentBalance);
+function CurrentBalance({ currentBalance }: { currentBalance: number | undefined }) {
+  if (!currentBalance) return;
+
+  let balance: number = 0;
+
+  if (currentBalance > 0) balance = useAnimatedNumber(currentBalance);
+	else balance = currentBalance;
 
 	return (
 		<section className="mt-12 sm:mt-16 md:mt-20 lg:mt-24 animate-slide-up delay-100">

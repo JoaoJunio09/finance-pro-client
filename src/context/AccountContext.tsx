@@ -2,8 +2,8 @@ import { createContext, useContext, useState, type ReactNode } from "react"
 import type { AccountResponse } from "../models/account/AccountResponse"
 
 type AccountContextType = {
-	account: AccountResponse,
-	setAccount: (account: AccountResponse) => void;
+	account: AccountResponse | null,
+	setAccountByUser: (account: AccountResponse) => void;
 }
 
 const AccountContext = createContext<AccountContextType | null>(null);
@@ -13,30 +13,24 @@ type AccountProviderProps = {
 }
 
 export function AccountProvider({ children }: AccountProviderProps) {
-	const [account, setAccount] = useState<AccountResponse>({
-		id: '',
-		income: 0,
-		expenses: 0,
-		netIncome: 0,
-		currentBalance: 0,
-		wallets: [],
-		biggestExpense: {
-			value: 0,
-			category: {
-				id: '',
-				name: '',
-				type: '',
-				icon: '',
-				system: true,
-			}
-		}
+	const [account, setAccount] = useState<AccountResponse | null>(() => {
+		const stored = sessionStorage.getItem('account');
+		return stored ? JSON.parse(stored) : null;
 	});
+
+	function setAccountByUser(account: AccountResponse) {
+		sessionStorage.setItem(
+			'account',
+			JSON.stringify(account)
+		)
+		setAccount(account);
+	}
 
 	return (
 		<AccountContext.Provider
 			value={{
 				account,
-				setAccount
+				setAccountByUser
 			}}
 		>
 			{children}

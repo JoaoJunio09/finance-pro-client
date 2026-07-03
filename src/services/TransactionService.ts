@@ -15,6 +15,7 @@ class TransactionService {
 	}
 
 	public async getAll(params: ParamsTransactionAPI) {
+		console.log(params)
 		try {
 			const response = await api.get<TransactionResponse[]>(this.BASE_URL, {
 				headers: {

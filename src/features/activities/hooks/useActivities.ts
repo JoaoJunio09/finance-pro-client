@@ -57,26 +57,34 @@ function useActivities() {
 
 	const { account } = useAccountContext();
 
+  const accountId = account?.id;
+
 	const transactionService = useTransactionService();
   const recurrenceService = useRecurrenceService();
 
 	const queryTransactions = useQuery({
 		queryKey: [
 			'transactions',
-			account.id
+			accountId,
+      month,
+      year
 		],
-		queryFn: () => transactionService.getAll({ accountId: account.id }),
-		enabled: !!account.id,
+		queryFn: () => transactionService.getAll({
+      accountId: accountId,
+      month: (month+1),
+      year: year
+    }),
+		enabled: !!accountId || !!month || !!year,
 		retry: 3
 	});
 
   const queryRecurrences = useQuery({
     queryKey: [
       'recurrences',
-      account.id
+      accountId
     ],
-    queryFn: () => recurrenceService.getAll({ accountId: account.id }),
-    enabled: !!account.id,
+    queryFn: () => recurrenceService.getAll({ accountId: accountId }),
+    enabled: !!accountId,
     retry: 3
   });
 
@@ -90,7 +98,9 @@ function useActivities() {
 
 	const transactions = useMemo(() => {
 		return queryTransactions.data ?? [];
-	}, [queryTransactions.data]);
+	}, [queryTransactions.data, accountId, month, year]);
+
+  console.log(transactions)
 
   const recurrences = useMemo(() => {
     return queryRecurrences.data ?? [];

@@ -15,13 +15,15 @@ function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState<TransactionType>('CREDIT');
   const { account, transactions, loading } = useDashboard();
-  const { setAccount } = useAccountContext();
+  const { setAccountByUser } = useAccountContext();
 
   useEffect(() => {
     if (account) {
-      setAccount(account);
+      setAccountByUser(account);
     }
   }, [account]);
+
+  console.log(account)
 
   return (
     <main className="flex-1 w-full min-w-0 relative z-10 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
@@ -36,7 +38,7 @@ function Dashboard() {
         />
         
         <CurrentBalance
-          currentBalance={account?.currentBalance ?? 0}
+          currentBalance={account?.currentBalance}
         />
 
         <div className="mt-16 md:mt-20 lg:mt-28 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 w-full min-w-0">  

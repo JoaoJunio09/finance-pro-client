@@ -1,17 +1,15 @@
-import { AdIcon, ALargeSmall, CalendarDays, Clock } from "lucide-react";
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { ALargeSmall, CalendarDays, Clock } from "lucide-react";
+import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
+import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatRelativeDateTime } from "../../../utils/FormatDate";
 
 interface RecentTransactionsProps {
 	transactions: TransactionResponse[];
-	activeMonth: number;
-	MONTHS: string[];
 }
 
 function RecentTransactions({
-	transactions,
-	MONTHS,
-	activeMonth
+	transactions
 }: RecentTransactionsProps) {
 	return (
 		<section className="w-full flex flex-col min-w-0 animate-slide-up delay-300">
@@ -36,7 +34,7 @@ function RecentTransactions({
 										${isFuture ? 'bg-amber-500/5 border-amber-500/10 text-amber-500/70 group-hover:text-amber-400 group-hover:bg-amber-500/10' : 
 										'bg-white/[0.02] border-white/[0.04] text-zinc-500 group-hover:text-zinc-300'}`}
 									>
-										<AdIcon className="w-5 h-5" />
+										<DynamicIcon name={tx.category.icon as IconName} className="w-5 h-5" />
 									</div>
 									<div className="flex flex-col gap-1 min-w-0">
 										<h4 className={`text-sm sm:text-base font-medium truncate ${isFuture ? 'text-amber-100/90' : 'text-zinc-200'}`}>
@@ -51,10 +49,7 @@ function RecentTransactions({
 												)}
 											</span>
 											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0"></span>
-											{/* <span>{tx.day < 10 ? `0${tx.day}` : tx.day} de {MONTHS[activeMonth]} {tx.time ? `às ${tx.time}` : ''}</span>
-											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
-											<span className="hidden sm:block">{tx.wallet}</span> */}
-											<span>01 de Julho de 2026</span>
+											<span>{formatRelativeDateTime(tx.registeredAt)}</span>
 											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
 											<span className="hidden sm:block">Conta Corrente</span>
 										</div>
