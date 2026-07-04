@@ -1,0 +1,1 @@
+export type TransactionModalType = 'CREDIT' | 'DEBIT' | 'RECURRING';

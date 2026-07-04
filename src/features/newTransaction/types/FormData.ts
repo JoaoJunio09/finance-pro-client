@@ -1,13 +1,18 @@
-import type { TransactionType } from "../../../types/TransactionType";
+import type { FrequencyType } from "../../../types/FrequencyType";
+import type { TransactionModalType } from "./TransactionModalType";
 
 export interface FormData {
-	amount: number,
+	amount: string,
 	description: string,
 	categoryId: string,
 	registeredAt: string,
-	type: TransactionType,
+	type: TransactionModalType,
 	walletId?: string,
 	toWalletId?: string,
 	fromWalletId?: string,
-	observation?: string 
+	observation?: string,
+	frequency?: FrequencyType,
+	recDayOne?: string,
+	recDayTwo?: string,
+	month?: string
 }
