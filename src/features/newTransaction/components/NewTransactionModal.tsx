@@ -5,6 +5,13 @@ import useNewTransaction from '../hooks/useNewTransaction';
 import FormTransaction from './FormTransaction';
 import type { TransactionModalType } from '../types/TransactionModalType';
 
+const formatCurrencyInput = (value: string) => {
+  const numbers = value.replace(/\D/g, '');
+  if (!numbers) return '';
+  const amount = (parseInt(numbers, 10) / 100).toFixed(2);
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(parseFloat(amount));
+};
+
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 
 const formatDateBR = (dateStr: string) => {
@@ -28,7 +35,7 @@ interface TransactionModalProps {
 
 function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { form, handleOnChange, setFrequency, setType, categories, wallets, register } = useNewTransaction();
+  const { form, handleOnChange, setFrequency, setType, setRecurrenceType, categories, wallets, register } = useNewTransaction(onClose);
 
   useEffect(() => {
     if (isOpen) {
@@ -62,6 +69,7 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
           isRecurring={isRecurring}
           onClose={onClose}
           setFrequency={setFrequency}
+          setRecurrenceType={setRecurrenceType}
           setType={setType}
           themeHex={themeHex}
           categories={categories}
@@ -86,7 +94,7 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
               <div className="space-y-4">
                 <div>
                   <span className="text-xs text-zinc-500 block mb-1">Valor</span>
-                  <span className="text-xl font-bold text-white tracking-tight">{form.amount || 'R$ 0,00'}</span>
+                  <span className="text-xl font-bold text-white tracking-tight">{formatCurrencyInput(form.amount || 'R$ 0,00')}</span>
                 </div>
                 
                 <div>
@@ -130,7 +138,9 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
                 {isRecurring && (
                   <div className="pt-2">
                     <span className="text-[10px] uppercase text-[#8B5CF6] block mb-1">Frequência Automática</span>
-                    <span className="text-xs font-medium text-zinc-300 capitalize">{form.frequency}</span>
+                    <span className="text-xs font-medium text-zinc-300 capitalize">
+                      {form.recurrenceType} • {form.recurrenceType === 'CREDIT' ? 'Receita' : 'Despesa'}
+                    </span>
                   </div>
                 )}
               </div>
