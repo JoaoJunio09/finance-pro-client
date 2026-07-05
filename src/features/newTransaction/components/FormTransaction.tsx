@@ -242,13 +242,15 @@ interface ConfigureRecurrenceProps {
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 	setFrequency: (freq: FrequencyType) => void;
 	setRecurrenceType: (recType: RecurrenceType) => void;
+	inputsError: Record<string, string>;
 }
 
 const ConfigureRecurrence = ({
 	form,
 	handleOnChange,
 	setFrequency,
-	setRecurrenceType
+	setRecurrenceType,
+	inputsError
 }: ConfigureRecurrenceProps) => {
 	return (
 		<div className="sm:col-span-2 animate-slide-up bg-[#111113]/50 border border-[#7C3AED]/20 rounded-2xl p-5 sm:p-6 mt-2">
@@ -298,6 +300,7 @@ const ConfigureRecurrence = ({
 						</div>
 					</button>
 				</div>
+				{inputsError.recurrenceType && <span className="text-xs text-red-600 ml-2">{inputsError.recurrenceType}</span>}
 			</div>
 
 			<div className="border-t border-white/[0.04] pt-6 mb-5">
@@ -387,6 +390,8 @@ const ConfigureRecurrence = ({
 					</>
 				)}
 			</div>
+
+			{inputsError.frequencyType && <span className="text-xs text-red-600 ml-2">{inputsError.frequencyType}</span>}
 		</div>
 	)
 }
@@ -487,6 +492,7 @@ function FormTransaction({
 								handleOnChange={handleOnChange}
 								setFrequency={setFrequency}
 								setRecurrenceType={setRecurrenceType}
+								inputsError={inputsError}
 							/>
 						)}
 

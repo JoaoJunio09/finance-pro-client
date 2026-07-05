@@ -86,7 +86,7 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
           setType={setType}
           themeHex={themeHex}
           inputsError={inputsError}
-          clearErrors={clearErrors}
+          clearErrors={clearErrors}       
           resetForm={resetForm}
           categories={categories}
           wallets={wallets}

@@ -205,6 +205,7 @@ function useNewTransaction(onClose: () => void) {
 			...prev,
 			frequencyType: freq
 		}));
+		removeError('frequencyType');
 	}
 
 	function setRecurrenceType(recurrenceType: RecurrenceType) {
@@ -212,6 +213,7 @@ function useNewTransaction(onClose: () => void) {
 			...prev,
 			recurrenceType: recurrenceType
 		}));
+		removeError('recurrenceType');
 	}
 
 	function register() {
@@ -232,7 +234,7 @@ function useNewTransaction(onClose: () => void) {
 
 		const localErrors: Record<string, string> = {};
 
-		if (!form.amount || form.amount === '' || Number(form.amount) <= 0) {
+		if (!form.amount || form.amount === '' || formatCurrencyToAPI(form.amount) <= 0) {
 			localErrors['amount'] = 'Digite um valor';
 		}
 
@@ -279,13 +281,36 @@ function useNewTransaction(onClose: () => void) {
 		if (!account) {
 			return;
 		}
+		
+		const localErrors: Record<string, string> = {};
 
-		if (!form.amount || form.amount === '' || !form.recurrenceType || !form.frequencyType || !form.walletId) {
-			showToast({
-				title: 'Dados inválidos',
-				message: 'Preencha todos os dados para registrar a Recorrência',
-				type: 'error'
-			});
+		if (!form.amount || form.amount === '' || formatCurrencyToAPI(form.amount) <= 0) {
+			localErrors['amount'] = 'Digite um valor';
+		}
+
+		if (!form.description || form.description === '') {
+			localErrors['description'] = 'Preencha a descrição';
+		}
+
+		if (!form.recurrenceType) {
+			localErrors['recurrenceType'] = 'Escolha o tipo da Recorrência';
+		}
+
+		if (!form.frequencyType) {
+			localErrors['frequencyType'] = 'Escolha a frequência da Recorrência';
+		}
+
+		if (!form.walletId || form.walletId === '') {
+			localErrors['wallet'] = 'Selecione uma carteira';
+		}
+
+		if (!form.categoryId || form.categoryId === '') {
+			localErrors['category'] = 'Selecione uma categoria';
+		}
+
+		setInputsError(localErrors);
+
+		if (Object.keys(localErrors).length > 0 || !form.walletId || !form.frequencyType || !form.recurrenceType) {
 			return;
 		}
 
@@ -302,7 +327,7 @@ function useNewTransaction(onClose: () => void) {
 			recurrence.dayOne = Number(form.recDayOne);
 		}
 
-		if (form.frequencyType === 'MONTHLY' && form.recDayOne && form.recDayTwo) {
+		if (form.frequencyType === 'BIWEEKLY' && form.recDayOne && form.recDayTwo) {
 			recurrence.dayOne = Number(form.recDayOne);
 			recurrence.dayTwo = Number(form.recDayTwo);
 		}
