@@ -17,33 +17,34 @@ function PerfomTransaction({
       </h3>
       
       <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 w-full min-w-0">
-        {/* Adicionar Receita - Verde (Emerald) */}
+        {/* Adicionar Receita */}
         <button
           onClick={() => {
             setOpenModal(true);
             setType('CREDIT');
           }}
-          className="cursor-pointer flex-1 min-w-0 border border-white/[0.04] p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-emerald-800 hover:border-emerald-500/30 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.15)] active:scale-[0.98]"
+          className="cursor-pointer flex-1 min-w-0 relative overflow-hidden border border-emerald-500/20 p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-gradient-to-br from-emerald-500/[0.10] via-[#111113] to-[#111113] hover:border-emerald-500/40 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.25)] active:scale-[0.98]"
         >
-          <span className="font-medium text-base md:text-lg lg:text-xl tracking-wide text-zinc-300 group-hover:text-white transition-colors truncate pr-3">
+          <span className="font-medium text-base md:text-lg lg:text-xl tracking-wide text-zinc-200 group-hover:text-white transition-colors truncate pr-3">
             Adicionar Receita
           </span>
-          <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex-shrink-0 flex items-center justify-center text-zinc-500 bg-emerald-500 group-hover:text-white transition-all duration-500 group-hover:scale-110">
+          <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex-shrink-0 flex items-center justify-center text-white bg-emerald-500 shadow-[0_0_24px_-4px_rgba(16,185,129,0.55)] transition-all duration-500 group-hover:scale-110">
             <Plus className="w-5 h-5 lg:w-6 lg:h-6" />
           </div>
         </button>
-        {/* Adicionar Despesa - Vermelho (Rose) */}
+
+        {/* Adicionar Despesa */}
         <button
           onClick={() => {
             setOpenModal(true);
             setType('DEBIT');
           }}
-          className="cursor-pointer flex-1 min-w-0 border border-white/[0.04] p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-rose-950 hover:border-rose-500/30 hover:shadow-[0_10px_40px_-10px_rgba(244,63,94,0.15)] active:scale-[0.98]"
+          className="cursor-pointer flex-1 min-w-0 relative overflow-hidden border border-rose-500/20 p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-gradient-to-br from-rose-500/[0.10] via-[#111113] to-[#111113] hover:border-rose-500/40 hover:shadow-[0_10px_40px_-10px_rgba(244,63,94,0.25)] active:scale-[0.98]"
         >
-          <span className="font-medium text-base md:text-lg lg:text-xl tracking-wide text-zinc-300 group-hover:text-white transition-colors truncate pr-3">
+          <span className="font-medium text-base md:text-lg lg:text-xl tracking-wide text-zinc-200 group-hover:text-white transition-colors truncate pr-3">
             Adicionar Despesa
           </span>
-          <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex-shrink-0 bg-white/[0.10] flex items-center justify-center text-zinc-500 group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 group-hover:rotate-90 group-hover:scale-110">
+          <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex-shrink-0 bg-rose-500 flex items-center justify-center text-white shadow-[0_0_24px_-4px_rgba(244,63,94,0.55)] transition-all duration-500 group-hover:rotate-90 group-hover:scale-110">
             <Minus className="w-5 h-5 lg:w-6 lg:h-6" />
           </div>
         </button>

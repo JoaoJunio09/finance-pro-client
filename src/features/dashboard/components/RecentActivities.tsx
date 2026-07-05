@@ -87,7 +87,7 @@ function RecentActivities({
 			</div>
 			
 			<div className="flex flex-col w-full min-w-0">
-				{transactions.map((tx, idx) => (
+				{transactions.slice(0, 10).map((tx, idx) => (
 					<TimelineItem 
 						key={tx.id} 
 						transaction={tx} 

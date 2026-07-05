@@ -2,8 +2,8 @@ import { CheckCircle2, Wallet } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { useEffect, useRef } from 'react';
 import useNewTransaction from '../hooks/useNewTransaction';
-import FormTransaction from './FormTransaction';
 import type { TransactionModalType } from '../types/TransactionModalType';
+import FormTransaction from './FormTransaction';
 
 const formatCurrencyInput = (value: string) => {
   const numbers = value.replace(/\D/g, '');
@@ -35,7 +35,20 @@ interface TransactionModalProps {
 
 function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { form, handleOnChange, setFrequency, setType, setRecurrenceType, categories, wallets, register } = useNewTransaction(onClose);
+  const {
+    form,
+    handleOnChange,
+    setFrequency,
+    setType,
+    setRecurrenceType,
+    categories,
+    wallets,
+    register,
+    isLoading,
+    inputsError,
+    clearErrors,
+    resetForm
+  } = useNewTransaction(onClose);
 
   useEffect(() => {
     if (isOpen) {
@@ -72,6 +85,9 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
           setRecurrenceType={setRecurrenceType}
           setType={setType}
           themeHex={themeHex}
+          inputsError={inputsError}
+          clearErrors={clearErrors}
+          resetForm={resetForm}
           categories={categories}
           wallets={wallets}
         />
@@ -157,10 +173,19 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
                 'bg-rose-500 text-rose-950 hover:bg-rose-400 shadow-rose-500/20'
               }`}
             >
-              {isRecurring ? 'Salvar Recorrência' : `Salvar Movimentação`}
+              {isLoading ? (
+                'Salvando...'
+              ) : (
+                `${isRecurring ? 'Salvar Recorrência' : 'Salvar Movimentação'}`
+              )}
+              
             </button>
             <button 
-              onClick={onClose}
+              onClick={() => {
+                clearErrors();
+                resetForm();
+                onClose();
+              }}
               className="cursor-pointer w-full py-4 rounded-xl bg-transparent hover:bg-white/[0.04] text-zinc-400 hover:text-white text-sm font-medium transition-colors"
             >
               Cancelar

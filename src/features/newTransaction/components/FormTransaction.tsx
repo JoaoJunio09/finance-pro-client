@@ -55,6 +55,7 @@ interface AmountProps {
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	themeHex: "text-rose-400" | "text-emerald-400" | "text-[#8B5CF6]";
+	inputsError: Record<string, string>;
 }
 
 const Amount = ({
@@ -62,7 +63,8 @@ const Amount = ({
 	inputRef,
 	form,
 	handleOnChange,
-	themeHex
+	themeHex,
+	inputsError
 }: AmountProps) => {
 	return (
 		<div className="flex flex-col items-center justify-center py-6">
@@ -82,6 +84,7 @@ const Amount = ({
 					className="bg-transparent text-6xl sm:text-7xl font-bold text-white w-full max-w-[300px] sm:max-w-[400px] outline-none placeholder-zinc-800 tracking-tighter"
 				/>
 			</div>
+			{inputsError.amount && <span className="text-xs text-red-600 pl-2 mr-auto">{inputsError.amount}</span>}
 		</div>
 	)
 }
@@ -90,12 +93,14 @@ interface DescriptionProps {
 	type: TransactionModalType;
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+	inputsError: Record<string, string>;
 }
 
 const Description = ({
 	form,
 	handleOnChange,
-	type
+	type,
+	inputsError
 }: DescriptionProps) => {
 	return (
 		<div className="sm:col-span-2">
@@ -109,9 +114,13 @@ const Description = ({
 					value={form.description}
 					onChange={handleOnChange}
 					placeholder={type === 'CREDIT' ? "Ex.: Salário" : "Ex.: Mercado"}
-					className="w-full bg-[#111113] border border-white/[0.04] rounded-2xl py-3.5 pl-12 pr-4 text-sm text-zinc-100 font-medium placeholder-zinc-600 focus:border-[#8B5CF6]/50 focus:bg-[#151518] hover:border-white/[0.08] transition-all outline-none shadow-sm focus:shadow-[0_0_0_2px_rgba(139,92,246,0.1)]"
+					className={`
+						w-full bg-[#111113] border rounded-2xl py-3.5 pl-12 pr-4 text-sm text-zinc-100 font-medium placeholder-zinc-600 focus:border-[#8B5CF6]/50 focus:bg-[#151518] hover:border-white/[0.08] transition-all outline-none shadow-sm focus:shadow-[0_0_0_2px_rgba(139,92,246,0.1)]
+						${inputsError.description ? 'border-red-600' : 'border-white/[0.04]'}
+					`}
 				/>
 			</div>
+			{inputsError.description && <span className="text-xs text-red-600 ml-2">{inputsError.description}</span>}
 		</div>
 	)
 }
@@ -119,13 +128,15 @@ const Description = ({
 interface CategoriesProps {
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-	categories: CategoryResponse[]
+	categories: CategoryResponse[];
+	inputsError: Record<string, string>;
 }
 
 const Categories = ({
 	form,
 	handleOnChange,
-	categories
+	categories,
+	inputsError
 }: CategoriesProps) => {
 	return (
 		<div className="sm:col-span-2 w-full">
@@ -135,7 +146,10 @@ const Categories = ({
 				<Select
 					id="categoryId"
 					name="categoryId"
-					className={`w-full relative z-20 bg-[#111113] rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
+					className={`
+						w-full relative z-20 bg-[#111113] rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center
+						${inputsError.category && 'border border-red-600'}
+					`}
 					onChange={handleOnChange}
 					value={form.categoryId}
 				>
@@ -145,6 +159,7 @@ const Categories = ({
 					))}
 				</Select>
 			</div>
+			{inputsError.category && <span className="text-xs text-red-600 ml-2">{inputsError.category}</span>}
 		</div>
 	)
 }
@@ -152,13 +167,15 @@ const Categories = ({
 interface WalletsProps {
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-	wallets: WalletResponse[]
+	wallets: WalletResponse[];
+	inputsError: Record<string, string>;
 }
 
 const Wallets = ({
 	form,
 	handleOnChange,
-	wallets
+	wallets,
+	inputsError
 }: WalletsProps) => {
 	return (
 		<div className="sm:col-span-2 w-full">
@@ -168,7 +185,10 @@ const Wallets = ({
 				<Select
 					id="walletId"
 					name="walletId"
-					className={`w-full relative z-20 bg-[#111113] hover:border-white/[0.08]' rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
+					className={`
+						w-full relative z-20 bg-[#111113] hover:border-white/[0.08]' rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center
+						${inputsError.wallet && 'border border-red-600'}
+					`}
 					onChange={handleOnChange}
 					value={form.walletId}
 				>
@@ -178,6 +198,7 @@ const Wallets = ({
 					))}
 				</Select>
 			</div>
+			{inputsError.wallet && <span className="text-xs text-red-600 ml-2">{inputsError.wallet}</span>}
 		</div>
 	)
 }
@@ -185,14 +206,16 @@ const Wallets = ({
 interface RegisteredAtProps {
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+	inputsError: Record<string, string>;
 }
 
 const RegisteredAt = ({
 	form,
-	handleOnChange
+	handleOnChange,
+	inputsError
 }: RegisteredAtProps) => {
 	return (
-		<div className="sm:col-span-2">
+		<div className="pt-3">
 			<label className="text-[13px] font-medium text-zinc-400 block mb-2 pl-1">Data da Transação</label>
 			<div className="relative group">
 				<CalendarDays className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500 group-focus-within:text-zinc-300 transition-colors" />
@@ -202,10 +225,14 @@ const RegisteredAt = ({
 					type="datetime-local"
 					value={form.registeredAt}
 					onChange={handleOnChange}
-					className="w-full bg-[#111113] border border-white/[0.04] rounded-2xl py-3.5 pl-12 pr-4 text-sm text-zinc-100 font-medium placeholder-zinc-600 focus:border-[#8B5CF6]/50 focus:bg-[#151518] hover:border-white/[0.08] transition-all outline-none shadow-sm focus:shadow-[0_0_0_2px_rgba(139,92,246,0.1)] style-color-scheme-dark"
+					className={`
+						w-full bg-[#111113] border rounded-2xl py-3.5 pl-12 pr-4 text-sm text-zinc-100 font-medium placeholder-zinc-600 focus:border-[#8B5CF6]/50 focus:bg-[#151518] hover:border-white/[0.08] transition-all outline-none shadow-sm focus:shadow-[0_0_0_2px_rgba(139,92,246,0.1)] style-color-scheme-dark
+						${inputsError.registeredAt ? 'border-red-800' : 'border-white/[0.04]'}
+					`}
 					style={{ colorScheme: 'dark' }}
 				/>
 			</div>
+			{inputsError.registeredAt && <span className="text-xs text-red-600 ml-2">{inputsError.registeredAt}</span>}
 		</div>
 	)
 }
@@ -374,6 +401,9 @@ interface FormTransactionProps {
 	isRecurring: boolean;
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	themeHex: "text-rose-400" | "text-emerald-400" | "text-[#8B5CF6]";
+	inputsError: Record<string, string>;
+	clearErrors: () => void,
+	resetForm: () => void,
 	categories: CategoryResponse[];
 	wallets: WalletResponse[];
 }
@@ -388,6 +418,9 @@ function FormTransaction({
 	isRecurring,
 	inputRef,
 	themeHex,
+	inputsError,
+	clearErrors,
+	resetForm,
 	categories,
 	wallets
 }: FormTransactionProps) {
@@ -399,7 +432,14 @@ function FormTransaction({
 						<h2 className="text-2xl font-semibold text-white tracking-tight">Adicionar Movimentação</h2>
 						<p className="text-sm font-light text-zinc-500 mt-1">Registre e categorize em poucos segundos.</p>
 					</div>
-					<button onClick={onClose} className="p-2 rounded-full text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors">
+					<button
+						onClick={() => {
+							clearErrors();
+							resetForm();
+							onClose();
+						}}
+						className="p-2 rounded-full text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors"
+					>
 						<X className="w-5 h-5" />
 					</button>
 				</div>
@@ -417,6 +457,7 @@ function FormTransaction({
 						inputRef={inputRef}
 						themeHex={themeHex}
 						type={form.type}
+						inputsError={inputsError}
 					/>
 
 					{/* Grid de Inputs Principais */}
@@ -427,6 +468,7 @@ function FormTransaction({
 							form={form}
 							handleOnChange={handleOnChange}
 							type={form.type}
+							inputsError={inputsError}
 						/>
 
 						{/* Data (Escondida se for recorrência genérica) */}
@@ -434,6 +476,7 @@ function FormTransaction({
 							<RegisteredAt
 								form={form}
 								handleOnChange={handleOnChange}
+								inputsError={inputsError}
 							/>
 						)}
 
@@ -453,6 +496,7 @@ function FormTransaction({
 								form={form}
 								handleOnChange={handleOnChange}
 								categories={categories}
+								inputsError={inputsError}
 							/>
 
 							{/* Contas */}
@@ -460,6 +504,7 @@ function FormTransaction({
 								form={form}
 								handleOnChange={handleOnChange}
 								wallets={wallets}
+								inputsError={inputsError}
 							/>
 						</div>
 					</div>
