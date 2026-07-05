@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
 import { useAccountContext } from '../../../context/AccountContext';
-import type { TransactionType } from '../../../types/TransactionType';
 import TransactionModal from '../../newTransaction/components/NewTransactionModal';
+import type { TransactionModalType } from '../../newTransaction/types/TransactionModalType';
 import useDashboard from '../hooks/useDashboard';
 import Apresentation from './Apresentation';
 import CurrentBalance from './CurrentBalance';
@@ -13,7 +13,7 @@ import RecentActivities from './RecentActivities';
 
 function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
-  const [type, setType] = useState<TransactionType>('CREDIT');
+  const [type, setType] = useState<TransactionModalType>('CREDIT');
   const { account, transactions, loading } = useDashboard();
   const { setAccountByUser } = useAccountContext();
 
@@ -62,8 +62,9 @@ function Dashboard() {
         </div>
 
         <TransactionModal
-          isOpen={true}
+          isOpen={openModal}
           onClose={() => setOpenModal(false)}
+          type={type}
         />
       </div>
       <div className="h-28 md:h-0"></div>

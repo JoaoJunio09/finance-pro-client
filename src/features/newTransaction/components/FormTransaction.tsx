@@ -7,6 +7,13 @@ import type { FrequencyType } from "../../../types/FrequencyType";
 import type { FormData } from "../types/FormData";
 import type { TransactionModalType } from "../types/TransactionModalType";
 
+const formatCurrencyInput = (value: string) => {
+  const numbers = value.replace(/\D/g, '');
+  if (!numbers) return '';
+  const amount = (parseInt(numbers, 10) / 100).toFixed(2);
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(parseFloat(amount));
+};
+
 interface TypeSelectionProps {
 	type: TransactionModalType;
 	setType: (type: TransactionModalType) => void;
@@ -115,6 +122,72 @@ const Description = ({
 	)
 }
 
+interface CategoriesProps {
+	form: FormData;
+	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+	categories: CategoryResponse[]
+}
+
+const Categories = ({
+	form,
+	handleOnChange,
+	categories
+}: CategoriesProps) => {
+	return (
+		<div className="sm:col-span-2 w-full">
+			<label className="text-[13px] font-medium text-zinc-400 block mb-2 pl-1">Categorias</label>
+			<div className="relative group">
+				<AlignLeft className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500 group-focus-within:text-zinc-300 transition-colors" />
+				<Select
+					id="categoryId"
+					name="categoryId"
+					className={`w-full relative z-20 bg-[#111113] rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
+					onChange={handleOnChange}
+					value={form.categoryId}
+				>
+					<option value=''>Selecione</option>
+					{categories.map((cat) => (
+						<option value={cat.id}>{cat.name}</option>
+					))}
+				</Select>
+			</div>
+		</div>
+	)
+}
+
+interface WalletsProps {
+	form: FormData;
+	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+	wallets: WalletResponse[]
+}
+
+const Wallets = ({
+	form,
+	handleOnChange,
+	wallets
+}: WalletsProps) => {
+	return (
+		<div className="sm:col-span-2 w-full">
+			<label className="text-[13px] font-medium text-zinc-400 block mb-2 pl-1">Contas/Carteiras</label>
+			<div className="relative group">
+				<AlignLeft className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500 group-focus-within:text-zinc-300 transition-colors" />
+				<Select
+					id="walletId"
+					name="walletId"
+					className={`w-full relative z-20 bg-[#111113] hover:border-white/[0.08]' rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
+					onChange={handleOnChange}
+					value={form.walletId}
+				>
+					<option value=''>Selecione</option>
+					{wallets.map((wallet) => (
+						<option value={wallet.id}>{wallet.name}</option>
+					))}
+				</Select>
+			</div>
+		</div>
+	)
+}
+
 interface RegisteredAtProps {
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
@@ -218,7 +291,6 @@ const ConfigureRecurrence = ({
 interface FormTransactionProps {
 	onClose: () => void
 	setType: (type: TransactionModalType) => void;
-	type: TransactionModalType;
 	form: FormData;
 	handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 	setFrequency: (freq: FrequencyType) => void;
@@ -232,7 +304,6 @@ interface FormTransactionProps {
 function FormTransaction({
 	onClose,
 	setType,
-	type,
 	form,
 	handleOnChange,
 	setFrequency,
@@ -258,7 +329,7 @@ function FormTransaction({
 				{/* Conteúdo Central Scrollável: O scroll atua exclusivamente aqui */}
 				<div className="flex-1 overflow-y-auto modal-scroll px-6 sm:px-8 pb-8 space-y-8 min-h-0 relative">
 					<TypeSelection
-						type={type}
+						type={form.type}
 						setType={setType}
 					/>
 
@@ -267,44 +338,34 @@ function FormTransaction({
 						handleOnChange={handleOnChange}
 						inputRef={inputRef}
 						themeHex={themeHex}
-						type={type}
+						type={form.type}
 					/>
 
 					{/* Grid de Inputs Principais */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+					<div className="sm:grid-cols-2 gap-5 sm:gap-6">
 						
 						{/* Descrição */}
 						<Description
 							form={form}
 							handleOnChange={handleOnChange}
-							type={type}
+							type={form.type}
 						/>
 
-						{/* Categorias */}
-						<Select
-							id="categoryId"
-							name="categoryId"
-							className={`w-full relative z-20 bg-[#111113] rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
-							onChange={handleOnChange}
-							value={form.categoryId}
-						>
-							{categories.map((cat) => (
-								<option value={cat.id}>{cat.name}</option>
-							))}
-						</Select>
+						<div className="w-full flex justify-between gap-2 pt-3 pb-3">
+							{/* Categorias */}
+							<Categories
+								form={form}
+								handleOnChange={handleOnChange}
+								categories={categories}
+							/>
 
-						{/* Contas */}
-						<Select
-							id="walletId"
-							name="walletId"
-							className={`w-full relative z-20 bg-[#111113] hover:border-white/[0.08]' rounded-2xl py-3.5 pl-2 pr-10 text-left transition-all outline-none flex items-center`}
-							onChange={handleOnChange}
-							value={form.walletId}
-						>
-							{wallets.map((wallet) => (
-								<option value={wallet.id}>{wallet.name}</option>
-							))}
-						</Select>
+							{/* Contas */}
+							<Wallets
+								form={form}
+								handleOnChange={handleOnChange}
+								wallets={wallets}
+							/>
+						</div>
 
 						{/* Data (Escondida se for recorrência genérica) */}
 						{!isRecurring && (
