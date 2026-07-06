@@ -14,7 +14,44 @@ function Calendar({
 	setSelectedDate,
 	currentBalance
 }: CalendarProps) {
-	const currentDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
+	const today = new Date();
+	const currentDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+	today.setHours(0, 0, 0, 0);
+
+	let runningBalance = currentBalance;
+
+	const calendarWithBalance = calendarDays.map(day => {
+		if (!day.date) {
+			return day;
+		}
+
+		const [year, month, dayNumber] = day.date.split("-").map(Number);
+		const dayDate = new Date(year, month - 1, dayNumber);
+
+		if (dayDate < today) {
+			return {
+				...day,
+				predictedBalance: null
+			}
+		}
+
+		const movement = [
+			...day.transactions,
+			...day.recurrences
+		].reduce((sum, item) => {
+			return item.type === 'CREDIT'
+				? sum + item.amount
+				: sum - item.amount
+		}, 0);
+
+		runningBalance += movement;
+
+		return {
+			...day,
+			predictedBalance: runningBalance
+		}
+	});
+
 	return (
 		<div className="w-full flex flex-col min-w-0 animate-slide-up delay-100 flex-1 mb-16">
 			{/* <h3 className="text-lg font-medium text-white mb-5 tracking-tight">Calendário de Movimentações</h3> */}
@@ -27,7 +64,8 @@ function Calendar({
 
 				{/* Grid de Dias */}
 				<div className="grid grid-cols-7 bg-white/[0.04] gap-[1px]">
-					{calendarDays.map((item, idx) => {
+				
+					{calendarWithBalance.map((item, idx) => {
 						if (!item.date) {
 							return <div key={`empty-${idx}`} className="bg-[#09090B] min-h-[60px] sm:min-h-[120px] md:min-h-[140px] opacity-40"></div>;
 						}
@@ -35,17 +73,6 @@ function Calendar({
 						const isToday = item.date === currentDate;
 						const hasFuture = (item.futureTotal ? item.futureTotal > 0 : false);
 						const isSelected = selectedDate === item.date;
-
-						const movementBalance  = [
-							...item.transactions,
-							...item.recurrences
-						].reduce((total, movement) => {
-							return movement.type === 'CREDIT'
-								? total + movement.amount
-								: total - movement.amount;
-						}, 0);
-
-						const predictedBalance = currentBalance + movementBalance;
 
 						return (
 							<div
@@ -127,11 +154,11 @@ function Calendar({
 									) : null}
 								</div>
 								<div className="hidden sm:flex flex-col justify-end w-full pt-2 border-t border-white/[0.02] relative z-10">
-										{item.transactions.length > 0 || item.recurrences.length > 0? (
+										{(item.transactions.length > 0 || item.recurrences.length > 0) && item.predictedBalance !== null ? (
 											<div className="flex items-center justify-between gap-1 w-full text-[10px]">
 												<span className="text-zinc-500 font-medium uppercase tracking-wider">Previsto</span>
 												<span className="font-semibold text-zinc-300 font-mono tracking-tight">
-													{formatCurrency(predictedBalance)}
+													{formatCurrency(item.predictedBalance ?? 0)}
 												</span>
 											</div>
 										) : <div className="h-[14px]"></div>}

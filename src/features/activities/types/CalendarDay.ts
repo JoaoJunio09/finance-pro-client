@@ -8,4 +8,5 @@ export type CalendarDay = {
 	inTotal?: number | undefined;
 	outTotal?: number | undefined;
 	futureTotal?: number | undefined;
+	predictedBalance?: number | null;
 };
