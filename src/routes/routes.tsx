@@ -6,6 +6,7 @@ import SignInPage from "../pages/SignInPage";
 import ActivitiesPage from "../pages/ActivitiesPage";
 import RecurrencesPage from "../pages/RecurrencesPage";
 import ScrollToTop from "./ScrollToTop";
+import App from "../features/activities/components/Activities2";
 
 function RoutesApp() {
 	return (
@@ -17,6 +18,7 @@ function RoutesApp() {
 						<Route path="/" element={<SignInPage />} />
 						<Route path="/dashboard" element={<DashboardPage />} />
 						<Route path="/activities" element={<ActivitiesPage />} />
+						<Route path="/activities2" element={<App />} />
 						<Route path="/recurrences" element={<RecurrencesPage />} />
 					</Routes>
 				</AccountProvider>

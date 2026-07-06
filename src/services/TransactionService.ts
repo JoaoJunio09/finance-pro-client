@@ -1,4 +1,5 @@
 import InternalServerError from "../exceptions/InternalServerError";
+import type { AllTransactionResponse } from "../models/transaction/AllTransactionResponse";
 import type { OverviewResponse } from "../models/transaction/OverviewResponse";
 import type { ParamsTransactionAPI } from "../models/transaction/ParamsTransactionAPI";
 import type { TransactionRequest } from "../models/transaction/TransactionRequest";
@@ -15,9 +16,8 @@ class TransactionService {
 	}
 
 	public async getAll(params: ParamsTransactionAPI) {
-		console.log(params)
 		try {
-			const response = await api.get<TransactionResponse[]>(this.BASE_URL, {
+			const response = await api.get<AllTransactionResponse>(this.BASE_URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`

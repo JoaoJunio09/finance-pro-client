@@ -3,8 +3,8 @@ import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
 import useTransactionService from "../../../hooks/useTransactionService";
-import type { CalendarDay } from "../types/CalendarDay";
 import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
+import type { CalendarDay } from "../types/CalendarDay";
 
 function getRecurrenceDaysInMonth(
   recurrence: RecurrenceResponse,
@@ -97,10 +97,8 @@ function useActivities() {
   }
 
 	const transactions = useMemo(() => {
-		return queryTransactions.data ?? [];
+		return queryTransactions.data?.transactions ?? [];
 	}, [queryTransactions.data, accountId, month, year]);
-
-  console.log(transactions)
 
   const recurrences = useMemo(() => {
     return queryRecurrences.data ?? [];
@@ -173,6 +171,7 @@ function useActivities() {
   }, [selectedDate, calendarDays]);
 
 	return {
+    allTransaction: queryTransactions.data,
 		calendarDays,
 		transactions,
 		error: queryTransactions.error,

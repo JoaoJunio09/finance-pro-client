@@ -5,11 +5,14 @@ import Apresentation from './Apresentation';
 import Calendar from './Calendar';
 import DetailsOfDay from './DetailsOfDay';
 import RecentTransactions from './RecentTransactions';
+import Overview from './Overview';
+import Intelligence from './Intelligence';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function Activities() {
   const {
+    allTransaction,
     calendarDays,
     transactions,
     error,
@@ -44,13 +47,23 @@ function Activities() {
           MONTHS={MONTHS}
         />
 
+        <Overview
+          allTransaction={allTransaction}
+        />
+
+        <Intelligence
+          
+        />
+
         <Calendar
           calendarDays={calendarDays}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
 
-        <RecentTransactions transactions={transactions} />
+        <RecentTransactions
+          transactions={transactions}
+        />
 
         {selectedDateInfo && (
           <DetailsOfDay

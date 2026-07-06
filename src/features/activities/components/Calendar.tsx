@@ -14,6 +14,7 @@ function Calendar({
 	const currentDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
 	return (
 		<div className="w-full flex flex-col min-w-0 animate-slide-up delay-100 flex-1 mb-16">
+			{/* <h3 className="text-lg font-medium text-white mb-5 tracking-tight">Calendário de Movimentações</h3> */}
 			<div className="w-full border border-white/[0.06] rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#0e0e11]/80 backdrop-blur-xl shadow-2xl flex flex-col">
 				
 				{/* Headers de Semana */}
@@ -37,7 +38,7 @@ function Calendar({
 								key={item.date}
 								onClick={() => setSelectedDate(item.date)}
 								className={`
-									relative flex flex-col p-1 sm:p-2.5 md:p-4 min-h-[70px] sm:min-h-[120px] md:min-h-[140px] bg-[#09090B] 
+									relative flex flex-col justify-between p-2 sm:p-4 min-h-[90px] sm:min-h-[140px] md:min-h-[160px] bg-[#09090B] 
 									transition-all duration-300 cursor-pointer group hover:bg-[#111113] hover:z-10
 									${isSelected ? 'ring-2 ring-inset ring-[#8B5CF6] z-10 bg-[#111113]' : ''}
 								`}
@@ -111,7 +112,14 @@ function Calendar({
 										</div>
 									) : null}
 								</div>
-
+								<div className="hidden sm:flex flex-col justify-end w-full pt-2 border-t border-white/[0.02] relative z-10">
+										{item.transactions.length > 0 || item.recurrences.length > 0? (
+											<div className="flex items-center justify-between gap-1 w-full text-[10px]">
+												<span className="text-zinc-500 font-medium uppercase tracking-wider">Previsto</span>
+												<span className="font-semibold text-zinc-300 font-mono tracking-tight">[valor previsto]</span>
+											</div>
+										) : <div className="h-[14px]"></div>}
+									</div>
 							</div>
 						);
 					})}
@@ -120,9 +128,9 @@ function Calendar({
 
 			{/* Legenda do Calendário */}
 			<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-6 text-[10px] sm:text-xs text-zinc-500 font-medium animate-slide-up delay-200 px-4">
-				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div>Receita Concluída</div>
-				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-rose-500"></div>Despesa Concluída</div>
-				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-amber-500"></div>Recorrência Futura</div>
+				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div>Receita</div>
+				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-rose-500"></div>Despesa</div>
+				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-amber-500"></div>Recorrência</div>
 				<div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#8B5CF6]"></div>Dia Atual</div>
 			</div>
 		</div>

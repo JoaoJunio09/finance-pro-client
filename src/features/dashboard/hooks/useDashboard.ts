@@ -29,7 +29,7 @@ function useDashboard() {
 
 	return {
 		account: queryAccount.data ?? null,
-		transactions: queryTransactions.data ?? [],
+		transactions: queryTransactions.data?.transactions ?? [],
 		error: queryAccount.error,
 		loading: queryAccount.isLoading
 	}
