@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { PiggyBank, Wallet } from "lucide-react";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
 import { formatCurrency } from "../../../utils/FormatCurrency";
 
@@ -60,9 +60,19 @@ function Overview({ allTransaction }: OverviewProps) {
 				</div>
 			</section>
 		) : (
-			<div>
-				nada no mês selecionado
-			</div>
+			<section className="w-full mb-12 animate-slide-up delay-100">
+				<div className="bg-gradient-to-br from-[#111113] to-[#151518] border border-white/[0.06] rounded-[24px] p-10 sm:p-14 flex flex-col items-center justify-center text-center shadow-2xl">
+					<div className="w-14 h-14 rounded-2xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 flex items-center justify-center mb-5">
+						<PiggyBank className="w-7 h-7 text-[#8B5CF6]" />
+					</div>
+					<h3 className="text-lg font-semibold text-white tracking-tight mb-2">
+						Nada por aqui ainda
+					</h3>
+					<p className="text-sm text-zinc-500 font-light max-w-xs">
+						Nenhum registro encontrado para este mês. Assim que houver transações, seu resumo financeiro aparece aqui.
+					</p>
+				</div>
+			</section>
 		)}
 		</>
 	)

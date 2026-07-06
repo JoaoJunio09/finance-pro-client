@@ -1,4 +1,4 @@
-import { PieChart, Sparkles } from "lucide-react";
+import { PieChart, Sparkles, Telescope } from "lucide-react";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
 import { formatCurrency } from "../../../utils/FormatCurrency";
 
@@ -90,9 +90,7 @@ function MonthSummaryAndInsights({ allTransaction }: MonthSummaryAndInsightsProp
 
 			</section>
 		) : (
-			<div>
-				nada este mês
-			</div>
+			null
 		)}
 		</>
 	)

@@ -54,7 +54,7 @@ function Activities() {
             <Overview
               allTransaction={allTransaction ?? null}
             />
-              <MonthSummaryAndInsights
+            <MonthSummaryAndInsights
               allTransaction={allTransaction ?? null}
             />
             <Calendar
@@ -63,7 +63,6 @@ function Activities() {
               setSelectedDate={setSelectedDate}
               currentBalance={allTransaction?.currentBalance ?? 0}
             />
-
             <RecentTransactions
               allTransaction={allTransaction ?? null}
             />
