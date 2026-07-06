@@ -59,6 +59,7 @@ function Activities() {
           calendarDays={calendarDays}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          currentBalance={allTransaction?.currentBalance ?? 0}
         />
 
         <RecentTransactions

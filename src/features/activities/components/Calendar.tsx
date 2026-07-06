@@ -1,15 +1,18 @@
+import { formatCurrency } from "../../../utils/FormatCurrency";
 import type { CalendarDay } from "../types/CalendarDay";
 
 interface CalendarProps {
 	calendarDays: CalendarDay[];
 	selectedDate: string | null;
 	setSelectedDate: React.Dispatch<React.SetStateAction<string | null>>;
+	currentBalance: number,
 }
 
 function Calendar({
 	calendarDays,
 	selectedDate,
-	setSelectedDate
+	setSelectedDate,
+	currentBalance
 }: CalendarProps) {
 	const currentDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
 	return (
@@ -32,6 +35,17 @@ function Calendar({
 						const isToday = item.date === currentDate;
 						const hasFuture = (item.futureTotal ? item.futureTotal > 0 : false);
 						const isSelected = selectedDate === item.date;
+
+						const movementBalance  = [
+							...item.transactions,
+							...item.recurrences
+						].reduce((total, movement) => {
+							return movement.type === 'CREDIT'
+								? total + movement.amount
+								: total - movement.amount;
+						}, 0);
+
+						const predictedBalance = currentBalance + movementBalance;
 
 						return (
 							<div
@@ -116,7 +130,9 @@ function Calendar({
 										{item.transactions.length > 0 || item.recurrences.length > 0? (
 											<div className="flex items-center justify-between gap-1 w-full text-[10px]">
 												<span className="text-zinc-500 font-medium uppercase tracking-wider">Previsto</span>
-												<span className="font-semibold text-zinc-300 font-mono tracking-tight">[valor previsto]</span>
+												<span className="font-semibold text-zinc-300 font-mono tracking-tight">
+													{formatCurrency(predictedBalance)}
+												</span>
 											</div>
 										) : <div className="h-[14px]"></div>}
 									</div>
