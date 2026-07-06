@@ -4,9 +4,9 @@ import useActivities from '../hooks/useActivities';
 import Apresentation from './Apresentation';
 import Calendar from './Calendar';
 import DetailsOfDay from './DetailsOfDay';
-import RecentTransactions from './RecentTransactions';
+import MonthSummaryAndInsights from './MonthSummaryAndInsights';
 import Overview from './Overview';
-import Intelligence from './Intelligence';
+import RecentTransactions from './RecentTransactions';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
@@ -48,11 +48,11 @@ function Activities() {
         />
 
         <Overview
-          allTransaction={allTransaction}
+          allTransaction={allTransaction ?? null}
         />
 
-        <Intelligence
-          
+        <MonthSummaryAndInsights
+          allTransaction={allTransaction ?? null}
         />
 
         <Calendar
@@ -62,7 +62,7 @@ function Activities() {
         />
 
         <RecentTransactions
-          transactions={transactions}
+          allTransaction={allTransaction ?? null}
         />
 
         {selectedDateInfo && (

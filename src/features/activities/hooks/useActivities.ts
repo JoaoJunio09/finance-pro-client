@@ -75,7 +75,7 @@ function useActivities() {
       year: year
     }),
 		enabled: !!accountId || !!month || !!year,
-		retry: 3
+		retry: 1
 	});
 
   const queryRecurrences = useQuery({
@@ -85,7 +85,7 @@ function useActivities() {
     ],
     queryFn: () => recurrenceService.getAll({ accountId: accountId }),
     enabled: !!accountId,
-    retry: 3
+    retry: 1
   });
 
 	function goToPreviousMonth() {

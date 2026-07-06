@@ -1,4 +1,3 @@
-import type { CategoryResponse } from "../category/CategoryResponse";
 import type { TransactionResponse } from "./TransactionResponse";
 
 export interface AllTransactionResponse {
@@ -8,17 +7,7 @@ export interface AllTransactionResponse {
 	expenses: number,
 	netIncome: number,
 	commitment: number,
-	expenseOfTheMonth: BiggestExpenseOfTheMonth,
-	incomeOfTheMonth: BiggestIncomeOfTheMonth,
+	transactionBiggestIncome: TransactionResponse,
+	transactionBiggestExpense: TransactionResponse,
 	transactions: TransactionResponse[]
-}
-
-interface BiggestExpenseOfTheMonth {
-	value: number,
-	category: CategoryResponse
-}
-
-interface BiggestIncomeOfTheMonth {
-	value: number,
-	category: CategoryResponse
 }
