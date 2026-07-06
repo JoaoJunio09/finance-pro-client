@@ -96,8 +96,8 @@ function useActivities() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   }
 
-	const transactions = useMemo(() => {
-		return queryTransactions.data?.transactions ?? [];
+	const allTransaction = useMemo(() => {
+		return queryTransactions.data;
 	}, [queryTransactions.data, accountId, month, year]);
 
   const recurrences = useMemo(() => {
@@ -138,14 +138,14 @@ function useActivities() {
         const dayNumber = i - firstDayOffset + 1;
         const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayNumber).padStart(2, "0")}`;
 
-        const dayTxs = transactions.filter(tx => {
+        const dayTxs = allTransaction?.transactions.filter(tx => {
           const txDateOnly = tx.registeredAt.split('T')[0]; // "2026-07-15"
           return txDateOnly === dateString;
         });
         const dayRecurrences = recurrencesByDate.get(dateString) ?? [];
         
         let inTotal = 0, outTotal = 0;
-        dayTxs.forEach(tx => {
+        dayTxs?.forEach(tx => {
           if (tx.type === 'CREDIT') inTotal += tx.amount;
           else outTotal += tx.amount;
         });
@@ -154,7 +154,7 @@ function useActivities() {
 
         days.push({
           date: dateString,
-          transactions: dayTxs,
+          transactions: dayTxs ?? [],
           recurrences: dayRecurrences,
           inTotal,
           outTotal,
@@ -163,7 +163,7 @@ function useActivities() {
       }
     }
     return days;
-  }, [month, year, transactions, recurrencesByDate]);
+  }, [month, year, allTransaction?.transactions, recurrencesByDate]);
 
 	const selectedDateInfo = useMemo<CalendarDay | null | undefined>(() => {
     if (!selectedDate) return null;
@@ -173,7 +173,6 @@ function useActivities() {
 	return {
     allTransaction: queryTransactions.data,
 		calendarDays,
-		transactions,
 		error: queryTransactions.error,
 		loading: queryTransactions.isLoading || queryRecurrences.isLoading,
 		selectedDate,

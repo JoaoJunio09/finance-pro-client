@@ -7,6 +7,7 @@ import DetailsOfDay from './DetailsOfDay';
 import MonthSummaryAndInsights from './MonthSummaryAndInsights';
 import Overview from './Overview';
 import RecentTransactions from './RecentTransactions';
+import ActivitiesSkeleton from './ActivitiesSkeleton';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
@@ -14,7 +15,6 @@ function Activities() {
   const {
     allTransaction,
     calendarDays,
-    transactions,
     error,
     loading,
     selectedDate,
@@ -47,24 +47,28 @@ function Activities() {
           MONTHS={MONTHS}
         />
 
-        <Overview
-          allTransaction={allTransaction ?? null}
-        />
+        {loading ? (
+          <ActivitiesSkeleton />
+        ) : (
+          <div>
+            <Overview
+              allTransaction={allTransaction ?? null}
+            />
+              <MonthSummaryAndInsights
+              allTransaction={allTransaction ?? null}
+            />
+            <Calendar
+              calendarDays={calendarDays}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              currentBalance={allTransaction?.currentBalance ?? 0}
+            />
 
-        <MonthSummaryAndInsights
-          allTransaction={allTransaction ?? null}
-        />
-
-        <Calendar
-          calendarDays={calendarDays}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          currentBalance={allTransaction?.currentBalance ?? 0}
-        />
-
-        <RecentTransactions
-          allTransaction={allTransaction ?? null}
-        />
+            <RecentTransactions
+              allTransaction={allTransaction ?? null}
+            />
+          </div>
+        )}
 
         {selectedDateInfo && (
           <DetailsOfDay

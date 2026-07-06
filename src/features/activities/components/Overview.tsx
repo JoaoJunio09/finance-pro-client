@@ -3,7 +3,7 @@ import type { AllTransactionResponse } from "../../../models/transaction/AllTran
 import { formatCurrency } from "../../../utils/FormatCurrency";
 
 interface OverviewProps {
-	allTransaction: AllTransactionResponse | null
+	allTransaction: AllTransactionResponse | null;
 }
 
 function Overview({ allTransaction }: OverviewProps) {
