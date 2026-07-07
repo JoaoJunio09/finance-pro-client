@@ -1,19 +1,25 @@
-import { Activity, LayoutGrid, Menu } from "lucide-react";
+import { Activity, LayoutGrid, Menu, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MOBILE_ITEMS_BOTTOM = [
-  {
-    name: 'Painel de Controle',
-    active: 'dashboard',
-    path: '/dashboard',
-    icon: LayoutGrid,
-  },
   {
     name: 'Atividades',
     active: 'activities',
     path: '/activities',
     icon: Activity,
-  }
+  },
+	{
+    name: 'Painel de Controle',
+    active: 'dashboard',
+    path: '/dashboard',
+    icon: LayoutGrid,
+  },
+	{
+    name: 'Contas e Carteiras',
+    active: 'wallets',
+    path: '/wallets',
+    icon: Wallet,
+  },
 ]
 
 interface MobileNavProps {
