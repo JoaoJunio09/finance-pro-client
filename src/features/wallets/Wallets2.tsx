@@ -244,7 +244,7 @@ const PhysicalCard = ({
 // COMPONENTE PRINCIPAL DE CARTEIRAS
 // ==========================================
 
-function Wallets() {
+export default function Wallets2() {
   // Injetar fontes Outfit e Inter no head do documento
   useEffect(() => {
     const link = document.createElement('link');
@@ -391,8 +391,19 @@ function Wallets() {
   };
 
   return (
-		<main className="flex-1 w-full min-w-0 flex flex-col overflow-y-auto relative z-10">
-      <div className="max-w-[1440px] mx-auto px-4 lg:px-8 py-8 flex flex-col gap-[28px] w-full">
+    <div className="min-h-screen bg-[#09090B] font-['Inter'] text-white pb-20 relative">
+      
+      {/* 1. GRADIENTE RADIAL DE FUNDO GERAL DA PÁGINA */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px]"
+          style={{
+            background: 'radial-gradient(ellipse at top, rgba(124, 58, 237, 0.08) 0%, rgba(9, 9, 11, 0) 60%)'
+          }}
+        />
+      </div>
+
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-8 py-8 flex flex-col gap-[28px] relative z-10">
         
         {/* BLOCO 1 - HEADER DA PÁGINA */}
         <div className="flex flex-row justify-between items-start">
@@ -647,185 +658,185 @@ function Wallets() {
           </div>
         )}
 
-				{/* ==========================================
+      </div>
+
+      {/* ==========================================
           MODAIS E DIÁLOGOS DE INTERAÇÃO
           ========================================== */}
 
-				{/* MODAL ADICIONAR / EDITAR CARTEIRA */}
-				{showModal && (
-					<div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-						<div className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-overlay" onClick={() => setShowModal(false)} />
-						
-						<div className="relative z-[61] w-full max-w-[480px] bg-[#111113] border border-white/[0.06] rounded-[24px] p-[28px] animate-slide-up shadow-2xl"
-								style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.10)' }}>
-							
-							{/* Header Modal */}
-							<div className="flex items-center justify-between mb-[20px]">
-								<div className="flex items-center gap-3">
-									{editingWallet ? (
-										<div className="w-[40px] h-[40px] rounded-xl flex items-center justify-center bg-[#8B5CF6]/10 border border-[#8B5CF6]/20">
-											<Pencil size={18} className="text-[#8B5CF6]" />
-										</div>
-									) : (
-										<div className="w-[40px] h-[40px] rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #7C3AED, #6D28D9)' }}>
-											<Wallet size={18} color="#FFF" />
-										</div>
-									)}
-									<div className="font-['Outfit'] text-[17px] font-semibold text-[#E8EAFF]">
-										{editingWallet ? 'Editar Carteira' : 'Nova Carteira'}
-									</div>
-								</div>
-								<button onClick={() => setShowModal(false)} className="p-1 rounded-lg hover:bg-white/[0.05] text-zinc-500 hover:text-white transition-colors">
-									<X size={18} />
-								</button>
-							</div>
+      {/* MODAL ADICIONAR / EDITAR CARTEIRA */}
+      {showModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-overlay" onClick={() => setShowModal(false)} />
+          
+          <div className="relative z-[61] w-full max-w-[480px] bg-[#111113] border border-white/[0.06] rounded-[24px] p-[28px] animate-slide-up shadow-2xl"
+               style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.10)' }}>
+            
+            {/* Header Modal */}
+            <div className="flex items-center justify-between mb-[20px]">
+              <div className="flex items-center gap-3">
+                {editingWallet ? (
+                  <div className="w-[40px] h-[40px] rounded-xl flex items-center justify-center bg-[#8B5CF6]/10 border border-[#8B5CF6]/20">
+                    <Pencil size={18} className="text-[#8B5CF6]" />
+                  </div>
+                ) : (
+                  <div className="w-[40px] h-[40px] rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #7C3AED, #6D28D9)' }}>
+                    <Wallet size={18} color="#FFF" />
+                  </div>
+                )}
+                <div className="font-['Outfit'] text-[17px] font-semibold text-[#E8EAFF]">
+                  {editingWallet ? 'Editar Carteira' : 'Nova Carteira'}
+                </div>
+              </div>
+              <button onClick={() => setShowModal(false)} className="p-1 rounded-lg hover:bg-white/[0.05] text-zinc-500 hover:text-white transition-colors">
+                <X size={18} />
+              </button>
+            </div>
 
-							{/* Live Preview em Tempo Real */}
-							<div className="w-[240px] mx-auto mb-[24px]">
-								<PhysicalCard wallet={formPreviewWallet} />
-							</div>
+            {/* Live Preview em Tempo Real */}
+            <div className="w-[240px] mx-auto mb-[24px]">
+               <PhysicalCard wallet={formPreviewWallet} />
+            </div>
 
-							{/* Formulário */}
-							<div className="flex flex-col gap-[14px]">
-								
-								<div>
-									<label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Nome</label>
-									<input 
-										type="text"
-										placeholder="Ex: Conta Principal, Reserva, Moto..."
-										value={formName}
-										onChange={(e) => setFormName(e.target.value)}
-										className="w-full h-[44px] rounded-[12px] bg-[#09090B] border border-white/[0.08] px-4 font-['Inter'] text-[13px] text-white placeholder-zinc-500 focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all"
-									/>
-								</div>
+            {/* Formulário */}
+            <div className="flex flex-col gap-[14px]">
+              
+              <div>
+                <label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Nome</label>
+                <input 
+                  type="text"
+                  placeholder="Ex: Conta Principal, Reserva, Moto..."
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  className="w-full h-[44px] rounded-[12px] bg-[#09090B] border border-white/[0.08] px-4 font-['Inter'] text-[13px] text-white placeholder-zinc-500 focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all"
+                />
+              </div>
 
-								<div>
-									<label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Banco ou Tipo</label>
-									<div className="relative">
-										{/* Ícone customizado sobre o select native */}
-										<div className="absolute left-3.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none">
-											{React.createElement(BANK_CONFIGS[formBank]?.icon || Wallet, { size: 16, color: BANK_CONFIGS[formBank]?.color || '#8B5CF6' })}
-										</div>
-										<select 
-											value={formBank}
-											onChange={(e) => setFormBank(e.target.value)}
-											className="w-full h-[44px] rounded-[12px] bg-[#09090B] border border-white/[0.08] pl-11 pr-10 font-['Inter'] text-[13px] text-white appearance-none focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all cursor-pointer"
-										>
-											<optgroup label="Bancos" className="bg-[#111113]">
-												{Object.values(BANK_CONFIGS).filter(b => b.isRealBank).map(b => (
-													<option key={b.id} value={b.id}>{b.name}</option>
-												))}
-											</optgroup>
-											<optgroup label="Tipos" className="bg-[#111113]">
-												{Object.values(BANK_CONFIGS).filter(b => !b.isRealBank).map(b => (
-													<option key={b.id} value={b.id}>{b.name}</option>
-												))}
-											</optgroup>
-										</select>
-										<div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
-											<ChevronDown size={14} className="text-zinc-500" />
-										</div>
-									</div>
-								</div>
+              <div>
+                <label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Banco ou Tipo</label>
+                <div className="relative">
+                  {/* Ícone customizado sobre o select native */}
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none">
+                    {React.createElement(BANK_CONFIGS[formBank]?.icon || Wallet, { size: 16, color: BANK_CONFIGS[formBank]?.color || '#8B5CF6' })}
+                  </div>
+                  <select 
+                    value={formBank}
+                    onChange={(e) => setFormBank(e.target.value)}
+                    className="w-full h-[44px] rounded-[12px] bg-[#09090B] border border-white/[0.08] pl-11 pr-10 font-['Inter'] text-[13px] text-white appearance-none focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all cursor-pointer"
+                  >
+                    <optgroup label="Bancos" className="bg-[#111113]">
+                      {Object.values(BANK_CONFIGS).filter(b => b.isRealBank).map(b => (
+                        <option key={b.id} value={b.id}>{b.name}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Tipos" className="bg-[#111113]">
+                      {Object.values(BANK_CONFIGS).filter(b => !b.isRealBank).map(b => (
+                        <option key={b.id} value={b.id}>{b.name}</option>
+                      ))}
+                    </optgroup>
+                  </select>
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <ChevronDown size={14} className="text-zinc-500" />
+                  </div>
+                </div>
+              </div>
 
-								<div className="flex gap-4">
-									<div className="flex-1">
-										<label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Saldo Atual</label>
-										<div className="relative h-[52px] rounded-[12px] bg-[#09090B] border border-white/[0.08] focus-within:border-[#8B5CF6] focus-within:ring-[3px] focus-within:ring-[#8B5CF6]/20 transition-all overflow-hidden flex items-center">
-											<span className="font-['Inter'] text-[14px] text-zinc-500 absolute left-[14px] pointer-events-none font-semibold">R$</span>
-											<input 
-												type="text"
-												placeholder="0,00"
-												value={formBalance}
-												onChange={(e) => setFormBalance(formatInputValue(e.target.value))}
-												className="w-full h-full bg-transparent pl-[46px] pr-4 font-['Outfit'] text-[20px] font-semibold text-white tabular-nums placeholder-[#71717A] outline-none"
-											/>
-										</div>
-									</div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2">Saldo Atual</label>
+                  <div className="relative h-[52px] rounded-[12px] bg-[#09090B] border border-white/[0.08] focus-within:border-[#8B5CF6] focus-within:ring-[3px] focus-within:ring-[#8B5CF6]/20 transition-all overflow-hidden flex items-center">
+                    <span className="font-['Inter'] text-[14px] text-zinc-500 absolute left-[14px] pointer-events-none font-semibold">R$</span>
+                    <input 
+                      type="text"
+                      placeholder="0,00"
+                      value={formBalance}
+                      onChange={(e) => setFormBalance(formatInputValue(e.target.value))}
+                      className="w-full h-full bg-transparent pl-[46px] pr-4 font-['Outfit'] text-[20px] font-semibold text-white tabular-nums placeholder-[#71717A] outline-none"
+                    />
+                  </div>
+                </div>
 
-									{BANK_CONFIGS[formBank]?.isRealBank && (
-										<div className="w-[120px]">
-											<label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2 truncate">
-												4 Dígitos <span className="text-zinc-500 font-normal lowercase tracking-normal bg-[#111113] rounded px-1.5 ml-1 text-[10px] border border-white/[0.04]">(opc)</span>
-											</label>
-											<input 
-												type="text"
-												maxLength={4}
-												placeholder="0000"
-												value={formDigits}
-												onChange={(e) => setFormDigits(e.target.value.replace(/\D/g, ''))}
-												className="w-full h-[52px] rounded-[12px] bg-[#09090B] border border-white/[0.08] px-4 font-['Outfit'] text-[20px] font-medium text-white tabular-nums placeholder-zinc-500 focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all text-center"
-											/>
-										</div>
-									)}
-								</div>
+                {BANK_CONFIGS[formBank]?.isRealBank && (
+                  <div className="w-[120px]">
+                    <label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2 truncate">
+                      4 Dígitos <span className="text-zinc-500 font-normal lowercase tracking-normal bg-[#111113] rounded px-1.5 ml-1 text-[10px] border border-white/[0.04]">(opc)</span>
+                    </label>
+                    <input 
+                      type="text"
+                      maxLength={4}
+                      placeholder="0000"
+                      value={formDigits}
+                      onChange={(e) => setFormDigits(e.target.value.replace(/\D/g, ''))}
+                      className="w-full h-[52px] rounded-[12px] bg-[#09090B] border border-white/[0.08] px-4 font-['Outfit'] text-[20px] font-medium text-white tabular-nums placeholder-zinc-500 focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all text-center"
+                    />
+                  </div>
+                )}
+              </div>
 
-							</div>
+            </div>
 
-							<div className="w-full h-[1px] my-[20px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' }} />
+            <div className="w-full h-[1px] my-[20px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' }} />
 
-							{/* Footer Modal */}
-							<div className="flex gap-[10px]">
-								<button 
-									onClick={() => setShowModal(false)}
-									className="h-[42px] px-[20px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
-								>
-									Cancelar
-								</button>
-								<button 
-									onClick={saveWallet}
-									disabled={!formName.trim()}
-									className="flex-1 h-[42px] rounded-[10px] font-['Inter'] text-[13px] font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed outline-none"
-									style={{ 
-										background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
-										boxShadow: '0 4px 14px rgba(124,58,237,0.20)'
-									}}
-								>
-									Salvar Carteira
-								</button>
-							</div>
+            {/* Footer Modal */}
+            <div className="flex gap-[10px]">
+              <button 
+                onClick={() => setShowModal(false)}
+                className="h-[42px] px-[20px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={saveWallet}
+                disabled={!formName.trim()}
+                className="flex-1 h-[42px] rounded-[10px] font-['Inter'] text-[13px] font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed outline-none"
+                style={{ 
+                  background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+                  boxShadow: '0 4px 14px rgba(124,58,237,0.20)'
+                }}
+              >
+                Salvar Carteira
+              </button>
+            </div>
 
-						</div>
-					</div>
-				)}
+          </div>
+        </div>
+      )}
 
-				{/* CONFIRMAÇÃO DE EXCLUSÃO */}
-				{showDeleteConfirm && (
-					<div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-						<div className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-overlay" onClick={() => setShowDeleteConfirm(null)} />
-						
-						<div className="relative z-[61] w-full max-w-[380px] bg-[#111113] border border-white/[0.06] rounded-[20px] p-[28px] animate-slide-up">
-							
-							<div className="w-[44px] h-[44px] rounded-xl bg-[#F8717110] border border-rose-500/20 flex items-center justify-center mb-[16px]">
-								<AlertTriangle size={24} className="text-[#F87171]" />
-							</div>
+      {/* CONFIRMAÇÃO DE EXCLUSÃO */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-overlay" onClick={() => setShowDeleteConfirm(null)} />
+          
+          <div className="relative z-[61] w-full max-w-[380px] bg-[#111113] border border-white/[0.06] rounded-[20px] p-[28px] animate-slide-up">
+            
+            <div className="w-[44px] h-[44px] rounded-xl bg-[#F8717110] border border-rose-500/20 flex items-center justify-center mb-[16px]">
+              <AlertTriangle size={24} className="text-[#F87171]" />
+            </div>
 
-							<h3 className="font-['Outfit'] text-[17px] font-semibold text-white">Remover carteira?</h3>
-							<p className="font-['Inter'] text-[13px] text-zinc-500 mt-[8px] leading-[1.6]">
-								Esta ação não pode ser desfeita. O saldo e histórico desta carteira serão removidos do sistema.
-							</p>
+            <h3 className="font-['Outfit'] text-[17px] font-semibold text-white">Remover carteira?</h3>
+            <p className="font-['Inter'] text-[13px] text-zinc-500 mt-[8px] leading-[1.6]">
+              Esta ação não pode ser desfeita. O saldo e histórico desta carteira serão removidos do sistema.
+            </p>
 
-							<div className="flex gap-[10px] mt-[24px]">
-								<button 
-									onClick={() => setShowDeleteConfirm(null)}
-									className="flex-1 h-[42px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
-								>
-									Cancelar
-								</button>
-								<button 
-									onClick={() => confirmDelete(showDeleteConfirm)}
-									className="flex-1 h-[42px] rounded-[10px] bg-[#F8717110] border border-rose-500/20 hover:bg-rose-500/20 hover:border-rose-500 font-['Inter'] text-[13px] font-semibold text-[#F87171] transition-all outline-none"
-								>
-									Remover
-								</button>
-							</div>
+            <div className="flex gap-[10px] mt-[24px]">
+              <button 
+                onClick={() => setShowDeleteConfirm(null)}
+                className="flex-1 h-[42px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => confirmDelete(showDeleteConfirm)}
+                className="flex-1 h-[42px] rounded-[10px] bg-[#F8717110] border border-rose-500/20 hover:bg-rose-500/20 hover:border-rose-500 font-['Inter'] text-[13px] font-semibold text-[#F87171] transition-all outline-none"
+              >
+                Remover
+              </button>
+            </div>
 
-						</div>
-					</div>
-				)}
-      </div>
-    </main>
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }
-
-export default Wallets;

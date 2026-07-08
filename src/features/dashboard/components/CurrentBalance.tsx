@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 const useAnimatedNumber = (end: number, duration: number = 1500) => {
   const [value, setValue] = useState(0);
@@ -42,7 +42,7 @@ function CurrentBalance({ currentBalance }: { currentBalance: number | undefined
 			</p>
 			<div className="flex flex-wrap items-baseline gap-3 sm:gap-4 md:gap-6 lg:gap-8">
 				<h1 className="text-6xl sm:text-7xl md:text-8xl xl:text-9xl 2xl:text-[9rem] leading-none font-semibold tracking-tighter text-white">
-					{formatCurrency(balance)}
+					{formatCurrencyLabel(balance)}
 				</h1>
 				<span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-zinc-500 font-light tracking-wide">
 					Disponíveis.

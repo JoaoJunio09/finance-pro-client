@@ -1,7 +1,7 @@
 import { Activity, InfoIcon, Minus, Plus, X } from "lucide-react";
 import type { CalendarDay } from "../types/CalendarDay";
-import { formatCurrency } from "../../../utils/FormatCurrency";
 import { formatDateLabel } from "../../../utils/FormatDate";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface DetailsOfDayProps {
 	selectedDateInfo: CalendarDay;
@@ -62,7 +62,7 @@ function DetailsOfDay({
 												</div>
 											</div>
 											<span className={`text-base font-bold tracking-tight ${isInc ? 'text-emerald-400' : 'text-rose-400'}`}>
-												{isInc ? '+' : '-'}{formatCurrency(tx.amount)}
+												{isInc ? '+' : '-'}{formatCurrencyLabel(tx.amount)}
 											</span>
 										</div>
 									);
@@ -83,7 +83,7 @@ function DetailsOfDay({
 											<span className="text-xs text-amber-500/70">Previsto</span>
 										</div>
 										<span className="text-base font-bold tracking-tight text-amber-400">
-											{rec.type === 'CREDIT' ? '+' : '-'}{formatCurrency(rec.amount)}
+											{rec.type === 'CREDIT' ? '+' : '-'}{formatCurrencyLabel(rec.amount)}
 										</span>
 									</div>
 								))}

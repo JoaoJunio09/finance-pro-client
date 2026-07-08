@@ -8,6 +8,7 @@ import RecurrencesPage from "../pages/RecurrencesPage";
 import ScrollToTop from "./ScrollToTop";
 import App from "../features/activities/components/Activities2";
 import WalletsPage from "../pages/WalletsPage";
+import Wallets2 from "../features/wallets/Wallets2";
 
 function RoutesApp() {
 	return (
@@ -21,6 +22,7 @@ function RoutesApp() {
 						<Route path="/activities" element={<ActivitiesPage />} />
 						<Route path="/activities2" element={<App />} />
 						<Route path="/wallets" element={<WalletsPage />} />
+						<Route path="/wallets2" element={<Wallets2 />} />
 						<Route path="/recurrences" element={<RecurrencesPage />} />
 					</Routes>
 				</AccountProvider>

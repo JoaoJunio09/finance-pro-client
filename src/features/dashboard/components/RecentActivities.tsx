@@ -1,8 +1,8 @@
 import { AlignCenter, Wallet } from "lucide-react";
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
-import { formatCurrency } from "../../../utils/FormatCurrency";
 import { formatRelativeDateTime } from "../../../utils/FormatDate";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface TimelineItemProps {
   transaction: TransactionResponse;
@@ -53,7 +53,7 @@ const TimelineItem = ({
           
           <div className="flex flex-col sm:items-end gap-1 flex-shrink-0">
             <span className={`text-lg lg:text-xl font-medium tracking-tight ${isIncome ? 'text-emerald-500' : 'text-rose-700'}`}>
-              {isIncome ? '+' : '-'}{formatCurrency(transaction.amount)}
+              {isIncome ? '+' : '-'}{formatCurrencyLabel(transaction.amount)}
             </span>
             <div className="flex items-center gap-1.5 text-xs lg:text-sm text-zinc-600 font-medium">
               {/* {transaction.wallet.includes('Cartão') ? <CreditCard className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" /> : <Wallet className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" />} */}

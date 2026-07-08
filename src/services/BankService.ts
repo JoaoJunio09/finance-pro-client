@@ -1,33 +1,31 @@
 import InternalServerError from "../exceptions/InternalServerError";
-import type { ParamsWalletAPI } from "../models/wallet/ParamsWalletAPI";
-import type { WalletRequest } from "../models/wallet/WalletRequest";
-import type { WalletResponse } from "../models/wallet/WalletResponse";
+import type { BankResponse } from "../models/bank/BankResponse";
+import type { CategoryRequest } from "../models/category/CategoryRequest";
 import api from "./api";
 
-class WalletService {
+class BankService {
 	BASE_URL: string = '';
 	private accessToken: string = '';
 
 	constructor(accessToken: string) {
-		this.BASE_URL = '/api/wallets/v1';
+		this.BASE_URL = '/api/banks/v1';
 		this.accessToken = accessToken;
 	}
 
-	public async getAll(params: ParamsWalletAPI) {
+	public async getAll() {
 		try {
-			const response = await api.get<WalletResponse[]>(this.BASE_URL, {
+			const response = await api.get<BankResponse[]>(this.BASE_URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`
-				},
-				params
+				}
 			});
 
 			return response.data
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao carregar as Carteiras');
+				throw new InternalServerError('Erro ao carregar as Contas bancárias');
 			}
 
 			throw err;
@@ -37,27 +35,7 @@ class WalletService {
 	public async getById(id: string) {
 		const URL = `${this.BASE_URL}/${id}`;
 		try {
-			const response = await api.get<WalletResponse>(URL, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				}
-			});
-
-			return response.data;
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao carregar a Carteira');
-			}
-
-			throw err;
-		}
-	}
-
-	public async create(wallet: WalletRequest) {
-		try {
-			const response = await api.post<WalletResponse>(this.BASE_URL, wallet, {
+			const response = await api.get<BankResponse>(URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`
@@ -68,7 +46,27 @@ class WalletService {
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao criar uma Carteira');
+				throw new InternalServerError('Erro ao carregar a Conta bancária');
+			}
+
+			throw err;
+		}
+	}
+
+	public async create(category: CategoryRequest) {
+		try {
+			const response = await api.post<BankResponse>(this.BASE_URL, category, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao registrar uma Conta');
 			}
 
 			throw err;
@@ -76,4 +74,4 @@ class WalletService {
 	}
 }
 
-export default WalletService;
+export default BankService;

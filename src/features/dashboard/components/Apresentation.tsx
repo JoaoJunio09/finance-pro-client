@@ -1,4 +1,4 @@
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 function greeting(hour: number): string {
 	if (hour >= 3 && hour <= 12) {
@@ -28,8 +28,8 @@ function Apresentation({
 			</h2>
 
 			<p className="text-zinc-400 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-wide leading-snug max-w-[70ch]">
-				Você recebeu <span className="text-emerald-500 font-semibold">{formatCurrency(income)} </span> neste mês.<br className="hidden md:block" />
-				Até agora foram gastos <span className="text-rose-500 font-semibold">{formatCurrency(expense)}</span>.
+				Você recebeu <span className="text-emerald-500 font-semibold">{formatCurrencyLabel(income)} </span> neste mês.<br className="hidden md:block" />
+				Até agora foram gastos <span className="text-rose-500 font-semibold">{formatCurrencyLabel(expense)}</span>.
 			</p>
 		</header>
 	)

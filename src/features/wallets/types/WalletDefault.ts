@@ -1,0 +1,1 @@
+export const WalletDefault = 'Carteira Manual';

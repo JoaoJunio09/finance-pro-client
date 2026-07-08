@@ -1,6 +1,6 @@
 import { PieChart, Sparkles, Telescope } from "lucide-react";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface MonthSummaryAndInsightsProps {
 	allTransaction: AllTransactionResponse | null
@@ -52,11 +52,11 @@ function MonthSummaryAndInsights({ allTransaction }: MonthSummaryAndInsightsProp
 						<div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-8">
 							<div>
 								<span className="text-[10px] uppercase text-zinc-500 font-semibold block mb-1">Maior Gasto</span>
-								<span className="text-sm font-medium text-rose-400">{formatCurrency(allTransaction.transactionBiggestExpense.amount)}</span>
+								<span className="text-sm font-medium text-rose-400">{formatCurrencyLabel(allTransaction.transactionBiggestExpense.amount)}</span>
 							</div>
 							<div>
 								<span className="text-[10px] uppercase text-zinc-500 font-semibold block mb-1">Maior Receita</span>
-								<span className="text-sm font-medium text-emerald-400">{formatCurrency(allTransaction.transactionBiggestIncome.amount)}</span>
+								<span className="text-sm font-medium text-emerald-400">{formatCurrencyLabel(allTransaction.transactionBiggestIncome.amount)}</span>
 							</div>
 							<div>
 								<span className="text-[10px] uppercase text-zinc-500 font-semibold block mb-1">Top Despesa</span>

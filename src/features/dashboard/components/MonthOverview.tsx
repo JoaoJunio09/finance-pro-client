@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { BiggestExpense } from "../../../models/account/BiggestExpense";
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface MonthOverviewProps {
 	income: number;
@@ -27,7 +27,7 @@ function MonthOverview({
 					<span className="text-zinc-400 font-light text-base lg:text-xl">Entrou</span>
 					<div className="flex items-center gap-2 lg:gap-3 flex-shrink-0">
 						<ArrowUpRight className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-500" />
-						<span className="text-xl lg:text-3xl font-medium tracking-tight text-white">{formatCurrency(income)}</span>
+						<span className="text-xl lg:text-3xl font-medium tracking-tight text-white">{formatCurrencyLabel(income)}</span>
 					</div>
 				</div>
 				
@@ -35,13 +35,13 @@ function MonthOverview({
 					<span className="text-zinc-400 font-light text-base lg:text-xl">Saiu</span>
 					<div className="flex items-center gap-2 lg:gap-3 flex-shrink-0">
 						<ArrowDownRight className="w-4 h-4 lg:w-5 lg:h-5 text-rose-500" />
-						<span className="text-xl lg:text-3xl font-medium tracking-tight text-white">{formatCurrency(expense)}</span>
+						<span className="text-xl lg:text-3xl font-medium tracking-tight text-white">{formatCurrencyLabel(expense)}</span>
 					</div>
 				</div>
 
 				<div className="flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-white/[0.04] pb-4 lg:pb-5 group hover:border-white/[0.1] transition-colors gap-2">
 					<span className="text-zinc-400 font-light text-base lg:text-xl">Sobrou</span>
-					<span className="text-xl lg:text-3xl font-medium tracking-tight text-[#8B5CF6]">{formatCurrency(netIncome)}</span>
+					<span className="text-xl lg:text-3xl font-medium tracking-tight text-[#8B5CF6]">{formatCurrencyLabel(netIncome)}</span>
 				</div>
 
 				<div className="flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-white/[0.04] pb-4 lg:pb-5 group hover:border-white/[0.1] transition-colors gap-2">
@@ -49,7 +49,7 @@ function MonthOverview({
 					<div className="text-right flex flex-col items-end flex-shrink-0">
 						<span className="text-lg lg:text-2xl font-medium tracking-tight text-white">
 							{biggestExpense ? (
-								formatCurrency(biggestExpense.value)
+								formatCurrencyLabel(biggestExpense.value)
 							) : (
 								'R$ 0'
 							)}

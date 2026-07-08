@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import MobileNav from "../components/layout/mobileNav/MobileNav";
-import Wallets from "../features/wallets/Wallets";
+
 import Sidebar from "../components/layout/sidebar/Sidebar";
+import Wallets from "../features/wallets/components/Wallets";
 
 function WalletsPage() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);

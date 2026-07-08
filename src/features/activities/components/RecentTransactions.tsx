@@ -1,8 +1,8 @@
 import { CalendarDays, Clock, Flame, Target } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
-import { formatCurrency } from "../../../utils/FormatCurrency";
 import { formatRelativeDateTime } from "../../../utils/FormatDate";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface RecentTransactionsProps {
 	allTransaction: AllTransactionResponse | null;
@@ -55,7 +55,7 @@ function RecentTransactions({
 							</div>
 
 							<div className="mt-6 text-3xl font-bold text-rose-400">
-								-{formatCurrency(biggestExpense.amount)}
+								-{formatCurrencyLabel(biggestExpense.amount)}
 							</div>
 
 							<div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-zinc-500 flex-wrap">
@@ -94,7 +94,7 @@ function RecentTransactions({
 							</div>
 
 							<div className="mt-6 text-3xl font-bold text-emerald-400">
-								+{formatCurrency(biggestIncome.amount)}
+								+{formatCurrencyLabel(biggestIncome.amount)}
 							</div>
 							<div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-zinc-500 flex-wrap">
 								<Clock className="w-3.5 h-3.5" />
@@ -142,7 +142,7 @@ function RecentTransactions({
 								
 								<div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pl-16 sm:pl-0">
 									<span className={`text-base sm:text-lg font-bold tracking-tight ${isFuture ? 'text-amber-400' : isInc ? 'text-emerald-400' : 'text-rose-400'}`}>
-										{isInc ? '+' : '-'}{formatCurrency(tx.amount)}
+										{isInc ? '+' : '-'}{formatCurrencyLabel(tx.amount)}
 									</span>
 									<div className="flex items-center gap-2">
 										{isFuture ? (

@@ -12,25 +12,7 @@ import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { TransactionType } from "../../../types/TransactionType";
 import type { FormData } from "../types/FormData";
 import type { TransactionModalType } from "../types/TransactionModalType";
-
-function formatCurrency(value: string) {
-	const onlyNumbers = value.replace(/\D/g, '');
-
-	const number = Number(onlyNumbers) / 100;
-
-	return number.toLocaleString('pt-BR', {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	});
-}
-
-function formatCurrencyToAPI(value: string) {
-	return Number(
-			value
-				.replace(/\./g, '')
-				.replace(',', '.')
-		);
-}
+import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 
 function useNewTransaction(onClose: () => void) {
 	const [inputsError, setInputsError] = useState<Record<string, string>>({});
@@ -175,7 +157,7 @@ function useNewTransaction(onClose: () => void) {
 		const { name, value } = e.target;
 
 		 if (name === 'amount') {
-			const formattedValue = formatCurrency(value);
+			const formattedValue = formatCurrencyInput(value);
 			setForm((prev) => ({ ...prev, amount: formattedValue }));
 
 			const numericAmount = formatCurrencyToAPI(formattedValue);

@@ -1,4 +1,4 @@
-import { formatCurrency } from "../../../utils/FormatCurrency";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 import type { CalendarDay } from "../types/CalendarDay";
 
 interface CalendarProps {
@@ -158,7 +158,7 @@ function Calendar({
 											<div className="flex items-center justify-between gap-1 w-full text-[10px]">
 												<span className="text-zinc-500 font-medium uppercase tracking-wider">Previsto</span>
 												<span className="font-semibold text-zinc-300 font-mono tracking-tight">
-													{formatCurrency(item.predictedBalance ?? 0)}
+													{formatCurrencyLabel(item.predictedBalance ?? 0)}
 												</span>
 											</div>
 										) : <div className="h-[14px]"></div>}
