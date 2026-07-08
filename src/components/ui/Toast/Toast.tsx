@@ -72,7 +72,7 @@ function Toast({
   return (
     <div
       className={`
-        h-22 min-w-[400px] bg-[#111111] border border-[#2A2A2A]  rounded-2xl overflow-hidden z-[1000]
+        h-22 min-w-[350px] bg-[#111111] border border-[#2A2A2A]  rounded-2xl overflow-hidden z-[1000]
         
         transition-all duration-300 ease-out
         will-change-transform

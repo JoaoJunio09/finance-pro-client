@@ -37,7 +37,12 @@ function useNewTransaction(onClose: () => void) {
 		typeParam = 'CREDIT';
 	} else if (form.type === 'DEBIT' || form.recurrenceType === 'DEBIT') {
 		typeParam = 'DEBIT';
+	} else {
+		typeParam = undefined;
 	}
+
+	console.log(typeParam);
+	console.log(form.type);
 
 	function removeError(field: string) {
 		setInputsError(prev => {

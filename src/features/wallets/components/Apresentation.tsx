@@ -11,7 +11,7 @@ function Apresentation({ openAddModal }: ApresentationProps) {
 				<h1 className="font-['Outfit'] text-[24px] font-bold text-white tracking-tight">Carteiras/Cartões</h1>
 				<p className="font-['Inter'] text-[14px] text-zinc-500 mt-1">Gerencie suas contas, carteiras e cartões</p>
 			</div>
-			<button 
+			<button
 				onClick={openAddModal}
 				className="h-[38px] px-[18px] rounded-[10px] flex items-center gap-2 text-white font-['Inter'] text-[13px] font-semibold transition-all active:scale-[0.98] outline-none"
 				style={{ 

@@ -15,6 +15,7 @@ class CategoryService {
 	}
 
 	public async getAll(params: ParamsCategoryAPI) {
+		console.log(params)
 		try {
 			const response = await api.get<CategoryResponse[]>(this.BASE_URL, {
 				headers: {
