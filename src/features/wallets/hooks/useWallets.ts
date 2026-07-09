@@ -10,12 +10,14 @@ import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatC
 import type { FormData } from "../types/FormData";
 import { WalletDefault } from "../types/WalletDefault";
 
-function useWallets() {
+function useWallets(onSuccess: () => void) {
+	const [wallet, setWallet] = useState<WalletResponse | null>(null);
 	const [form, setForm] = useState<FormData>({
+		id: null,
 		name: '', 
 		bankIdOrType: '',
 		balance: '',
-		digits: ''
+		cardDigits: ''
 	});
 
 	const { account } = useAccountContext();
@@ -24,7 +26,7 @@ function useWallets() {
 	const walletService = useWalletService();
 	const bankService = useBankService();
 
-	const walletMutation = useMutation({
+	const walletMutationSave = useMutation({
 		mutationFn: (data: WalletRequest) => walletService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['wallets'] });
@@ -33,10 +35,38 @@ function useWallets() {
 				type: 'success',
 				title: 'Aumentando sua renda!!',
 				message: 'Carteira/Cartão foi adicionada à sua conta'
-			})
+			});
+
+			onSuccess();
 		},
-		onError: (err) => {
-			console.log(err);
+		onError: () => {
+			showToast({
+				type: 'error',
+				title: 'Erro ao salvar Carteira/Cartão',
+				message: 'Tente novamente em instantes.'
+			});
+		}
+	});
+
+	const walletMutationUpdate = useMutation({
+		mutationFn: (data: WalletRequest) => walletService.update(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+
+			showToast({
+				type: 'success',
+				title: 'Atualizado!!',
+				message: 'Carteira/Cartão foi atualizado com sucesso'
+			});
+
+			onSuccess();
+		},
+		onError: () => {
+			showToast({
+				type: 'error',
+				title: 'Erro ao atualizar Carteira/Cartão',
+				message: 'Tente novamente em instantes.'
+			});
 		}
 	});
 
@@ -73,7 +103,7 @@ function useWallets() {
 			id: '',
 			name: form.name,
 			balance: Number(form.balance),
-			cardDigits: form.digits,
+			cardDigits: form.cardDigits,
 			bank: {
 				id: queryBank.data?.id ?? '',
 				name: queryBank.data?.name ?? '',
@@ -87,12 +117,13 @@ function useWallets() {
 	}, [
 		form.name,
 		form.balance,
-		form.digits,
+		form.cardDigits,
 		queryBank.data
 	]);
 
 	useEffect(() => {
 		const firstBank = banks[0];
+
 		if (firstBank && !form.bankIdOrType) {
 			setForm(prev => ({
 				...prev,
@@ -100,6 +131,18 @@ function useWallets() {
 			}));
 		}
 	}, [banks]);
+
+	useEffect(() => {
+		if (!wallet) return;
+
+		setForm({
+			id: wallet.id,
+			name: wallet.name,
+			balance: wallet.balance.toString(),
+			bankIdOrType: wallet.bank ? wallet.bank.id : WalletDefault,
+			cardDigits: wallet.cardDigits ?? ''
+		});
+	}, [wallet]);
 
 	const totalAssets = wallets
 		.reduce((total, wallet) => total + (wallet.balance || 0), 0);
@@ -120,8 +163,8 @@ function useWallets() {
 			return;
 		}
 
-		if (name === 'digits') {
-			setForm((prev) => ({ ...prev, digits: value.replace(/\D/g, '') }));
+		if (name === 'cardDigits') {
+			setForm((prev) => ({ ...prev, cardDigits: value.replace(/\D/g, '') }));
 			return;
 		}
 
@@ -129,22 +172,45 @@ function useWallets() {
 	}
 
 	function saveOrUpdate() {
-		if (!account) {
+		if (!account || !form) {
 			return;
 		}
+
+		let isEditing = form.id !== null ? true : false;
 
 		const bankId = form.bankIdOrType === WalletDefault
 			? null
 			: form.bankIdOrType;
 
 		const wallet: WalletRequest = {
+			id: form.id,
 			name: form.name,
 			balance: formatCurrencyToAPI(form.balance),
+			cardDigits: form.cardDigits,
 			accountId: account.id,
 			bankId: bankId
 		}
 
-		walletMutation.mutate(wallet);
+		if (isEditing) {
+			walletMutationUpdate.mutate(wallet);
+		} else {
+			walletMutationSave.mutate(wallet);
+		}
+
+		console.log(form);
+		console.log(wallet);
+	}
+
+	function reset() {
+		setWallet(null);
+
+		setForm({
+			id: null,
+			name: '',
+			balance: '',
+			bankIdOrType: '',
+			cardDigits: ''
+		});
 	}
 
 	return {
@@ -155,8 +221,11 @@ function useWallets() {
 		bigWalletIncome,
 		smallWalletIncome,
 		form,
+		reset,
+		setWallet,
 		handleOnChange,
-		saveOrUpdate
+		saveOrUpdate,
+		isLoading: walletMutationSave.isPending || walletMutationUpdate.isPending
 	}
 }
 

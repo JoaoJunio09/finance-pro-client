@@ -1,10 +1,11 @@
 import { Plus } from "lucide-react";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 
 interface ApresentationProps {
-	openAddModal: () => void;
+	onNewWallet: (wallet: WalletResponse | null) => void;
 }
 
-function Apresentation({ openAddModal }: ApresentationProps) {
+function Apresentation({ onNewWallet }: ApresentationProps) {
 	return (
 		 <div className="animate-slide-up flex flex-row justify-between items-start">
 			<div>
@@ -12,7 +13,7 @@ function Apresentation({ openAddModal }: ApresentationProps) {
 				<p className="font-['Inter'] text-[14px] text-zinc-500 mt-1">Gerencie suas contas, carteiras e cartões</p>
 			</div>
 			<button
-				onClick={openAddModal}
+				onClick={() => onNewWallet(null)}
 				className="h-[38px] px-[18px] rounded-[10px] flex items-center gap-2 text-white font-['Inter'] text-[13px] font-semibold transition-all active:scale-[0.98] outline-none"
 				style={{ 
 					background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',

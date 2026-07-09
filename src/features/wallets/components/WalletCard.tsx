@@ -48,12 +48,11 @@ function WalletCard({
 
       {/* Camada 3: Logo/Ícone */}
       <div className="absolute top-[14px] right-[16px] text-white/90">
-        {wallet.bank ? (
+        {wallet.bank?.icon ? (
           <DynamicIcon name={wallet.bank.icon as IconName} size={isPreview ? 24 : 28} strokeWidth={1.5} />
         ) : (
           <Wallet size={isPreview ? 24 : 28} strokeWidth={1.5} />
         )}
-				
       </div>
 
       {/* Camada 4: Número do cartão */}
@@ -83,10 +82,13 @@ function WalletCard({
       </div>
 
       {/* Camada 7: Ações (Hover) */}
-      {wallet.id && (
+      {wallet && onEdit && (
         <div className="absolute top-[12px] left-[12px] flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
           <button 
-            // onClick={(e) => { e.stopPropagation(); onEdit(wallet); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(wallet);
+            }}
             className="w-[28px] h-[28px] rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
           >
             <Pencil size={12} className="text-white" />

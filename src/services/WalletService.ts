@@ -74,6 +74,26 @@ class WalletService {
 			throw err;
 		}
 	}
+
+	public async update(wallet: WalletRequest) {
+		try {
+			const response = await api.put<WalletResponse>(this.BASE_URL, wallet, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao atualizar a Carteira');
+			}
+
+			throw err;
+		}
+	}
 }
 
 export default WalletService;

@@ -113,17 +113,22 @@ export const INITIAL_WALLETS: WalletData[] = [
   },
 ];
 
-// ==========================================
-// COMPONENTE PRINCIPAL DE CARTEIRAS
-// ==========================================
-
 function Wallets() {
-  // Estrutura matemática do Donut SVG
-
-  const [openModal, setOpenModal] = useState(false);
-  
+  const [openModal, setOpenModal] = useState(false);  
 	const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
-	const {
+	
+  function handleSaveOrUpdate(wallet: WalletResponse | null) {
+    setWallet(wallet);
+    setOpenModal(true);  
+  }
+
+  function handleCloseModal() {
+    reset();
+    setOpenModal(false);
+    setSelectedWallet(null);
+  }
+
+  const {
     wallets,
     banks,
     previewWallet,
@@ -131,9 +136,12 @@ function Wallets() {
     bigWalletIncome,
     smallWalletIncome,
     form,
+    reset,
+    setWallet,
     handleOnChange,
-    saveOrUpdate
-  } = useWallets();
+    saveOrUpdate,
+    isLoading
+  } = useWallets(handleCloseModal);
 
 	const chartData = useMemo(() => {
 		if (!wallets) return;
@@ -171,7 +179,7 @@ function Wallets() {
         
         {/* BLOCO 1 - HEADER DA PÁGINA */}
         <Apresentation
-          openAddModal={() => setOpenModal(true)}
+          onNewWallet={handleSaveOrUpdate}
 				/>
 
         {/* BLOCO 2 - PATRIMÔNIO TOTAL (BANNER DESTAQUE ESTILO OVERVIEW) */}
@@ -186,6 +194,7 @@ function Wallets() {
 				<ListWallets
 					wallets={wallets ?? []}
 					setSelectedWallet={setSelectedWallet}
+          onEdit={handleSaveOrUpdate}
 				/>
 
         {/* BLOCO 4 - DETALHE DA CARTEIRA SELECIONADA */}
@@ -209,14 +218,13 @@ function Wallets() {
             form={form}
             handleOnChange={handleOnChange}
             banks={banks}
-            isEditing={false}
-            onClose={() => setOpenModal(false)}
+            isEditing={form.id !== null}
+            onClose={handleCloseModal}
             previewWallet={previewWallet}
             saveOrUpdate={saveOrUpdate}
+            isLoading={isLoading}
           />
         )}
-
-				{/* MODAL ADICIONAR / EDITAR CARTEIRA */}
 				
 				{/* CONFIRMAÇÃO DE EXCLUSÃO
 				{showDeleteConfirm && (

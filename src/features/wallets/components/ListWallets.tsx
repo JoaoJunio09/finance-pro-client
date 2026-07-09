@@ -5,11 +5,13 @@ import WalletCard from "./WalletCard";
 interface ListWalletsProps {
 	wallets: WalletResponse[];
 	setSelectedWallet: (wallet: WalletResponse) => void;
+	onEdit: (wallet: WalletResponse) => void;
 }
 
 function ListWallets({
 	wallets,
-	setSelectedWallet
+	setSelectedWallet,
+	onEdit
 }: ListWalletsProps) {
 	return (
 		<div className="animate-slide-up grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px]">
@@ -18,6 +20,7 @@ function ListWallets({
 					key={wallet.id} 
 					wallet={wallet}
 					onClick={setSelectedWallet}
+					onEdit={onEdit}
 				/>
 			))}
 

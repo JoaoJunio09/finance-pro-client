@@ -1,11 +1,12 @@
 import { ChevronDown, Pencil, Wallet, X } from "lucide-react";
-import React from "react";
-import WalletCard from "./WalletCard";
-import type { BankResponse } from "../../../models/bank/BankResponse";
-import type { FormData } from "../types/FormData";
-import type { WalletResponse } from "../../../models/wallet/WalletResponse";
-import { WalletDefault } from "../types/WalletDefault";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import React from "react";
+import type { BankResponse } from "../../../models/bank/BankResponse";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
+import type { FormData } from "../types/FormData";
+import { WalletDefault } from "../types/WalletDefault";
+import WalletCard from "./WalletCard";
+import { formatCurrencyInput } from "../../../utils/FormatCurrency";
 
 interface WalletModalProps {
 	banks: BankResponse[];
@@ -15,6 +16,7 @@ interface WalletModalProps {
 	isEditing: boolean
 	onClose: () => void;
 	saveOrUpdate: () => void;
+	isLoading: boolean;
 }
 
 function WalletModal({
@@ -24,7 +26,8 @@ function WalletModal({
 	handleOnChange,
 	isEditing,
 	onClose,
-	saveOrUpdate
+	saveOrUpdate,
+	isLoading
 }: WalletModalProps) {
 	const selectedBank = banks.find(b => b.id === form.bankIdOrType);
 	const isWalletDefault = form.bankIdOrType === WalletDefault;
@@ -119,7 +122,7 @@ function WalletModal({
 									name="balance"
 									type="text"
 									placeholder="0,00"
-									value={form.balance}
+									value={formatCurrencyInput(form.balance)}
 									onChange={handleOnChange}
 									className="w-full h-full bg-transparent pl-[46px] pr-4 font-['Outfit'] text-[20px] font-semibold text-white tabular-nums placeholder-[#71717A] outline-none"
 								/>
@@ -132,12 +135,12 @@ function WalletModal({
 									4 Dígitos <span className="text-zinc-500 font-normal lowercase tracking-normal bg-[#111113] rounded px-1.5 ml-1 text-[10px] border border-white/[0.04]">(opc)</span>
 								</label>
 								<input
-									id="digits"
-									name="digits"
+									id="cardDigits"
+									name="cardDigits"
 									type="text"
 									maxLength={4}
 									placeholder="0000"
-									value={form.digits}
+									value={form.cardDigits}
 									onChange={handleOnChange}
 									className="w-full h-[52px] rounded-[12px] bg-[#09090B] border border-white/[0.08] px-4 font-['Outfit'] text-[20px] font-medium text-white tabular-nums placeholder-zinc-500 focus:outline-none focus:border-[#8B5CF6] focus:ring-[3px] focus:ring-[#8B5CF6]/20 transition-all text-center"
 								/>
@@ -158,14 +161,14 @@ function WalletModal({
 					</button>
 					<button 
 						onClick={saveOrUpdate}
-						disabled={!form.name || !form.balance || !form.bankIdOrType}
+						disabled={!form.name || !form.balance || !form.bankIdOrType || isLoading}
 						className="flex-1 h-[42px] rounded-[10px] font-['Inter'] text-[13px] font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed outline-none"
 						style={{ 
 							background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
 							boxShadow: '0 4px 14px rgba(124,58,237,0.20)'
 						}}
 					>
-						Salvar Carteira
+						{!isLoading ? 'Salvar Carteira' : 'Carregando'}
 					</button>
 				</div>
 

@@ -1,6 +1,7 @@
 export interface FormData {
+	id: string | null,
 	name: string,
 	bankIdOrType: string,
 	balance: string,
-	digits: string,
+	cardDigits: string,
 }
