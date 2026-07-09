@@ -1,6 +1,6 @@
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Wallet } from "lucide-react";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 const getDisplayDigits = (digits: string | null,) => {
@@ -28,9 +28,9 @@ function WalletCard({
         relative overflow-hidden w-full rounded-[20px] aspect-[1.586] transition-all duration-200 ease-out group select-none cursor-pointer hover:-translate-y-1
       `}
       style={{ 
-        background: wallet.bank.gradient,
-        boxShadow: wallet.bank.shadow ? `0 8px 32px ${wallet.bank.shadow}` : 'none',
-        border: wallet.bank.name === 'C6 Bank' ? '1px solid rgba(255,255,255,0.15)' : 'none'
+        background: wallet.bank && wallet.bank.gradient ? wallet.bank.gradient : '#09090B',
+        boxShadow: wallet.bank && wallet.bank.shadow ? `0 8px 32px ${wallet.bank.shadow}` : 'none',
+        border: (wallet.bank && wallet.bank.name === 'C6 Bank') || !wallet.bank ? '1px solid rgba(255,255,255,0.15)' : 'none'
       }}
     >
       {/* Camada 1: Geometria (Decoração) */}
@@ -48,7 +48,12 @@ function WalletCard({
 
       {/* Camada 3: Logo/Ícone */}
       <div className="absolute top-[14px] right-[16px] text-white/90">
-				<DynamicIcon name={wallet.bank.icon as IconName} size={false ? 24 : 28} strokeWidth={1.5} />
+        {wallet.bank ? (
+          <DynamicIcon name={wallet.bank.icon as IconName} size={isPreview ? 24 : 28} strokeWidth={1.5} />
+        ) : (
+          <Wallet size={isPreview ? 24 : 28} strokeWidth={1.5} />
+        )}
+				
       </div>
 
       {/* Camada 4: Número do cartão */}

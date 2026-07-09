@@ -27,12 +27,15 @@ function WalletModal({
 	saveOrUpdate
 }: WalletModalProps) {
 	const selectedBank = banks.find(b => b.id === form.bankIdOrType);
+	const isWalletDefault = form.bankIdOrType === WalletDefault;
 	return (
 		<div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
 			<div className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-overlay" onClick={onClose} />
 			
-			<div className="relative z-[61] w-full max-w-[480px] bg-[#111113] border border-white/[0.06] rounded-[24px] p-[28px] animate-slide-up shadow-2xl"
-					style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.10)' }}>
+			<div
+				className="relative z-[61] w-full max-w-[480px] bg-[#111113] border border-white/[0.06] rounded-[24px] p-[28px] animate-slide-up shadow-2xl"
+				style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(139,92,246,0.10)' }}
+			>
 				
 				<div className="flex items-center justify-between mb-[20px]">
 					<div className="flex items-center gap-3">
@@ -123,7 +126,7 @@ function WalletModal({
 							</div>
 						</div>
 
-						{true && (
+						{!isWalletDefault && (
 							<div className="w-[120px]">
 								<label className="font-['Inter'] text-[12px] font-semibold text-zinc-500 uppercase tracking-widest block mb-2 truncate">
 									4 Dígitos <span className="text-zinc-500 font-normal lowercase tracking-normal bg-[#111113] rounded px-1.5 ml-1 text-[10px] border border-white/[0.04]">(opc)</span>

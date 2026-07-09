@@ -151,7 +151,7 @@ function Wallets() {
       const dashoffset = -currentOffset;
       
       currentOffset += percentage * circumference;
-      const color = w.bank.color;
+      const color = w.bank ? w.bank.color : '#ccc';
 
       return {
         ...w,
