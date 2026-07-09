@@ -1,12 +1,13 @@
 export const formatCurrencyLabel = (val: number) => {
+	const hasDecimal = val % 1 !== 0;
+
 	return new Intl.NumberFormat('pt-BR', {
 		style: 'currency',
 		currency: 'BRL',
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
+		minimumFractionDigits: hasDecimal ? 2 : 0,
+		maximumFractionDigits: 2,
 	}).format(val);
 };
-
 export function formatCurrencyInput(value: string) {
 	const onlyNumbers = value.replace(/\D/g, '');
 

@@ -12,12 +12,14 @@ interface WalletCardProps {
 	wallet: WalletResponse;
 	onClick?: (wallet: WalletResponse) => void;
 	onEdit?: (wallet: WalletResponse) => void;
+	onDelete?: (id: string) => void;
 }
 
 function WalletCard({ 
   wallet,
 	onClick,
-	onEdit
+	onEdit,
+  onDelete
 }: WalletCardProps) {
 	const isPreview = !onEdit && !onClick;
 
@@ -82,8 +84,8 @@ function WalletCard({
       </div>
 
       {/* Camada 7: Ações (Hover) */}
-      {wallet && onEdit && (
-        <div className="absolute top-[12px] left-[12px] flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+      {wallet && onEdit && onDelete && (
+        <div className="absolute top-[12px] left-[12px] flex gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-150">
           <button 
             onClick={(e) => {
               e.stopPropagation();
@@ -94,7 +96,10 @@ function WalletCard({
             <Pencil size={12} className="text-white" />
           </button>
           <button 
-            // onClick={(e) => { e.stopPropagation(); onDelete(wallet.id!); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(wallet.id);
+            }}
             className="w-[28px] h-[28px] rounded-lg bg-[#F8717140] hover:bg-[#F8717166] flex items-center justify-center transition-colors"
           >
             <Trash2 size={12} className="text-[#F87171]" />

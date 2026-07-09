@@ -6,7 +6,6 @@ import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import type { FormData } from "../types/FormData";
 import { WalletDefault } from "../types/WalletDefault";
 import WalletCard from "./WalletCard";
-import { formatCurrencyInput } from "../../../utils/FormatCurrency";
 
 interface WalletModalProps {
 	banks: BankResponse[];
@@ -122,7 +121,7 @@ function WalletModal({
 									name="balance"
 									type="text"
 									placeholder="0,00"
-									value={formatCurrencyInput(form.balance)}
+									value={form.balance}
 									onChange={handleOnChange}
 									className="w-full h-full bg-transparent pl-[46px] pr-4 font-['Outfit'] text-[20px] font-semibold text-white tabular-nums placeholder-[#71717A] outline-none"
 								/>

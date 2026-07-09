@@ -6,12 +6,14 @@ interface ListWalletsProps {
 	wallets: WalletResponse[];
 	setSelectedWallet: (wallet: WalletResponse) => void;
 	onEdit: (wallet: WalletResponse) => void;
+	onDelete: (id: string) => void;
 }
 
 function ListWallets({
 	wallets,
 	setSelectedWallet,
-	onEdit
+	onEdit,
+	onDelete
 }: ListWalletsProps) {
 	return (
 		<div className="animate-slide-up grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px]">
@@ -21,6 +23,7 @@ function ListWallets({
 					wallet={wallet}
 					onClick={setSelectedWallet}
 					onEdit={onEdit}
+					onDelete={onDelete}
 				/>
 			))}
 

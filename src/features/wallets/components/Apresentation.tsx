@@ -23,7 +23,7 @@ function Apresentation({ onNewWallet }: ApresentationProps) {
 				onMouseOut={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, #7C3AED, #6D28D9)'}
 			>
 				<Plus size={15} color="#FFFFFF" />
-				Nova Carteira
+				Novo
 			</button>
 		</div>
 	)

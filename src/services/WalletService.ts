@@ -23,7 +23,7 @@ class WalletService {
 				params
 			});
 
-			return response.data
+			return response.data;
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
@@ -64,7 +64,7 @@ class WalletService {
 				}
 			});
 
-			return response.data
+			return response.data;
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
@@ -84,11 +84,32 @@ class WalletService {
 				}
 			});
 
-			return response.data
+			return response.data;
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao atualizar a Carteira');
+			}
+
+			throw err;
+		}
+	}
+
+	public async delete(id: string) {
+		const URL = `${this.BASE_URL}/${id}`;
+		try {
+			const response = await api.delete(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data;
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao remover Carteira');
 			}
 
 			throw err;

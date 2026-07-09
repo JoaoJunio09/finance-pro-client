@@ -70,6 +70,28 @@ function useWallets(onSuccess: () => void) {
 		}
 	});
 
+	const walletMutationDelete = useMutation({
+		mutationFn: (id: string) => walletService.delete(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+
+			showToast({
+				type: 'success',
+				title: 'Carteira/Cartão removido!!',
+				message: 'Carteira/Cartão foi excluído com sucesso'
+			});
+
+			onSuccess();
+		},
+		onError: () => {
+			showToast({
+				type: 'error',
+				title: 'Erro ao remover Carteira/Cartão',
+				message: 'Tente novamente em instantes.'
+			});
+		}
+	});
+
 	const queryWallets = useQuery({
 		queryKey: [
 			'wallets',
@@ -102,7 +124,7 @@ function useWallets(onSuccess: () => void) {
 		return {
 			id: '',
 			name: form.name,
-			balance: Number(form.balance),
+			balance: formatCurrencyToAPI(form.balance),
 			cardDigits: form.cardDigits,
 			bank: {
 				id: queryBank.data?.id ?? '',
@@ -181,12 +203,15 @@ function useWallets(onSuccess: () => void) {
 		const bankId = form.bankIdOrType === WalletDefault
 			? null
 			: form.bankIdOrType;
+		const cardDigits = form.cardDigits === ''
+			? null
+			: form.cardDigits;
 
 		const wallet: WalletRequest = {
 			id: form.id,
 			name: form.name,
 			balance: formatCurrencyToAPI(form.balance),
-			cardDigits: form.cardDigits,
+			cardDigits: cardDigits,
 			accountId: account.id,
 			bankId: bankId
 		}
@@ -196,9 +221,10 @@ function useWallets(onSuccess: () => void) {
 		} else {
 			walletMutationSave.mutate(wallet);
 		}
+	}
 
-		console.log(form);
-		console.log(wallet);
+	function deleteWallet(id: string) {
+		walletMutationDelete.mutate(id);
 	}
 
 	function reset() {
@@ -225,7 +251,10 @@ function useWallets(onSuccess: () => void) {
 		setWallet,
 		handleOnChange,
 		saveOrUpdate,
-		isLoading: walletMutationSave.isPending || walletMutationUpdate.isPending
+		deleteWallet,
+		isLoading: walletMutationSave.isPending
+			|| walletMutationUpdate.isPending
+			|| walletMutationDelete.isPending
 	}
 }
 

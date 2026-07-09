@@ -3,7 +3,7 @@ export interface WalletRequest {
 	name: string,
 	description?: string,
 	balance: number,
-	cardDigits: string,
+	cardDigits: string | null,
 	goalId?: string,
 	bankId?: string | null,
 	accountId: string
