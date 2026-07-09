@@ -104,13 +104,13 @@ function useWallets() {
 	const totalAssets = wallets
 		.reduce((total, wallet) => total + (wallet.balance || 0), 0);
 
-	const bigWalletIncome = wallets.reduce((accumulator, actual) => {
-		return actual.balance > accumulator.balance ? actual : accumulator;
-	});
+	const bigWalletIncome = wallets.toSorted(
+		(a, b) => b.balance - a.balance
+	)[0] ?? null;
 	
-	const smallWalletIncome = wallets.reduce((accumulator, actual) => {
-		return actual.balance < accumulator.balance ? actual : accumulator;
-	});
+	const smallWalletIncome = wallets.toSorted(
+		(a, b) => a.balance - b.balance
+	)[0] ?? null;
 
 	function handleOnChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
 		const { name, value } = e.target;

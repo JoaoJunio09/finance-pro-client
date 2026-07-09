@@ -66,14 +66,14 @@ function TotalAssets({
 					<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Carteiras Ativas</span>
 					<span className="font-['Outfit'] text-[14px] font-semibold tabular-nums text-white ml-2">{wallets}</span>
 				</div>
-				{true && (
+				{bigIncome && (
 					<div className="flex items-center gap-[8px] md:justify-end">
 						<div className="w-[8px] h-[8px] rounded-full bg-emerald-400" />
 						<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Maior Saldo</span>
 						<span className="font-['Outfit'] text-[14px] font-semibold text-white ml-2">{bigIncome.name}</span>
 					</div>
 				)}
-				{true && (
+				{smallIncome && (
 					<div className="flex items-center gap-[8px] md:justify-end">
 						<div className="w-[8px] h-[8px] rounded-full bg-rose-400" />
 						<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Menor Saldo</span>
