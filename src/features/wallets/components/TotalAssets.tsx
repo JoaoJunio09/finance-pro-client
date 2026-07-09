@@ -1,12 +1,20 @@
 import { Wallet } from "lucide-react";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
+import type { BankResponse } from "../../../models/bank/BankResponse";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 
 interface TotalAssetsProps {
-	total: number
+	total: number,
+	wallets: number,
+	bigIncome: WalletResponse,
+	smallIncome: WalletResponse
 }
 
 function TotalAssets({
 	total,
+	wallets,
+	bigIncome,
+	smallIncome
 }: TotalAssetsProps) {
 	return(
 		<div
@@ -56,20 +64,20 @@ function TotalAssets({
 				<div className="flex items-center gap-[8px] md:justify-end">
 					<div className="w-[8px] h-[8px] rounded-full bg-[#8B5CF6]" />
 					<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Carteiras Ativas</span>
-					<span className="font-['Outfit'] text-[14px] font-semibold tabular-nums text-white ml-2">5</span>
+					<span className="font-['Outfit'] text-[14px] font-semibold tabular-nums text-white ml-2">{wallets}</span>
 				</div>
 				{true && (
 					<div className="flex items-center gap-[8px] md:justify-end">
 						<div className="w-[8px] h-[8px] rounded-full bg-emerald-400" />
 						<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Maior Saldo</span>
-						<span className="font-['Outfit'] text-[14px] font-semibold text-white ml-2">Nubank</span>
+						<span className="font-['Outfit'] text-[14px] font-semibold text-white ml-2">{bigIncome.name}</span>
 					</div>
 				)}
 				{true && (
 					<div className="flex items-center gap-[8px] md:justify-end">
 						<div className="w-[8px] h-[8px] rounded-full bg-rose-400" />
 						<span className="font-['Inter'] text-[12px] text-zinc-500 font-medium">Menor Saldo</span>
-						<span className="font-['Outfit'] text-[14px] font-semibold text-white ml-2">Caixa Econômica</span>
+						<span className="font-['Outfit'] text-[14px] font-semibold text-white ml-2">{smallIncome.name}</span>
 					</div>
 				)}
 			</div>

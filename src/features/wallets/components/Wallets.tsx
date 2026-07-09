@@ -128,6 +128,8 @@ function Wallets() {
     banks,
     previewWallet,
     totalAssets,
+    bigWalletIncome,
+    smallWalletIncome,
     form,
     handleOnChange,
     saveOrUpdate
@@ -175,6 +177,9 @@ function Wallets() {
         {/* BLOCO 2 - PATRIMÔNIO TOTAL (BANNER DESTAQUE ESTILO OVERVIEW) */}
         <TotalAssets
 					total={totalAssets ?? 0}
+          wallets={wallets.length}
+          bigIncome={bigWalletIncome}
+          smallIncome={smallWalletIncome}
 				/>
 
         {/* BLOCO 3 - GRID DE CARTÕES FÍSICOS */}

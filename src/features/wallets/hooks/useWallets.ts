@@ -104,6 +104,14 @@ function useWallets() {
 	const totalAssets = wallets
 		.reduce((total, wallet) => total + (wallet.balance || 0), 0);
 
+	const bigWalletIncome = wallets.reduce((accumulator, actual) => {
+		return actual.balance > accumulator.balance ? actual : accumulator;
+	});
+	
+	const smallWalletIncome = wallets.reduce((accumulator, actual) => {
+		return actual.balance < accumulator.balance ? actual : accumulator;
+	});
+
 	function handleOnChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
 		const { name, value } = e.target;
 
@@ -144,6 +152,8 @@ function useWallets() {
 		banks,
 		previewWallet,
 		totalAssets,
+		bigWalletIncome,
+		smallWalletIncome,
 		form,
 		handleOnChange,
 		saveOrUpdate
