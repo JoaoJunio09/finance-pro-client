@@ -54,9 +54,11 @@ function Activities() {
             <Overview
               allTransaction={allTransaction ?? null}
             />
-            <MonthSummaryAndInsights
-              allTransaction={allTransaction ?? null}
-            />
+            {allTransaction?.transactionBiggestIncome && allTransaction.transactionBiggestExpense && (
+              <MonthSummaryAndInsights
+                allTransaction={allTransaction ?? null}
+              />
+            )}
             <Calendar
               calendarDays={calendarDays}
               selectedDate={selectedDate}

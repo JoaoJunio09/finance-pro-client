@@ -1,32 +1,18 @@
-import {
-  AlertTriangle,
-  Building2,
-  CircleDot,
-  Flame,
-  Hexagon,
-  Home,
-  Landmark,
-  Pencil,
-  PiggyBank,
-  TrendingUp,
-  Wallet,
-  Zap
-} from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import Confirm from '../../../components/ui/Confirm/Confirm';
 import type { WalletResponse } from '../../../models/wallet/WalletResponse';
 import useWallets from '../hooks/useWallets';
 import Apresentation from './Apresentation';
 import AssetDistributionChart from './AssetDistributionChart';
 import ListWallets from './ListWallets';
 import TotalAssets from './TotalAssets';
-import WalletDetails from './WalletDetails';
+
 import WalletModal from './WalletModal';
-import Confirm from '../../../components/ui/Confirm/Confirm';
+import WalletDetails from './WalletDetails';
 
 function Wallets() {
   const [openModalSaveOrUpdate, setOpenModalSaveOrUpdate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
-	const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
   const [walletIdDelete, setWalletIdDelete] = useState('0');
 	
   function handleSaveOrUpdate(wallet: WalletResponse | null) {
@@ -51,6 +37,9 @@ function Wallets() {
     wallets,
     banks,
     previewWallet,
+    selectedWallet,
+    setSelectedWallet,
+    walletDetails,
     totalAssets,
     bigWalletIncome,
     smallWalletIncome,
@@ -121,7 +110,7 @@ function Wallets() {
         {/* BLOCO 4 - DETALHE DA CARTEIRA SELECIONADA */}
         {selectedWallet && (
           <WalletDetails
-						selectedWallet={selectedWallet}
+						selectedWallet={walletDetails}
 						setSelectedWallet={setSelectedWallet}
 					/>
         )}

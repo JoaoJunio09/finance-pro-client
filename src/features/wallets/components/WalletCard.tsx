@@ -9,7 +9,7 @@ const getDisplayDigits = (digits: string | null,) => {
 };
 
 interface WalletCardProps {
-	wallet: WalletResponse;
+	wallet: WalletResponse | undefined;
 	onClick?: (wallet: WalletResponse) => void;
 	onEdit?: (wallet: WalletResponse) => void;
 	onDelete?: (id: string) => void;
@@ -21,8 +21,8 @@ function WalletCard({
 	onEdit,
   onDelete
 }: WalletCardProps) {
+  if (!wallet) return;
 	const isPreview = !onEdit && !onClick;
-
   return (
     <div 
       onClick={() => onClick && wallet.id !== '' && onClick(wallet)}

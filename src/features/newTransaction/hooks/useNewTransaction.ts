@@ -41,9 +41,6 @@ function useNewTransaction(onClose: () => void) {
 		typeParam = undefined;
 	}
 
-	console.log(typeParam);
-	console.log(form.type);
-
 	function removeError(field: string) {
 		setInputsError(prev => {
 			const newErrors = { ...prev };

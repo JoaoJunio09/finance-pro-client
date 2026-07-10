@@ -48,7 +48,6 @@ function MonthSummaryAndInsights({ allTransaction }: MonthSummaryAndInsightsProp
 						<PieChart className="w-5 h-5 text-zinc-500" /> Resumo do Mês
 					</h3>
 					<div className="bg-[#111113]/40 border border-white/[0.04] rounded-[24px] p-6 sm:p-8 flex-1 flex flex-col justify-between">
-						
 						<div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-8">
 							<div>
 								<span className="text-[10px] uppercase text-zinc-500 font-semibold block mb-1">Maior Gasto</span>

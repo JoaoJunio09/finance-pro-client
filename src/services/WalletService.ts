@@ -1,5 +1,6 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { ParamsWalletAPI } from "../models/wallet/ParamsWalletAPI";
+import type { WalletDetailsResponse } from "../models/wallet/WalletDetails";
 import type { WalletRequest } from "../models/wallet/WalletRequest";
 import type { WalletResponse } from "../models/wallet/WalletResponse";
 import api from "./api";
@@ -28,6 +29,27 @@ class WalletService {
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao carregar as Carteiras');
+			}
+
+			throw err;
+		}
+	}
+
+	public async details(accountId: string, walletId: string) {
+		const URL = `${this.BASE_URL}/details/${accountId}/${walletId}`;
+		try {
+			const response = await api.get<WalletDetailsResponse>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data;
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao carregar a Carteira');
 			}
 
 			throw err;

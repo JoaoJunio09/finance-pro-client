@@ -4,6 +4,7 @@ import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
 import useBankService from "../../../hooks/useBankService";
 import useWalletService from "../../../hooks/useWalletService";
+import type { WalletDetailsResponse } from "../../../models/wallet/WalletDetails";
 import type { WalletRequest } from "../../../models/wallet/WalletRequest";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatCurrency";
@@ -12,6 +13,7 @@ import { WalletDefault } from "../types/WalletDefault";
 
 function useWallets(onSuccess: () => void) {
 	const [wallet, setWallet] = useState<WalletResponse | null>(null);
+	const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
 	const [form, setForm] = useState<FormData>({
 		id: null,
 		name: '', 
@@ -101,6 +103,17 @@ function useWallets(onSuccess: () => void) {
 		retry: 1
 	});
 
+	const queryWalletDetails = useQuery({
+		queryKey: [
+			'walletDetails',
+			selectedWallet?.id,
+			account?.id
+		],
+		queryFn: () => walletService.details(account?.id ?? '', selectedWallet?.id ?? ''),
+		enabled: !!account?.id && !!selectedWallet?.id,
+		retry: 1
+	});
+
 	const queryBanks = useQuery({
 		queryKey: ['banks'],
 		queryFn: () => bankService.getAll(),
@@ -118,6 +131,7 @@ function useWallets(onSuccess: () => void) {
 	});
 
 	const wallets = useMemo(() => queryWallets.data ?? [], [queryWallets.data]);
+	const walletDetails = useMemo<WalletDetailsResponse | null>(() => queryWalletDetails.data ?? null, [queryWalletDetails.data]);
 	const banks = useMemo(() => queryBanks.data ?? [], [queryBanks.data]);
 
 	const previewWallet = useMemo<WalletResponse>(() => {
@@ -243,6 +257,9 @@ function useWallets(onSuccess: () => void) {
 		wallets,
 		banks,
 		previewWallet,
+		selectedWallet,
+		setSelectedWallet,
+		walletDetails,
 		totalAssets,
 		bigWalletIncome,
 		smallWalletIncome,
