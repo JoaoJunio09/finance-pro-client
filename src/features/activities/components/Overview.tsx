@@ -10,7 +10,7 @@ function Overview({ allTransaction }: OverviewProps) {
 	return (
 		<>
 		{allTransaction !== null ? (
-			<section className="w-full mb-12 animate-slide-up delay-100">
+			<section className="w-full mb-10 animate-slide-up delay-100">
 				{/* <h3 className="text-lg font-medium text-white mb-5 tracking-tight">Visão Geral Financeira</h3> */}
 				<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
 					

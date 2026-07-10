@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
 import useActivities from '../hooks/useActivities';
 import Apresentation from './Apresentation';
@@ -17,6 +17,7 @@ function Activities() {
     calendarDays,
     error,
     loading,
+    fetching,
     selectedDate,
     setSelectedDate,
     selectedDateInfo,
@@ -35,35 +36,36 @@ function Activities() {
   return (
     <main className="flex-1 w-full min-w-0 flex flex-col transition-all duration-300 relative z-10">
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex flex-col flex-1">
-        {loading && (
-          <TopProgressBar />
-        )}
+        {(loading || fetching) && <TopProgressBar />}
 
-        <Apresentation
-          activeMonth={month}
-          activeYear={year}
-          goToPreviousMonth={goToPreviousMonth}
-          goToNextMonth={goToNextMonth}
-          MONTHS={MONTHS}
-        />
-
-        {loading ? (
+        {loading  ? (
           <ActivitiesSkeleton />
         ) : (
           <div>
-            <Overview
-              allTransaction={allTransaction ?? null}
+            <Apresentation
+              activeMonth={month}
+              activeYear={year}
+              goToPreviousMonth={goToPreviousMonth}
+              goToNextMonth={goToNextMonth}
+              MONTHS={MONTHS}
             />
+
             {allTransaction?.transactionBiggestIncome && allTransaction.transactionBiggestExpense && (
-              <MonthSummaryAndInsights
-                allTransaction={allTransaction ?? null}
-              />
+              <>
+                <Overview
+                  allTransaction={allTransaction ?? null}
+                />
+
+                <MonthSummaryAndInsights
+                  allTransaction={allTransaction ?? null}
+                />
+              </>
             )}
             <Calendar
               calendarDays={calendarDays}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
-              currentBalance={allTransaction?.currentBalance ?? 0}
+              currentBalance={allTransaction?.currentBalance ?? 0}  
             />
             <RecentTransactions
               allTransaction={allTransaction ?? null}

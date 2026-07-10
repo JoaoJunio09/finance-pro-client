@@ -13,7 +13,7 @@ function Apresentation({
 	activeYear,
 	goToPreviousMonth,
 	goToNextMonth,
-	MONTHS
+	MONTHS 
 }: ApresentationProps) {
 	return (
 		<section className="animate-slide-up flex flex-col items-center text-center w-full mb-10 mt-2">
@@ -23,7 +23,6 @@ function Apresentation({
 			<p className="text-zinc-500 font-light text-sm md:text-base max-w-[65ch] leading-relaxed mb-8">
 				Acompanhe todas as movimentações do mês em um único lugar. Visualize receitas, despesas e recorrências de forma simples, organizada e intuitiva.
 			</p>
-
 			{/* Paginação do Calendário */}
 			<div className="flex flex-col items-center gap-2">
 				<div className="flex items-center gap-4 sm:gap-6 bg-[#111113]/50 border border-white/[0.04] p-1.5 rounded-full backdrop-blur-sm">

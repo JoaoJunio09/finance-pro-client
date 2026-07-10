@@ -1,4 +1,4 @@
-import { PieChart, Sparkles, Telescope } from "lucide-react";
+import { PieChart, Sparkles } from "lucide-react";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
@@ -42,7 +42,7 @@ function MonthSummaryAndInsights({ allTransaction }: MonthSummaryAndInsightsProp
 					</div>
 				</div>
 
-				{/* Resumo & Mini Chart (Right - 5 cols) */}
+				{/* Resumo do Mês*/}
 				<div className="lg:col-span-5 flex flex-col">
 						<h3 className="text-lg font-medium text-white mb-5 tracking-tight flex items-center gap-2">
 						<PieChart className="w-5 h-5 text-zinc-500" /> Resumo do Mês
@@ -69,20 +69,6 @@ function MonthSummaryAndInsights({ allTransaction }: MonthSummaryAndInsightsProp
 								<span className="text-[10px] uppercase text-zinc-500 font-semibold block mb-1">Previsão Fim do Mês</span>
 								<span className="text-sm font-bold text-[#8B5CF6]">R$ 19.622,00</span>
 							</div>
-						</div>
-
-						{/* Minimalist Area Chart for Balance Evolution (Mocked shape) */}
-						<div className="w-full h-16 relative mt-auto border-b border-white/[0.04]">
-							<svg className="w-full h-full overflow-visible" viewBox="0 0 400 60" preserveAspectRatio="none">
-								<defs>
-									<linearGradient id="grad-line" x1="0" y1="0" x2="0" y2="1">
-										<stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.3" />
-										<stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
-									</linearGradient>
-								</defs>
-								<path d="M0,50 L40,45 L80,55 L120,40 L160,20 L200,25 L240,10 L280,15 L320,5 L360,20 L400,10 L400,60 L0,60 Z" fill="url(#grad-line)" />
-								<polyline fill="none" stroke="#8B5CF6" strokeWidth="2" points="0,50 40,45 80,55 120,40 160,20 200,25 240,10 280,15 320,5 360,20 400,10" />
-							</svg>
 						</div>
 					</div>
 				</div>

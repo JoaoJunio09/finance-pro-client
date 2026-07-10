@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
@@ -74,8 +74,9 @@ function useActivities() {
       month: (month+1),
       year: year
     }),
-		enabled: !!accountId || !!month || !!year,
-		retry: 1
+    enabled: Boolean(accountId),
+		retry: 1,
+    placeholderData: keepPreviousData
 	});
 
   const queryRecurrences = useQuery({
@@ -175,6 +176,9 @@ function useActivities() {
 		calendarDays,
 		error: queryTransactions.error,
 		loading: queryTransactions.isLoading || queryRecurrences.isLoading,
+    fetching:
+      (queryTransactions.isFetching && !queryTransactions.isLoading) ||
+      (queryRecurrences.isFetching && !queryRecurrences.isLoading),
 		selectedDate,
 		setSelectedDate,
 		selectedDateInfo,

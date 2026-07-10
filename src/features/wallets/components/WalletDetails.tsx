@@ -82,7 +82,7 @@ function WalletDetails({
 										<div className="font-['Inter'] text-[11px] text-zinc-500 capitalize">{formatRelativeDateTime(tx.registeredAt)}</div>
 									</div>
 									<div className={`font-['Outfit'] text-[13px] font-semibold tabular-nums ${tx.type === 'CREDIT' ? 'text-emerald-400' : 'text-rose-400'}`}>
-										{tx.type === 'CREDIT' ? '+' : ''}{formatCurrencyLabel(tx.amount)}
+										{tx.type === 'CREDIT' ? '+' : '-'}{formatCurrencyLabel(tx.amount)}
 									</div>
 								</div>
 							))

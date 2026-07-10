@@ -8,6 +8,7 @@ export const formatCurrencyLabel = (val: number) => {
 		maximumFractionDigits: 2,
 	}).format(val);
 };
+
 export function formatCurrencyInput(value: string) {
 	const onlyNumbers = value.replace(/\D/g, '');
 

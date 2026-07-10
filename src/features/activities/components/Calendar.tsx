@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 import type { CalendarDay } from "../types/CalendarDay";
 
@@ -5,7 +6,7 @@ interface CalendarProps {
 	calendarDays: CalendarDay[];
 	selectedDate: string | null;
 	setSelectedDate: React.Dispatch<React.SetStateAction<string | null>>;
-	currentBalance: number,
+	currentBalance: number;
 }
 
 function Calendar({
@@ -53,7 +54,7 @@ function Calendar({
 	});
 
 	return (
-		<div className="w-full flex flex-col min-w-0 animate-slide-up delay-100 flex-1 mb-16">
+		<div className="w-full flex flex-col gap-10 min-w-0 animate-slide-up delay-100 flex-1 mb-16">
 			<div className="w-full border border-white/[0.06] rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#0e0e11]/80 backdrop-blur-xl shadow-2xl flex flex-col">
 				
 				{/* Headers de Semana */}
