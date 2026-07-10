@@ -269,9 +269,10 @@ function useWallets(onSuccess: () => void) {
 		handleOnChange,
 		saveOrUpdate,
 		deleteWallet,
-		isLoading: walletMutationSave.isPending
+		isLoadingSave: walletMutationSave.isPending
 			|| walletMutationUpdate.isPending
-			|| walletMutationDelete.isPending
+			|| walletMutationDelete.isPending,
+		isLoading: queryWallets.isLoading || queryBanks.isLoading
 	}
 }
 

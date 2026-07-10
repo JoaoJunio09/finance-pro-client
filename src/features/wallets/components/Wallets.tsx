@@ -9,6 +9,8 @@ import TotalAssets from './TotalAssets';
 
 import WalletModal from './WalletModal';
 import WalletDetails from './WalletDetails';
+import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
+import WalletsSkeleton from './WalletsSkeleton';
 
 function Wallets() {
   const [openModalSaveOrUpdate, setOpenModalSaveOrUpdate] = useState(false);
@@ -49,6 +51,7 @@ function Wallets() {
     handleOnChange,
     saveOrUpdate,
     deleteWallet,
+    isLoadingSave,
     isLoading
   } = useWallets(handleCloseModal);
 
@@ -85,42 +88,51 @@ function Wallets() {
   return (
 		<main className="flex-1 w-full min-w-0 flex flex-col overflow-y-auto relative z-10">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8 py-8 flex flex-col gap-[28px] w-full">
+        {isLoading && (
+          <TopProgressBar />
+        )}
         
         {/* BLOCO 1 - HEADER DA PÁGINA */}
         <Apresentation
           onNewWallet={handleSaveOrUpdate}
 				/>
 
-        {/* BLOCO 2 - PATRIMÔNIO TOTAL (BANNER DESTAQUE ESTILO OVERVIEW) */}
-        <TotalAssets
-					total={totalAssets ?? 0}
-          wallets={wallets.length}
-          bigIncome={bigWalletIncome}
-          smallIncome={smallWalletIncome}
-				/>
+        {isLoading ? (
+          <WalletsSkeleton />
+        ) : (
+          <>
+            {/* BLOCO 2 - PATRIMÔNIO TOTAL (BANNER DESTAQUE ESTILO OVERVIEW) */}
+            <TotalAssets
+              total={totalAssets ?? 0}
+              wallets={wallets.length}
+              bigIncome={bigWalletIncome}
+              smallIncome={smallWalletIncome}
+            />
 
-        {/* BLOCO 3 - GRID DE CARTÕES FÍSICOS */}
-				<ListWallets
-					wallets={wallets ?? []}
-					setSelectedWallet={setSelectedWallet}
-          onEdit={handleSaveOrUpdate}
-          onDelete={handleOnDelete}
-				/>
+            {/* BLOCO 3 - GRID DE CARTÕES FÍSICOS */}
+            <ListWallets
+              wallets={wallets ?? []}
+              setSelectedWallet={setSelectedWallet}
+              onEdit={handleSaveOrUpdate}
+              onDelete={handleOnDelete}
+            />
 
-        {/* BLOCO 4 - DETALHE DA CARTEIRA SELECIONADA */}
-        {selectedWallet && (
-          <WalletDetails
-						selectedWallet={walletDetails}
-						setSelectedWallet={setSelectedWallet}
-					/>
-        )}
+            {/* BLOCO 4 - DETALHE DA CARTEIRA SELECIONADA */}
+            {selectedWallet && (
+              <WalletDetails
+                selectedWallet={walletDetails}
+                setSelectedWallet={setSelectedWallet}
+              />
+            )}
 
-        {/* BLOCO 5 - DISTRIBUIÇÃO PATRIMONIAL */}
-        {chartData && chartData.length > 0 && (
-          <AssetDistributionChart
-            chartData={chartData}
-            totalAssets={totalAssets ?? 0}
-          />
+            {/* BLOCO 5 - DISTRIBUIÇÃO PATRIMONIAL */}
+            {chartData && chartData.length > 0 && (
+              <AssetDistributionChart
+                chartData={chartData}
+                totalAssets={totalAssets ?? 0}
+              />
+            )}
+          </>
         )}
 
         {openModalSaveOrUpdate && (
@@ -132,10 +144,9 @@ function Wallets() {
             onClose={handleCloseModal}
             previewWallet={previewWallet}
             saveOrUpdate={saveOrUpdate}
-            isLoading={isLoading}
+            isLoading={isLoadingSave}
           />
         )}
-				
 				
 				{openModalDelete && (
 					<Confirm

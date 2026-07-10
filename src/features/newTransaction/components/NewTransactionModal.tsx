@@ -58,6 +58,8 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
     if (type) setType(type);
   }, [isOpen, type]);
 
+  console.log(type);
+
   if (!isOpen) return null;
 
   const isIncome = form.type === 'CREDIT';

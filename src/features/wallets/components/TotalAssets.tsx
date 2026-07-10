@@ -1,7 +1,6 @@
 import { Wallet } from "lucide-react";
-import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
-import type { BankResponse } from "../../../models/bank/BankResponse";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
+import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
 interface TotalAssetsProps {
 	total: number,

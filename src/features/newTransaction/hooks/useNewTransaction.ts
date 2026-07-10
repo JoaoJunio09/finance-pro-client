@@ -33,12 +33,10 @@ function useNewTransaction(onClose: () => void) {
 
 	let typeParam: TransactionType | undefined = undefined;
 
-	if (form.type === 'CREDIT' || form.recurrenceType === 'CREDIT') {
-		typeParam = 'CREDIT';
-	} else if (form.type === 'DEBIT' || form.recurrenceType === 'DEBIT') {
-		typeParam = 'DEBIT';
-	} else {
-		typeParam = undefined;
+	if (form.type === 'RECURRING') {
+		typeParam = form.recurrenceType;
+	} else if (form.type === 'CREDIT' || form.type === 'DEBIT') {
+		typeParam = form.type;
 	}
 
 	function removeError(field: string) {
@@ -76,7 +74,6 @@ function useNewTransaction(onClose: () => void) {
 		queryKey: [
 			'categories',
 			typeParam,
-			form.type,
 			form.recurrenceType
 		],
 		queryFn: () => categoryService.getAll(
