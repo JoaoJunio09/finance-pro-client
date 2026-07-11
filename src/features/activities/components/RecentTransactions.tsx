@@ -9,11 +9,13 @@ import type { TransactionResponse } from "../../../models/transaction/Transactio
 interface RecentTransactionsProps {
 	allTransaction: AllTransactionResponse | null;
 	handleSaveOrUpdate: (transaction: TransactionResponse | null) => void;
+	handleOnDelete: (id: string) => void;
 }
 
 function RecentTransactions({
 	allTransaction,
-	handleSaveOrUpdate
+	handleSaveOrUpdate,
+	handleOnDelete
 }: RecentTransactionsProps) {
 	const biggestExpense = allTransaction?.transactionBiggestExpense;
 	const biggestIncome = allTransaction?.transactionBiggestIncome;
@@ -73,7 +75,7 @@ function RecentTransactions({
 								<TransactionAction
 									transaction={biggestExpense}
 									onEdit={handleSaveOrUpdate}
-									onRemove={() => {}}
+									onRemove={handleOnDelete}
 								/>
 							</div>
 						</div>
@@ -119,7 +121,7 @@ function RecentTransactions({
 								<TransactionAction
 									transaction={biggestIncome}
 									onEdit={handleSaveOrUpdate}
-									onRemove={() => {}}
+									onRemove={handleOnDelete}
 								/>
 							</div>
 						</div>
@@ -189,7 +191,7 @@ function RecentTransactions({
 								<TransactionAction
 									transaction={tx}
 									onEdit={handleSaveOrUpdate}
-									onRemove={() => {}}
+									onRemove={handleOnDelete}
 								/>
 							</div>
 						);

@@ -96,6 +96,27 @@ class TransactionService {
 			throw err;
 		}
 	}
+
+	public async delete(id: string) {
+		const URL = `${this.BASE_URL}/${id}`;
+		try {
+			const response = await api.delete<void>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao deletar Transação');
+			}
+
+			throw err;
+		}
+	}
 }
 
 export default TransactionService;

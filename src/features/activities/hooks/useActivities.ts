@@ -1,10 +1,11 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
 import useTransactionService from "../../../hooks/useTransactionService";
 import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
 import type { CalendarDay } from "../types/CalendarDay";
+import showToast from "../../../components/ui/Toast/Toast";
 
 function getRecurrenceDaysInMonth(
   recurrence: RecurrenceResponse,
@@ -49,18 +50,41 @@ function isPastMonth(month: number, year: number): boolean {
 }
 
 function useActivities() {
+  const [transactionDeleteId, setTransactionDeleteId] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
-	const month = useMemo(() => currentDate.getMonth(), [currentDate]);
+  const month = useMemo(() => currentDate.getMonth(), [currentDate]);
 	const year = useMemo(() => currentDate.getFullYear(), [currentDate]);
 
 	const { account } = useAccountContext();
+  const queryClient = useQueryClient();
 
   const accountId = account?.id;
 
 	const transactionService = useTransactionService();
   const recurrenceService = useRecurrenceService();
+
+  const transactionMutationDelete = useMutation({
+    mutationFn: (id: string) => transactionService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['account'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      
+      showToast({
+        type: 'success',
+        title: 'Excluido!',
+        message: 'A transação foi excluida com sucesso.'
+      });
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        title: 'Erro ao excluir Transação!',
+        message: 'Tente novamente em instantes.'
+      });
+    }
+  });
 
 	const queryTransactions = useQuery({
 		queryKey: [
@@ -87,15 +111,7 @@ function useActivities() {
     queryFn: () => recurrenceService.getAll({ accountId: accountId }),
     enabled: !!accountId,
     retry: 1
-  });
-
-	function goToPreviousMonth() {
-    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
-  }
-
-  function goToNextMonth() {
-    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-  }
+  });  
 
 	const allTransaction = useMemo(() => {
 		return queryTransactions.data;
@@ -171,11 +187,27 @@ function useActivities() {
     return calendarDays.find(d => d.date === selectedDate);
   }, [selectedDate, calendarDays]);
 
+  function goToPreviousMonth() {
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  }
+
+  function goToNextMonth() {
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  }
+
+  function deleteTransaction() {
+    if (!transactionDeleteId) return;
+    transactionMutationDelete.mutate(transactionDeleteId);
+  }
+
 	return {
     allTransaction: queryTransactions.data,
+    deleteTransaction,
+    setTransactionDeleteId,
 		calendarDays,
 		error: queryTransactions.error,
-		loading: queryTransactions.isLoading || queryRecurrences.isLoading,
+    loadingDelete: transactionMutationDelete.isPending,
+		loadingQuery: queryTransactions.isLoading || queryRecurrences.isLoading,
     fetching:
       (queryTransactions.isFetching && !queryTransactions.isLoading) ||
       (queryRecurrences.isFetching && !queryRecurrences.isLoading),

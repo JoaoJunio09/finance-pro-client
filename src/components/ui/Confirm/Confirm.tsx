@@ -28,6 +28,7 @@ interface ConfirmProps {
 	buttonText: string,
 	onCancel: () => void;
 	onConfirm: () => void;
+	isLoading: boolean;
 }
 
 function Confirm({
@@ -36,7 +37,8 @@ function Confirm({
 	message,
 	buttonText,
 	onCancel,
-	onConfirm
+	onConfirm,
+	isLoading
 }: ConfirmProps) {
 	const config = CONFIG[type];
 	const Icon = config.icon;
@@ -62,19 +64,19 @@ function Confirm({
 				<div className="flex gap-[10px] mt-[24px]">
 					<button 
 						onClick={onCancel}
-						className="flex-1 h-[42px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
+						className="cursor-pointer flex-1 h-[42px] rounded-[10px] bg-transparent border border-white/[0.08] hover:bg-white/[0.04] font-['Inter'] text-[13px] font-medium text-zinc-400 hover:text-white transition-all outline-none"
 					>
 						Cancelar
 					</button>
 					<button 
 						onClick={onConfirm}
 						className={`
-							flex-1 h-[42px] rounded-[10px] bg-[#F8717110] border font-['Inter'] text-[13px] font-semibold text-[#F87171] transition-all outline-none
+							cursor-pointer flex-1 h-[42px] rounded-[10px] bg-[#F8717110] border font-['Inter'] text-[13px] font-semibold text-[#F87171] transition-all outline-none
 							${config.border}
 							hover:${config.color}
 						`}
 					>
-						{buttonText}
+						{isLoading ? 'Carregando...' : `${buttonText}`}
 					</button>
 				</div>
 

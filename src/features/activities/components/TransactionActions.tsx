@@ -4,7 +4,7 @@ import type { TransactionResponse } from "../../../models/transaction/Transactio
 export interface TransactionAction {
 	transaction: TransactionResponse;
 	onEdit: (transaction: TransactionResponse) => void;
-	onRemove: (transaction: TransactionResponse) => void;
+	onRemove: (id: string) => void;
 }
 
 function TransactionAction({
@@ -30,7 +30,7 @@ function TransactionAction({
 				onClick={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-					onRemove(transaction);
+					onRemove(transaction.id);
 				}}
 				className="cursor-pointer w-10 h-10 sm:w-[36px] sm:h-[36px] flex items-center justify-center rounded-[10px] sm:rounded-xl bg-white/[0.02] border border-white/[0.05] text-zinc-400 hover:bg-[#FB7185]/10 hover:border-[#FB7185]/25 hover:text-[#FB7185] transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[1px] hover:scale-[1.03] active:scale-[0.96] outline-none"
 				title="Excluir transação"
