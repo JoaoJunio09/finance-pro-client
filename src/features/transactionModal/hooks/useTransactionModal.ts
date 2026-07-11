@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
 import useCategoryService from "../../../hooks/useCategoryService";
@@ -7,16 +7,22 @@ import useRecurrenceService from "../../../hooks/useRecurrenceService";
 import useTransactionService from "../../../hooks/useTransactionService";
 import type { RecurrenceRequest } from "../../../models/recurrence/RecurrenceRequest";
 import type { TransactionRequest } from "../../../models/transaction/TransactionRequest";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 import type { FrequencyType } from "../../../types/FrequencyType";
 import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { TransactionType } from "../../../types/TransactionType";
+import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 import type { FormData } from "../types/FormData";
 import type { TransactionModalType } from "../types/TransactionModalType";
-import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatCurrency";
+import useWalletService from "../../../hooks/useWalletService";
 
-function useNewTransaction(onClose: () => void) {
+function useTransactionModal(
+	onClose: () => void,
+	transaction: TransactionResponse | null
+) {
 	const [inputsError, setInputsError] = useState<Record<string, string>>({});
 	const [form, setForm] = useState<FormData>({
+		id: null,
 		amount: '',
 		description: '',
 		categoryId: '',
@@ -27,9 +33,33 @@ function useNewTransaction(onClose: () => void) {
 	const { account } = useAccountContext();
 	const queryClient = useQueryClient();
 
+	const walletService = useWalletService();
 	const categoryService = useCategoryService();
 	const transactionService = useTransactionService();
 	const recurrenceService = useRecurrenceService();
+
+	useEffect(() => {
+		if (!transaction) return;
+		
+		setForm({
+			id: transaction.id,
+			amount: transaction.amount.toString(),
+			description: transaction.description,
+			observation: transaction.observation,
+			categoryId: transaction.category.id,
+			walletId: transaction.walletId,
+			toWalletId: '',
+			fromWalletId: '',
+			registeredAt: transaction.registeredAt,
+			type: transaction.type,
+			recurrenceId: transaction.recurrenceId,
+			recDayOne: '',
+			recDayTwo: '',
+			frequencyType: 'MONTHLY',
+			month: '',
+			recurrenceType: 'CREDIT'
+		});
+	}, [transaction]);
 
 	let typeParam: TransactionType | undefined = undefined;
 
@@ -53,6 +83,7 @@ function useNewTransaction(onClose: () => void) {
 
 	function resetForm() {
 		setForm({
+			id: null,
 			amount: '',
 			description: '',
 			categoryId: '',
@@ -67,8 +98,18 @@ function useNewTransaction(onClose: () => void) {
 			month: '',
 			observation: '',
 			recurrenceType: 'CREDIT'
-		})
+		});
 	}
+
+	const queryWallets = useQuery({
+		queryKey: [
+			'wallets',
+			account?.id
+		],
+		queryFn: () => walletService.getAll({ accountId: account?.id }),
+		enabled: Boolean(account?.id),
+		retry: 1
+	});
 
 	const queryCategories = useQuery({
 		queryKey: [
@@ -84,7 +125,7 @@ function useNewTransaction(onClose: () => void) {
 		retry: 3
 	});
 
-	const transactionMutation = useMutation({
+	const transactionMutationSave = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['account'] });
@@ -100,7 +141,7 @@ function useNewTransaction(onClose: () => void) {
 			else {
 				showToast({
 					title: 'Saldo atualizado!!',
-					message: 'Receita adicionada com sucesso',
+					message: 'Despesa adicionada com sucesso',
 					type: 'success'
 				});
 			}
@@ -117,6 +158,40 @@ function useNewTransaction(onClose: () => void) {
 			});
 		}
 	});
+
+	const transactionMutationUpdate = useMutation({
+		mutationFn: (data: TransactionRequest) => transactionService.update(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['account'] });
+			queryClient.invalidateQueries({ queryKey: ['transactions'] });
+
+			if (form.type === 'CREDIT') {
+				showToast({
+					title: 'Aumentando sua renda!!',
+					message: 'Receita atualizada com sucesso',
+					type: 'finance'
+				});
+			}
+			else {
+				showToast({
+					title: 'Saldo atualizado!!',
+					message: 'Despesa atualizada com sucesso',
+					type: 'success'
+				});
+			}
+
+			clearErrors();
+			resetForm();
+			onClose();
+		},
+		onError: () => {
+			showToast({
+				title: 'Erro ao atualizar',
+				message: 'Não foi possível concluir a transação',
+				type: 'error'
+			});
+		}
+	})
 
 	const recurrenceMutation = useMutation({
 		mutationFn: (data: RecurrenceRequest) => recurrenceService.create(data),
@@ -197,18 +272,18 @@ function useNewTransaction(onClose: () => void) {
 		removeError('recurrenceType');
 	}
 
-	function register() {
+	function saveOrUpdate() {
 		const isRecurring: boolean = form.type === "RECURRING";	
 
 		if (!isRecurring) {
-			registerTransaction();
+			saveOrUpdateTransaction();
 			return;
 		}
 
 		registerRecurrence();
 	}
 
-	function registerTransaction() {
+	function saveOrUpdateTransaction() {
 		if (!account) {
 			return;
 		}
@@ -241,9 +316,12 @@ function useNewTransaction(onClose: () => void) {
 			return;
 		}
 
+		let isEditing = form.id !== null ? true : false;
+
 		const type:TransactionType = form.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
 		const transaction:TransactionRequest = {
+			id: form.id,
 			amount: formatCurrencyToAPI(form.amount),
 			description: form.description,
 			observation: form.observation,
@@ -255,7 +333,11 @@ function useNewTransaction(onClose: () => void) {
 			accountId: account.id
 		}
 
-		transactionMutation.mutate(transaction);
+		if (isEditing) {
+			transactionMutationUpdate.mutate(transaction);
+		} else {
+			transactionMutationSave.mutate(transaction);
+		}
 	}
 
 	function registerRecurrence() {
@@ -323,18 +405,18 @@ function useNewTransaction(onClose: () => void) {
 
 	return {
 		categories: queryCategories.data ?? [],
-		wallets: account?.wallets ?? [],
+		wallets: queryWallets.data ?? [],
 		handleOnChange,
 		setFrequency,
 		setType,
 		setRecurrenceType,
 		form,
-		register,
-		isLoading: transactionMutation.isPending || recurrenceMutation.isPending,
+		saveOrUpdate,
+		isLoading: transactionMutationSave.isPending || transactionMutationUpdate.isPending || recurrenceMutation.isPending,
 		inputsError,
 		clearErrors,
 		resetForm
 	}
 }
 
-export default useNewTransaction;
+export default useTransactionModal;

@@ -8,10 +8,15 @@ import MonthSummaryAndInsights from './MonthSummaryAndInsights';
 import Overview from './Overview';
 import RecentTransactions from './RecentTransactions';
 import ActivitiesSkeleton from './ActivitiesSkeleton';
+import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
+import TransactionModal from '../../transactionModal/components/TransactionModal';
+import type { TransactionModalType } from '../../transactionModal/types/TransactionModalType';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function Activities() {
+  const [transaction, setTransaction] = useState<TransactionResponse | null>(null); 
+  const [openModal, setOpenModal] = useState(false);
   const {
     allTransaction,
     calendarDays,
@@ -27,11 +32,18 @@ function Activities() {
     year
   } = useActivities();
 
+  function handleSaveOrUpdate(transaction: TransactionResponse | null) {
+    setTransaction(transaction);
+    setOpenModal(true);
+  }
+
   useEffect(() => {
     if (error) {
       console.log(error);
     }
   }, [error]);
+
+  const type: TransactionModalType = transaction?.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
   return (
     <main className="flex-1 w-full min-w-0 flex flex-col transition-all duration-300 relative z-10">
@@ -69,6 +81,7 @@ function Activities() {
             />
             <RecentTransactions
               allTransaction={allTransaction ?? null}
+              handleSaveOrUpdate={handleSaveOrUpdate}
             />
           </div>
         )}
@@ -78,6 +91,15 @@ function Activities() {
             selectedDateInfo={selectedDateInfo}
             setSelectedDate={setSelectedDate}
             MONTHS={MONTHS}
+          />
+        )}
+
+        {openModal && (
+          <TransactionModal
+            isOpen={openModal}
+            onClose={() => setOpenModal(false)}
+            type={type}
+            transaction={transaction}
           />
         )}
       </div>

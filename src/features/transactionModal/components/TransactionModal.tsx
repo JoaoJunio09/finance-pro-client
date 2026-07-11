@@ -1,16 +1,11 @@
 import { CheckCircle2, Wallet } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { useEffect, useRef } from 'react';
-import useNewTransaction from '../hooks/useNewTransaction';
+import { formatCurrencyInput, formatCurrencyLabel } from '../../../utils/FormatCurrency';
+import useTransactionModal from '../hooks/useTransactionModal';
 import type { TransactionModalType } from '../types/TransactionModalType';
 import FormTransaction from './FormTransaction';
-
-const formatCurrencyInput = (value: string) => {
-  const numbers = value.replace(/\D/g, '');
-  if (!numbers) return '';
-  const amount = (parseInt(numbers, 10) / 100).toFixed(2);
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(parseFloat(amount));
-};
+import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
 
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -30,10 +25,11 @@ const formatDateBR = (dateStr: string) => {
 interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: TransactionModalType
+  type: TransactionModalType | null,
+  transaction: TransactionResponse | null;
 }
 
-function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
+function TransactionModal({ isOpen, onClose, type, transaction }: TransactionModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     form,
@@ -43,12 +39,12 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
     setRecurrenceType,
     categories,
     wallets,
-    register,
+    saveOrUpdate,
     isLoading,
     inputsError,
     clearErrors,
     resetForm
-  } = useNewTransaction(onClose);
+  } = useTransactionModal(onClose, transaction);
 
   useEffect(() => {
     if (isOpen) {
@@ -110,7 +106,7 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
               <div className="space-y-4">
                 <div>
                   <span className="text-xs text-zinc-500 block mb-1">Valor</span>
-                  <span className="text-xl font-bold text-white tracking-tight">{formatCurrencyInput(form.amount || 'R$ 0,00')}</span>
+                  <span className="text-xl font-bold text-white tracking-tight">{formatCurrencyLabel(Number(form.amount) || 0)}</span>
                 </div>
                 
                 <div>
@@ -126,7 +122,11 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
                     {form.categoryId ? (
                       <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
                         <div className={`w-4 h-4 rounded flex items-center justify-center text-white`}>
-                          <DynamicIcon name={selectedCategory?.icon as IconName} className="w-2.5 h-2.5" />
+                          {selectedCategory ? (
+                            <DynamicIcon name={selectedCategory?.icon as IconName} className="w-2.5 h-2.5" />
+                          ) : (
+                            <Wallet className="w-2.5 h-2.5" />
+                          )}
                         </div>
                         <span className="truncate">{selectedCategory?.name}</span>
                       </div>
@@ -137,7 +137,11 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
                     <span className="text-[10px] uppercase text-zinc-500 block mb-1">Conta</span>
                     {selectedWallet ? (
                       <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
-                        <Wallet className="w-3.5 h-3.5 text-zinc-400" />
+                        {selectedWallet.bank?.icon && selectedWallet.bank.color ? (
+                          <DynamicIcon name={selectedWallet.bank.icon as IconName} size={16} color={selectedWallet.bank.color} />
+                        ) : (
+                          <Wallet size={16} color="#8B5CF6" />
+                        )}
                         <span className="truncate">{selectedWallet.name}</span>
                       </div>
                     ) : <span className="text-xs text-zinc-600">-</span>}
@@ -166,7 +170,7 @@ function TransactionModal({ isOpen, onClose, type }: TransactionModalProps) {
           {/* Footer Fixo: Ações mantidas firmes na base do Modal */}
           <div className="flex flex-col gap-3 p-6 sm:p-8 pt-6 sm:pt-0 shrink-0 bg-[#09090B] sm:bg-[#111113] border-t border-white/[0.04] sm:border-t-0">
             <button
-              onClick={register}
+              onClick={saveOrUpdate}
               className={`cursor-pointer w-full py-4 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 shadow-xl active:scale-[0.98] ${
                 isIncome ? 'bg-emerald-500 text-emerald-950 hover:bg-emerald-400 shadow-emerald-500/20' : 
                 isRecurring ? 'bg-[#8B5CF6] text-white hover:bg-[#7C3AED] shadow-[#8B5CF6]/20' : 

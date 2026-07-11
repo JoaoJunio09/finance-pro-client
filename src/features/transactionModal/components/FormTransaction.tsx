@@ -431,91 +431,91 @@ function FormTransaction({
 }: FormTransactionProps) {
 	return (
 		<div className="flex-1 flex flex-col min-h-0">  
-				{/* Header Fixo */}
-				<div className="px-6 sm:px-8 pt-8 pb-6 flex-shrink-0 flex items-start justify-between bg-[#09090B] z-10">
-					<div>
-						<h2 className="text-2xl font-semibold text-white tracking-tight">Adicionar Movimentação</h2>
-						<p className="text-sm font-light text-zinc-500 mt-1">Registre e categorize em poucos segundos.</p>
-					</div>
-					<button
-						onClick={() => {
-							clearErrors();
-							resetForm();
-							onClose();
-						}}
-						className="p-2 rounded-full text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors"
-					>
-						<X className="w-5 h-5" />
-					</button>
+			{/* Header Fixo */}
+			<div className="px-6 sm:px-8 pt-8 pb-6 flex-shrink-0 flex items-start justify-between bg-[#09090B] z-10">
+				<div>
+					<h2 className="text-2xl font-semibold text-white tracking-tight">Adicionar Movimentação</h2>
+					<p className="text-sm font-light text-zinc-500 mt-1">Registre e categorize em poucos segundos.</p>
 				</div>
+				<button
+					onClick={() => {
+						clearErrors();
+						resetForm();
+						onClose();
+					}}
+					className="p-2 rounded-full text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors"
+				>
+					<X className="w-5 h-5" />
+				</button>
+			</div>
 
-				{/* Conteúdo Central Scrollável: O scroll atua exclusivamente aqui */}
-				<div className="flex-1 overflow-y-auto modal-scroll px-6 sm:px-8 pb-8 space-y-8 min-h-0 relative">
-					<TypeSelection
-						type={form.type}
-						setType={setType}
-					/>
+			{/* Conteúdo Central Scrollável: O scroll atua exclusivamente aqui */}
+			<div className="flex-1 overflow-y-auto modal-scroll px-6 sm:px-8 pb-8 space-y-8 min-h-0 relative">
+				<TypeSelection
+					type={form.type}
+					setType={setType}
+				/>
 
-					<Amount
+				<Amount
+					form={form}
+					handleOnChange={handleOnChange}
+					inputRef={inputRef}
+					themeHex={themeHex}
+					type={form.type}
+					inputsError={inputsError}
+				/>
+
+				{/* Grid de Inputs Principais */}
+				<div className="sm:grid-cols-2 gap-5 sm:gap-6">
+					
+					{/* Descrição */}
+					<Description
 						form={form}
 						handleOnChange={handleOnChange}
-						inputRef={inputRef}
-						themeHex={themeHex}
 						type={form.type}
 						inputsError={inputsError}
 					/>
 
-					{/* Grid de Inputs Principais */}
-					<div className="sm:grid-cols-2 gap-5 sm:gap-6">
-						
-						{/* Descrição */}
-						<Description
+					{/* Data (Escondida se for recorrência genérica) */}
+					{!isRecurring && (
+						<RegisteredAt
 							form={form}
 							handleOnChange={handleOnChange}
-							type={form.type}
+							inputsError={inputsError}
+						/>
+					)}
+
+					{/* === CAMPOS DINÂMICOS DE RECORRÊNCIA === */}
+					{isRecurring && (
+						<ConfigureRecurrence
+							form={form}
+							handleOnChange={handleOnChange}
+							setFrequency={setFrequency}
+							setRecurrenceType={setRecurrenceType}
+							inputsError={inputsError}
+						/>
+					)}
+
+					<div className="w-full flex justify-between gap-2 pt-3 pb-3">
+						{/* Categorias */}
+						<Categories
+							form={form}
+							handleOnChange={handleOnChange}
+							categories={categories}
 							inputsError={inputsError}
 						/>
 
-						{/* Data (Escondida se for recorrência genérica) */}
-						{!isRecurring && (
-							<RegisteredAt
-								form={form}
-								handleOnChange={handleOnChange}
-								inputsError={inputsError}
-							/>
-						)}
-
-						{/* === CAMPOS DINÂMICOS DE RECORRÊNCIA === */}
-						{isRecurring && (
-							<ConfigureRecurrence
-								form={form}
-								handleOnChange={handleOnChange}
-								setFrequency={setFrequency}
-								setRecurrenceType={setRecurrenceType}
-								inputsError={inputsError}
-							/>
-						)}
-
-						<div className="w-full flex justify-between gap-2 pt-3 pb-3">
-							{/* Categorias */}
-							<Categories
-								form={form}
-								handleOnChange={handleOnChange}
-								categories={categories}
-								inputsError={inputsError}
-							/>
-
-							{/* Contas */}
-							<Wallets
-								form={form}
-								handleOnChange={handleOnChange}
-								wallets={wallets}
-								inputsError={inputsError}
-							/>
-						</div>
+						{/* Contas */}
+						<Wallets
+							form={form}
+							handleOnChange={handleOnChange}
+							wallets={wallets}
+							inputsError={inputsError}
+						/>
 					</div>
 				</div>
 			</div>
+		</div>
 	)
 }
 

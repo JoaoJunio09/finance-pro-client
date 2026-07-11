@@ -1,13 +1,14 @@
 import { Minus, Plus } from "lucide-react";
 import type { TransactionType } from "../../../types/TransactionType";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
 interface PerfomTransactionProps {
-  setOpenModal: (isOpen: boolean) => void,
+  handleSaveOrUpdate: (transaction: TransactionResponse | null) => void,
   setType: (type: TransactionType) => void,
 }
 
 function PerfomTransaction({
-  setOpenModal,
+  handleSaveOrUpdate,
   setType,
 }: PerfomTransactionProps) {
 	return (
@@ -20,7 +21,7 @@ function PerfomTransaction({
         {/* Adicionar Receita */}
         <button
           onClick={() => {
-            setOpenModal(true);
+            handleSaveOrUpdate(null);
             setType('CREDIT');
           }}
           className="cursor-pointer flex-1 min-w-0 relative overflow-hidden border border-emerald-500/20 p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-gradient-to-br from-emerald-500/[0.10] via-[#111113] to-[#111113] hover:border-emerald-500/40 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.25)] active:scale-[0.98]"
@@ -36,7 +37,7 @@ function PerfomTransaction({
         {/* Adicionar Despesa */}
         <button
           onClick={() => {
-            setOpenModal(true);
+            handleSaveOrUpdate(null);
             setType('DEBIT');
           }}
           className="cursor-pointer flex-1 min-w-0 relative overflow-hidden border border-rose-500/20 p-5 lg:p-7 rounded-[24px] lg:rounded-[32px] flex items-center justify-between group transition-all duration-300 bg-gradient-to-br from-rose-500/[0.10] via-[#111113] to-[#111113] hover:border-rose-500/40 hover:shadow-[0_10px_40px_-10px_rgba(244,63,94,0.25)] active:scale-[0.98]"

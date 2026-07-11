@@ -3,6 +3,7 @@ import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { TransactionModalType } from "./TransactionModalType";
 
 export interface FormData {
+	id: string | null,
 	amount: string,
 	description: string,
 	categoryId: string,
@@ -12,6 +13,7 @@ export interface FormData {
 	toWalletId?: string,
 	fromWalletId?: string,
 	observation?: string,
+	recurrenceId?: string,
 	frequencyType?: FrequencyType,
 	recDayOne?: string,
 	recDayTwo?: string,

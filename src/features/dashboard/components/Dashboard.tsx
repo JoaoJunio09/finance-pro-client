@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
 import { useAccountContext } from '../../../context/AccountContext';
-import TransactionModal from '../../newTransaction/components/NewTransactionModal';
-import type { TransactionModalType } from '../../newTransaction/types/TransactionModalType';
 import useDashboard from '../hooks/useDashboard';
 import Apresentation from './Apresentation';
 import CurrentBalance from './CurrentBalance';
@@ -10,12 +8,21 @@ import Insights from './Insights';
 import MonthOverview from './MonthOverview';
 import PerfomTransaction from './PerfomTransaction';
 import RecentActivities from './RecentActivities';
+import type { TransactionModalType } from '../../transactionModal/types/TransactionModalType';
+import TransactionModal from '../../transactionModal/components/TransactionModal';
+import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
 
 function Dashboard() {
+  const [transaction, setTransaction] = useState<TransactionResponse | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState<TransactionModalType>('CREDIT');
   const { account, transactions, loading } = useDashboard();
   const { setAccountByUser } = useAccountContext();
+
+  function handleSaveOrUpdate(transaction: TransactionResponse | null) {
+    setTransaction(transaction);
+    setOpenModal(true);
+  }
 
   useEffect(() => {
     if (account) {
@@ -42,7 +49,7 @@ function Dashboard() {
         <div className="mt-16 md:mt-20 lg:mt-28 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 w-full min-w-0">  
           <div className="flex flex-col gap-16 lg:gap-20 min-w-0 w-full">
             <PerfomTransaction
-              setOpenModal={setOpenModal}
+              handleSaveOrUpdate={handleSaveOrUpdate}
               setType={setType}
             />
             <RecentActivities
@@ -65,6 +72,7 @@ function Dashboard() {
           isOpen={openModal}
           onClose={() => setOpenModal(false)}
           type={type}
+          transaction={transaction}
         />
       </div>
       <div className="h-28 md:h-0"></div>

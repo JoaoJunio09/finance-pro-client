@@ -1,15 +1,19 @@
 import { CalendarDays, Clock, Flame, Target } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
-import { formatRelativeDateTime } from "../../../utils/FormatDate";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
+import { formatRelativeDateTime } from "../../../utils/FormatDate";
+import TransactionAction from "./TransactionActions";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
 interface RecentTransactionsProps {
 	allTransaction: AllTransactionResponse | null;
+	handleSaveOrUpdate: (transaction: TransactionResponse | null) => void;
 }
 
 function RecentTransactions({
-	allTransaction
+	allTransaction,
+	handleSaveOrUpdate
 }: RecentTransactionsProps) {
 	const biggestExpense = allTransaction?.transactionBiggestExpense;
 	const biggestIncome = allTransaction?.transactionBiggestIncome;
@@ -58,11 +62,19 @@ function RecentTransactions({
 								-{formatCurrencyLabel(biggestExpense.amount)}
 							</div>
 
-							<div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-zinc-500 flex-wrap">
-								<Clock className="w-3.5 h-3.5" />
-								<span>{formatRelativeDateTime(biggestExpense.registeredAt)}</span>
-								<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-								<span>Conta Corrente</span>
+							<div className="mt-5 pt-4 border-t border-white/5 flex justify-between items-center gap-2 text-xs text-zinc-500 flex-wrap">
+								<div className="flex items-center gap-2">
+									<Clock className="w-3.5 h-3.5" />
+									<span>{formatRelativeDateTime(biggestExpense.registeredAt)}</span>
+									<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
+									<span>Conta Corrente</span>
+								</div>
+
+								<TransactionAction
+									transaction={biggestExpense}
+									onEdit={handleSaveOrUpdate}
+									onRemove={() => {}}
+								/>
 							</div>
 						</div>
 					)}
@@ -96,15 +108,22 @@ function RecentTransactions({
 							<div className="mt-6 text-3xl font-bold text-emerald-400">
 								+{formatCurrencyLabel(biggestIncome.amount)}
 							</div>
-							<div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-zinc-500 flex-wrap">
-								<Clock className="w-3.5 h-3.5" />
-								<span>{formatRelativeDateTime(biggestIncome.registeredAt)}</span>
-								<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-								<span>Conta Corrente</span>
+							<div className="mt-5 pt-4 border-t border-white/5 flex justify-between items-center gap-2 text-xs text-zinc-500 flex-wrap">
+								<div className="flex items-center gap-2">
+									<Clock className="w-3.5 h-3.5" />
+									<span>{formatRelativeDateTime(biggestIncome.registeredAt)}</span>
+									<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
+									<span>Conta Corrente</span>
+								</div>
+
+								<TransactionAction
+									transaction={biggestIncome}
+									onEdit={handleSaveOrUpdate}
+									onRemove={() => {}}
+								/>
 							</div>
 						</div>
 					)}
-
 				</div>
 			)}
 			
@@ -116,46 +135,62 @@ function RecentTransactions({
 						const isInc = tx.type === 'CREDIT';					
 
 						return (
-							<div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 bg-[#0e0e11]/50 border border-white/[0.04] hover:bg-[#111113] hover:border-white/[0.08] transition-all rounded-[20px] group gap-4 relative overflow-hidden">
-								<div className="flex items-center gap-4 pl-1">
-									<div className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors flex-shrink-0
-										${isFuture ? 'bg-amber-500/5 border-amber-500/10 text-amber-500/70 group-hover:text-amber-400 group-hover:bg-amber-500/10' : 
-										'bg-white/[0.02] border-white/[0.04] text-zinc-500 group-hover:text-zinc-300'}`}
+							<div
+								key={tx.id}
+								className="grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 p-4 sm:p-5 bg-[#0e0e11]/50 border border-white/[0.04] hover:bg-[#111113] hover:border-white/[0.08] transition-all rounded-[20px] group overflow-hidden"
+							>
+								<div className="flex items-center gap-4 min-w-0 pl-1">
+									<div
+										className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors flex-shrink-0
+											${
+												isFuture
+													? 'bg-amber-500/5 border-amber-500/10 text-amber-500/70 group-hover:text-amber-400 group-hover:bg-amber-500/10'
+													: 'bg-white/[0.02] border-white/[0.04] text-zinc-500 group-hover:text-zinc-300'
+											}`}
 									>
 										<DynamicIcon name={tx.category.icon as IconName} className="w-5 h-5" />
 									</div>
+
 									<div className="flex flex-col gap-1 min-w-0">
-										<div className="flex items-center gap-2">
+										<div className="flex items-center gap-2 min-w-0">
 											<h4 className={`text-sm sm:text-base font-medium truncate ${isFuture ? 'text-amber-100/90' : 'text-zinc-200'}`}>
 												{tx.description}
 											</h4>
 										</div>
-										<div className="flex items-center gap-2 text-[11px] sm:text-xs text-zinc-500 truncate">
-											<span className={`${isFuture ? 'text-amber-500/80' : 'text-[#8B5CF6]'} font-medium`}>{tx.category.name}</span>
-											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0"></span>
-											<span>{formatRelativeDateTime(tx.registeredAt)}</span>
+
+										<div className="flex flex-col sm:flex-row sm:items-center gap-2 text-[11px] sm:text-xs text-zinc-500 truncate">
+											<span className={`${isFuture ? 'text-amber-500/80' : 'text-[#8B5CF6]'} font-medium truncate`}>
+												{tx.category.name}
+											</span>
+											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
+											<span className="truncate">{formatRelativeDateTime(tx.registeredAt)}</span>
 											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
 											<span className="hidden sm:block">Conta corrente</span>
 										</div>
 									</div>
 								</div>
-								
-								<div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pl-16 sm:pl-0">
-									<span className={`text-base sm:text-lg font-bold tracking-tight ${isFuture ? 'text-amber-400' : isInc ? 'text-emerald-400' : 'text-rose-400'}`}>
+
+								<div className="flex flex-col items-end justify-center gap-2">
+									<span className={`text-base sm:text-lg font-bold tracking-tight whitespace-nowrap ${isFuture ? 'text-amber-400' : isInc ? 'text-emerald-400' : 'text-rose-400'}`}>
 										{isInc ? '+' : '-'}{formatCurrencyLabel(tx.amount)}
 									</span>
-									<div className="flex items-center gap-2">
-										{isFuture ? (
-											<span className="text-[10px] uppercase tracking-wider text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded flex items-center gap-1 font-bold">
-												<Clock className="w-3 h-3" /> Previsto
-											</span>
-										) : (
-											<span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-bold ${isInc ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'}`}>
-												{isInc ? 'Receita' : 'Despesa'}
-											</span>
-										)}
-									</div>
+
+									{isFuture ? (
+										<span className="text-[10px] uppercase tracking-wider text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded flex items-center gap-1 font-bold whitespace-nowrap">
+											<Clock className="w-3 h-3" /> Previsto
+										</span>
+									) : (
+										<span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-bold whitespace-nowrap ${isInc ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'}`}>
+											{isInc ? 'Receita' : 'Despesa'}
+										</span>
+									)}
 								</div>
+
+								<TransactionAction
+									transaction={tx}
+									onEdit={handleSaveOrUpdate}
+									onRemove={() => {}}
+								/>
 							</div>
 						);
 					})}
