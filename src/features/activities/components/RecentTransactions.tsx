@@ -69,7 +69,7 @@ function RecentTransactions({
 									<Clock className="w-3.5 h-3.5" />
 									<span>{formatRelativeDateTime(biggestExpense.registeredAt)}</span>
 									<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-									<span>Conta Corrente</span>
+									<span>{biggestExpense.wallet.name}</span>
 								</div>
 
 								<TransactionAction
@@ -115,7 +115,7 @@ function RecentTransactions({
 									<Clock className="w-3.5 h-3.5" />
 									<span>{formatRelativeDateTime(biggestIncome.registeredAt)}</span>
 									<span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-									<span>Conta Corrente</span>
+									<span>{biggestIncome.wallet.name}</span>
 								</div>
 
 								<TransactionAction
@@ -167,7 +167,7 @@ function RecentTransactions({
 											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
 											<span className="truncate">{formatRelativeDateTime(tx.registeredAt)}</span>
 											<span className="w-1 h-1 rounded-full bg-zinc-700 flex-shrink-0 hidden sm:block"></span>
-											<span className="hidden sm:block">Conta corrente</span>
+											<span className="hidden sm:block">{tx.wallet.name}</span>
 										</div>
 									</div>
 								</div>

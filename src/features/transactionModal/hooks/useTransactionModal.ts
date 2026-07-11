@@ -47,7 +47,7 @@ function useTransactionModal(
 			description: transaction.description,
 			observation: transaction.observation,
 			categoryId: transaction.category.id,
-			walletId: transaction.walletId,
+			walletId: transaction.wallet.id,
 			toWalletId: '',
 			fromWalletId: '',
 			registeredAt: transaction.registeredAt,
