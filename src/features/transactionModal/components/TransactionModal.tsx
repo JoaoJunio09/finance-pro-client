@@ -106,7 +106,9 @@ function TransactionModal({ isOpen, onClose, type, transaction }: TransactionMod
               <div className="space-y-4">
                 <div>
                   <span className="text-xs text-zinc-500 block mb-1">Valor</span>
-                  <span className="text-xl font-bold text-white tracking-tight">{formatCurrencyLabel(Number(form.amount) || 0)}</span>
+                  <span className="text-xl font-bold text-white tracking-tight">
+                    {formatCurrencyInput(form.amount || '0')}
+                  </span>
                 </div>
                 
                 <div>

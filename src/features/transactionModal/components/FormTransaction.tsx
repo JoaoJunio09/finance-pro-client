@@ -7,6 +7,7 @@ import type { FrequencyType } from "../../../types/FrequencyType";
 import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { FormData } from "../types/FormData";
 import type { TransactionModalType } from "../types/TransactionModalType";
+import { formatCurrencyInput } from "../../../utils/FormatCurrency";
 
 interface TypeSelectionProps {
 	type: TransactionModalType;
@@ -79,7 +80,7 @@ const Amount = ({
 					name="amount"
 					type="text"
 					placeholder="0,00"
-					value={form.amount.replace('R$', '').trim()}
+					value={formatCurrencyInput(form.amount.replace('R$', '').trim())}
 					onChange={handleOnChange}
 					className="bg-transparent text-6xl sm:text-7xl font-bold text-white w-full max-w-[300px] sm:max-w-[400px] outline-none placeholder-zinc-800 tracking-tighter"
 				/>
