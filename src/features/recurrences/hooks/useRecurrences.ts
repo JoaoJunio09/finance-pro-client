@@ -9,10 +9,10 @@ import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { AllRecurrenceResponse } from "../../../models/recurrence/AllRecurrenceResponse";
 
 function useRecurrences() {
-	const [type, setType] = useState<RecurrenceType | undefined>();
-	const [frequencyType, setFrequencyType] = useState<FrequencyType | undefined>();
-	const [executionType, setExecutionType] = useState<ExecutionType | undefined>();
-	const [sort, setSort] = useState<RecurrenceSort | undefined>();
+	const [type, setType] = useState<RecurrenceType | undefined>(undefined);
+	const [frequencyType, setFrequencyType] = useState<FrequencyType | undefined>(undefined);
+	const [executionType, setExecutionType] = useState<ExecutionType | undefined>(undefined);
+	const [sort, setSort] = useState<RecurrenceSort>('NEAREST_DATE');
 	
 	const { account } = useAccountContext();
 	
@@ -46,18 +46,34 @@ function useRecurrences() {
 		setType(undefined);
 		setFrequencyType(undefined);
 		setExecutionType(undefined);
-		setSort(undefined);
+		setSort('NEAREST_DATE');
 	}
 
 	const allRecurrences = useMemo<AllRecurrenceResponse | null>(() => queryOverview.data ?? null, [queryOverview.data]);
+
+	const activeFiltersCount = useMemo(() => {
+		let count = 0;
+
+		if (type) count++;
+		if (frequencyType) count++;
+		if (executionType) count++;
+		if (sort !== 'NEAREST_DATE') count++;
+
+		return count;
+	}, [type, frequencyType, executionType, sort]);
 
 	return {
 		allRecurrences,
 		loading: queryOverview.isFetching,
 		setType,
+		type,
 		setFrequencyType,
+		frequencyType,
 		setExecutionType,
+		executionType,
 		setSort,
+		sort,
+		activeFiltersCount,
 		clearFilters
 	}
 }

@@ -1,6 +1,14 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 
-function FilterAndSearch() {
+interface FilterAndSearchProps {
+	setIsFilterDrawerOpen: (isOpen: boolean) => void;
+	activeFiltersCount: number;
+}
+
+function FilterAndSearch({
+	setIsFilterDrawerOpen,
+	activeFiltersCount
+}: FilterAndSearchProps) {
 	return (
 		<div className="flex flex-row items-center gap-[10px] mb-[16px]">
 			<div className="flex-1 relative">
@@ -16,7 +24,7 @@ function FilterAndSearch() {
 			</div>
 			
 			<button 
-				// onClick={() => setIsFilterDrawerOpen(true)}
+				onClick={() => setIsFilterDrawerOpen(true)}
 				className="relative flex items-center justify-center h-[40px] px-[16px] rounded-[12px] gap-[8px] font-['Inter'] text-[13px] font-medium transition-all outline-none animate-pulse-subtle"
 				style={{ backgroundColor: 'rgba(17,17,19,0.5)', border: '1px solid rgba(255,255,255,0.06)', color: '#A1A1AA' }}
 				onMouseOver={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#FFFFFF'; }}
@@ -24,9 +32,9 @@ function FilterAndSearch() {
 			>
 				<SlidersHorizontal size={15} />
 				<span className="hidden sm:block">Filtros Avançados</span>
-				{1 > 0 && (
+				{activeFiltersCount > 0 && (
 					<span className="absolute -top-[6px] -right-[6px] w-[18px] h-[18px] rounded-full bg-[#8B5CF6] text-white text-[10px] font-bold flex items-center justify-center shadow-md">
-						{1}
+						{activeFiltersCount}
 					</span>
 				)}
 			</button>

@@ -91,10 +91,16 @@ html::-webkit-scrollbar-thumb:hover {
 }
 
 /* Suaviza transição de altura em mudanças de layout */
-.smooth-height { transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+.smooth-height {
+	transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
 
-.animate-slide-up { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-.animate-drawer { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-up {
+	animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0;
+}
+.animate-drawer {
+	animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
 @theme {
 	--animate-toast: animate-toast 3s linear forwards;
