@@ -4,6 +4,7 @@ import WalletCard from "./WalletCard";
 
 interface ListWalletsProps {
 	wallets: WalletResponse[];
+	onNewWallet: (wallet: WalletResponse | null) => void;
 	setSelectedWallet: (wallet: WalletResponse) => void;
 	onEdit: (wallet: WalletResponse) => void;
 	onDelete: (id: string) => void;
@@ -11,6 +12,7 @@ interface ListWalletsProps {
 
 function ListWallets({
 	wallets,
+	onNewWallet,
 	setSelectedWallet,
 	onEdit,
 	onDelete
@@ -29,6 +31,7 @@ function ListWallets({
 
 			{/* Placeholder para Adicionar Nova Carteira */}
 			<div
+				onClick={() => onNewWallet(null)}
 				className="rounded-[20px] aspect-[1.586] border-2 border-dashed border-white/[0.06] bg-transparent hover:bg-[rgba(139,146,246,0.05)] hover:border-[#8B5CF6]/50 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center group"
 			>
 				<div

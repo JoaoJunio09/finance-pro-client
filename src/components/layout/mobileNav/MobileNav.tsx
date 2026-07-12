@@ -34,7 +34,7 @@ function MobileNav({ setIsOpen, active }: MobileNavProps) {
 				<Menu className="w-6 h-6" />
 			</button>
 			{MOBILE_ITEMS_BOTTOM.map((menu) => (
-				<Link to={menu.path} className={`
+				<Link key={menu.name} to={menu.path} className={`
 					text-[#8B5CF6] p-2
 					${active === menu.active ? 'text-[#8B5CF6]' : 'text-zinc-500 hover:text-zinc-100'}	
 				`}>

@@ -1,10 +1,10 @@
 import { CalendarDays, Clock, Flame, Target } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { AllTransactionResponse } from "../../../models/transaction/AllTransactionResponse";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 import { formatRelativeDateTime } from "../../../utils/FormatDate";
 import TransactionAction from "./TransactionActions";
-import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
 interface RecentTransactionsProps {
 	allTransaction: AllTransactionResponse | null;

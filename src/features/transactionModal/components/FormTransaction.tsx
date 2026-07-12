@@ -5,9 +5,9 @@ import type { CategoryResponse } from "../../../models/category/CategoryResponse
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import type { FrequencyType } from "../../../types/FrequencyType";
 import type { RecurrenceType } from "../../../types/RecurrenceType";
+import { formatCurrencyInput } from "../../../utils/FormatCurrency";
 import type { FormData } from "../types/FormData";
 import type { TransactionModalType } from "../types/TransactionModalType";
-import { formatCurrencyInput } from "../../../utils/FormatCurrency";
 
 interface TypeSelectionProps {
 	type: TransactionModalType;

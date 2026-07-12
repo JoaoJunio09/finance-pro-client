@@ -12,6 +12,8 @@ import type { TransactionResponse } from '../../../models/transaction/Transactio
 import TransactionModal from '../../transactionModal/components/TransactionModal';
 import type { TransactionModalType } from '../../transactionModal/types/TransactionModalType';
 import Confirm from '../../../components/ui/Confirm/Confirm';
+import RecurrencesSection from './RecurrenceSection';
+import { RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
@@ -63,7 +65,7 @@ function Activities() {
         {loadingQuery  ? (
           <ActivitiesSkeleton />
         ) : (
-          <div>
+          <section>
             <Apresentation
               activeMonth={month}
               activeYear={year}
@@ -94,7 +96,7 @@ function Activities() {
               handleSaveOrUpdate={handleSaveOrUpdate}
               handleOnDelete={handleOnDelete}
             />
-          </div>
+          </section>
         )}
 
         {selectedDateInfo && (
@@ -114,24 +116,23 @@ function Activities() {
           />
         )}
 
-      {openModalConfirm && (
-        <Confirm
-          type='warning'
-          title='Excluir Transação'
-          message='Ao excluir a transação, esta ação não poderá ser desfeita.'
-          buttonText='Excluir'
-          isLoading={loadingDelete}
-          onCancel={() => {
-            setTransactionDeleteId(null);
-            setOpenModalConfirm(false);
-          }}
-          onConfirm={() => {
-            deleteTransaction();
-            setOpenModalConfirm(false);
-          }}
-        />
-      )}
-
+        {openModalConfirm && (
+          <Confirm
+            type='warning'
+            title='Excluir Transação'
+            message='Ao excluir a transação, esta ação não poderá ser desfeita.'
+            buttonText='Excluir'
+            isLoading={loadingDelete}
+            onCancel={() => {
+              setTransactionDeleteId(null);
+              setOpenModalConfirm(false);
+            }}
+            onConfirm={() => {
+              deleteTransaction();
+              setOpenModalConfirm(false);
+            }}
+          />
+        )}
       </div>
       <div className="h-28 md:h-0"></div>
     </main>

@@ -15,7 +15,6 @@ function MonthOverview({
 	netIncome,
 	biggestExpense
 }: MonthOverviewProps) {
-	console.log(biggestExpense)
 	return (
 		<div className="animate-slide-up delay-400 w-full min-w-0">
 			<h3 className="text-zinc-600 text-xs sm:text-sm lg:text-base uppercase tracking-[0.15em] font-semibold mb-6 lg:mb-8">

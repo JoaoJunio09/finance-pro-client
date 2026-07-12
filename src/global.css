@@ -63,8 +63,6 @@ html::-webkit-scrollbar-thumb:hover {
 	scrollbar-width: none;
 }
 
-.animate-overlay { animation: overlayFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.animate-modal { animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-bottom-sheet { animation: bottomSheetUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -94,6 +92,9 @@ html::-webkit-scrollbar-thumb:hover {
 
 /* Suaviza transição de altura em mudanças de layout */
 .smooth-height { transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+
+.animate-slide-up { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+.animate-drawer { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 @theme {
 	--animate-toast: animate-toast 3s linear forwards;

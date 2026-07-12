@@ -43,7 +43,7 @@ function useTransactionModal(
 		
 		setForm({
 			id: transaction.id,
-			amount: transaction.amount.toString(),
+			amount: formatCurrencyInput((transaction.amount * 100).toString()),
 			description: transaction.description,
 			observation: transaction.observation,
 			categoryId: transaction.category.id,

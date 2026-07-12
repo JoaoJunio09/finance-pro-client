@@ -1,0 +1,1 @@
+export type RecurrenceSort = 'NEAREST_DATE' | 'HIGHEST_AMOUNT' | 'ALPHABETICAL';

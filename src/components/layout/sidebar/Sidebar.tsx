@@ -1,4 +1,4 @@
-import { Activity, LayoutGrid, Settings, Wallet, X } from "lucide-react";
+import { Activity, LayoutGrid, RepeatIcon, Settings, Wallet, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MENU_ITEMS = [
@@ -19,6 +19,12 @@ const MENU_ITEMS = [
     active: 'wallets',
     path: '/wallets',
     icon: Wallet,
+  },
+  {
+    name: 'Recorrências',
+    active: 'recurrences',
+    path: '/recurrences',
+    icon: RepeatIcon,
   },
   {
     name: 'Configurações',

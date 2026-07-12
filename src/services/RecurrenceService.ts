@@ -1,4 +1,5 @@
 import InternalServerError from "../exceptions/InternalServerError";
+import type { AllRecurrenceResponse } from "../models/recurrence/AllRecurrenceResponse";
 import type { ParamsRecurrenceAPI } from "../models/recurrence/ParamsRecurrenceAPI";
 import type { RecurrenceRequest } from "../models/recurrence/RecurrenceRequest";
 import type { RecurrenceResponse } from "../models/recurrence/RecurrenceResponse";
@@ -28,6 +29,28 @@ class RecurrenceService {
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao carregar as Recorrências');
+			}
+
+			throw err;
+		}
+	}
+
+	public async getOverview(params: ParamsRecurrenceAPI) {
+		const URL = `${this.BASE_URL}/overview`;
+		try {
+			const response = await api.get<AllRecurrenceResponse>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				},
+				params
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao carregar visão geral de Recorrências');
 			}
 
 			throw err;

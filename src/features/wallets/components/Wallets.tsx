@@ -112,6 +112,7 @@ function Wallets() {
             {/* BLOCO 3 - GRID DE CARTÕES FÍSICOS */}
             <ListWallets
               wallets={wallets ?? []}
+              onNewWallet={handleSaveOrUpdate}
               setSelectedWallet={setSelectedWallet}
               onEdit={handleSaveOrUpdate}
               onDelete={handleOnDelete}
@@ -154,6 +155,7 @@ function Wallets() {
             title='Remover carteira?'
             message='Esta ação não pode ser desfeita. O saldo e histórico desta carteira serão removidos do sistema.'
             buttonText='Remover'
+            isLoading={isLoadingSave}
             onCancel={() => setOpenModalDelete(false)}
             onConfirm={() => deleteWallet(walletIdDelete)}
           />
