@@ -81,7 +81,7 @@ const RecurrenceCardToList = ({
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
 						<span className="font-['Inter'] text-[11px] text-zinc-500">{recurrence.category.name}</span>
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
-						<span className="font-['Inter'] text-[11px] text-zinc-500 truncate">Conta Corrente</span>
+						<span className="font-['Inter'] text-[11px] text-zinc-500 truncate">{recurrence.wallet.name}</span>
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
 						<span className="font-['Inter'] text-[10px] text-zinc-600 uppercase tracking-widest">{recurrence.executionType === 'AUTOMATIC' ? 'Automática' : 'Manual'}</span>
 					</div>
