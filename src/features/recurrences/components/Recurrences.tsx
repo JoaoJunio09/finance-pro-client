@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import Confirm from '../../../components/ui/Confirm/Confirm';
 import TopProgressBar from '../../../components/ui/TopProgressBar/TopProgressBar';
 import type { RecurrenceResponse } from '../../../models/recurrence/RecurrenceResponse';
+import type { RecurrenceType } from '../../../types/RecurrenceType';
 import RecurrenceModal from '../../recurrenceModal/components/RecurrenceModal';
 import useRecurrences from '../hooks/useRecurrences';
 import Apresentation from './Apresentation';
@@ -11,16 +13,37 @@ import RecurrencesList from './RecurrencesList';
 import RecurrencesOverdueList from './RecurrencesOverdueList';
 import RecurrencesTodayList from './RecurrencesTodayList';
 import RecurrencesUpcomingList from './RecurrencesUpcomingList';
-import type { RecurrenceType } from '../../../types/RecurrenceType';
+import RecurrenceSkeleton from './RecurrenceSkeleton';
 
 export default function Recurrences() {
-	const [recurrence, setRecurrence] = useState<RecurrenceResponse | null>(null); 
-	const [isOpenModal, setIsOpenModal] = useState(false);
+	const [recurrence, setRecurrence] = useState<RecurrenceResponse | null>(null);
+	const [recurrenceIdDelete, setRecurrenceIdDelete] = useState('0');
+	const [isOpenModalSaveOrUpdate, setIsOpenModalSaveOrUpdate] = useState(false);
+	const [isOpenModalDelete, setIsOpenModaDelete] = useState(false);
 	const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+
+	function handleSaveOrUpdate(recurrence: RecurrenceResponse | null) {
+		setRecurrence(recurrence);
+		setIsOpenModalSaveOrUpdate(true);
+	}
+
+	function handleDelete(id: string) {
+		setRecurrenceIdDelete(id);
+		setIsOpenModaDelete(true);
+	}
+
+	function handleCloseModal() {
+		setIsOpenModaDelete(false);
+	}
+
 	const {
 		allRecurrences,
+		recurrences,
 		isLoading,
 		isFetching,
+		isLoadingSave,
+		search,
+		setSearch,
 		setType: setTypeFilter,
 		type: typeFilter,
 		setFrequencyType,
@@ -30,13 +53,9 @@ export default function Recurrences() {
 		setSort,
 		sort,
 		activeFiltersCount,
-		clearFilters
-	} = useRecurrences();
-
-	function handleSaveOrUpdate(recurrence: RecurrenceResponse | null) {
-		setRecurrence(recurrence);
-		setIsOpenModal(true);
-	}
+		clearFilters,
+		deleteRecurrence
+	} = useRecurrences(handleCloseModal);
 
 	const type: RecurrenceType = recurrence?.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
@@ -47,7 +66,7 @@ export default function Recurrences() {
 			)}
 
 			{isLoading ? (
-				<h1>carregando...</h1>
+				<RecurrenceSkeleton />
 			) : (
 				<div className="max-w-[1440px] mx-auto px-4 lg:px-8 py-8 flex flex-col w-full">
 					<Apresentation
@@ -64,14 +83,16 @@ export default function Recurrences() {
 					<div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-[24px] items-start">
 						<div className="flex flex-col order-2 lg:order-1 min-w-0 animate-slide-up delay-100">	
 							<FilterAndSearch
+								setSearch={setSearch}
+								search={search}
 								setIsFilterDrawerOpen={setIsFilterDrawerOpen}
 								activeFiltersCount={activeFiltersCount}
 							/>
 
 							<RecurrencesList
-								recurrences={allRecurrences?.recurrences ?? []}
+								recurrences={recurrences ?? []}
 								onEdit={handleSaveOrUpdate}
-								onDelete={() => {}}
+								onDelete={handleDelete}
 							/>
 						</div>
 
@@ -111,12 +132,24 @@ export default function Recurrences() {
 				/>
 			)}
 
-			{isOpenModal && (
+			{isOpenModalSaveOrUpdate && (
 				<RecurrenceModal
-					isOpen={isOpenModal}
-					onClose={() => setIsOpenModal(false)}
+					isOpen={isOpenModalSaveOrUpdate}
+					onClose={() => setIsOpenModalSaveOrUpdate(false)}
 					type={type}
 					recurrence={recurrence}
+				/>
+			)}
+
+			{isOpenModalDelete && (
+				<Confirm
+					type='warning'
+					title='Remover Recorrêcia? Esta ação não poderá ser desfeita.'
+					message='Ao remover a Recorrência da sua conta, todas as transações referentes a ela serão automaticamente removidas. Caso não seja isso que queira, desative ao invés de remover.'
+					buttonText='Remover'
+					isLoading={isLoadingSave}
+					onCancel={() => setIsOpenModaDelete(false)}
+					onConfirm={() => deleteRecurrence(recurrenceIdDelete)}
 				/>
 			)}
       

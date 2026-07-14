@@ -1,11 +1,15 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 
 interface FilterAndSearchProps {
+	setSearch: (value: string) => void;
+	search: string;
 	setIsFilterDrawerOpen: (isOpen: boolean) => void;
 	activeFiltersCount: number;
 }
 
 function FilterAndSearch({
+	setSearch,
+	search,
 	setIsFilterDrawerOpen,
 	activeFiltersCount
 }: FilterAndSearchProps) {
@@ -16,8 +20,8 @@ function FilterAndSearch({
 				<input 
 					type="text" 
 					placeholder="Buscar por nome, categoria ou carteira..."
-					// value={searchQuery}
-					// onChange={e => setSearchQuery(e.target.value)}
+					value={search}
+					onChange={e => setSearch(e.target.value)}
 					className="w-full h-[40px] rounded-[12px] pl-[36px] pr-[16px] font-['Inter'] text-[13px] text-white outline-none transition-all placeholder:text-zinc-600 focus:border-[#8B5CF6]/50 focus:bg-[#151518]"
 					style={{ backgroundColor: 'rgba(17,17,19,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}
 				/>

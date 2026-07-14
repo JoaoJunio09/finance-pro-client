@@ -8,5 +8,4 @@ export interface AllRecurrenceResponse {
   recurrencesDueToday: RecurrenceResponse[];
   recurrencesOverdue: RecurrenceResponse[];
   recurrencesUpcoming: RecurrenceResponse[];
-  recurrences: RecurrenceResponse[];
 }

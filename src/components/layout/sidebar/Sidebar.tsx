@@ -29,7 +29,7 @@ const MENU_ITEMS = [
   {
     name: 'Configurações',
     active: 'configuration',
-    path: '/configurations',
+    path: '/settings',
     icon: Settings,
   },
 ]

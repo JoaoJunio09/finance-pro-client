@@ -5,8 +5,10 @@ import type { RecurrenceType } from "../../types/RecurrenceType";
 
 export interface ParamsRecurrenceAPI {
 	accountId?: string,
+	search?: string,
 	type?: RecurrenceType,
 	frequencyType?: FrequencyType,
 	executionType?: ExecutionType,
-	sort?: RecurrenceSort
+	sort?: RecurrenceSort,
+	signal?: AbortSignal
 }

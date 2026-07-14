@@ -33,11 +33,13 @@ const getOccurrenceText = (recurrence: RecurrenceResponse) => {
 interface RecurrenceCardProps {
 	recurrence: RecurrenceResponse;
 	onEdit: (recurrence: RecurrenceResponse | null) => void;
+	onDelete: (id: string) => void;
 }
 
 const RecurrenceCardToList = ({
 	recurrence,
-	onEdit
+	onEdit,
+	onDelete
 }: RecurrenceCardProps) => {
 	const isIncome = recurrence.type === 'CREDIT';
 	const isPaused = recurrence.active === false;
@@ -109,14 +111,17 @@ const RecurrenceCardToList = ({
 							e.stopPropagation();
 							onEdit(recurrence);
 						}}
-						className="w-[30px] h-[30px] rounded-lg flex items-center justify-center transition-colors outline-none hover:bg-white/[0.06] group/btn"
+						className="cursor-pointer w-[30px] h-[30px] rounded-lg flex items-center justify-center transition-colors outline-none hover:bg-white/[0.06] group/btn"
 						title="Editar"
 					>
 						<Pencil size={13} className="text-zinc-500 group-hover/btn:text-zinc-300 transition-colors" />
 					</button>
 					<button 
-						// onClick={(e) => { e.stopPropagation(); onDeleteRecurrence(rec.id); }}
-						className="w-[30px] h-[30px] rounded-lg flex items-center justify-center transition-colors outline-none bg-[#F871710F] hover:bg-[#F871711F]"
+						onClick={(e) => {
+							e.stopPropagation();
+							onDelete(recurrence.id);
+						}}
+						className="cursor-pointer w-[30px] h-[30px] rounded-lg flex items-center justify-center transition-colors outline-none bg-[#F871710F] hover:bg-[#F871711F]"
 						title="Remover"
 					>
 						<Trash2 size={13} color="#F87171" />
@@ -136,7 +141,8 @@ interface RecurrencesListProps {
 
 function RecurrencesList({
 	recurrences,
-	onEdit
+	onEdit,
+	onDelete
 } : RecurrencesListProps) {
 	return (
 		<div
@@ -155,6 +161,7 @@ function RecurrencesList({
 							key={rec.id}
 							recurrence={rec}
 							onEdit={onEdit}
+							onDelete={onDelete}
 						/>
 					))
 				) : (
