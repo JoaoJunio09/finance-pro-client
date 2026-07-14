@@ -3,6 +3,7 @@ import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { FrequencyType } from "../../../types/FrequencyType";
 import type { ExecutionType } from "../../../types/ExecutionType";
 import type { RecurrenceSort } from "../../../types/RecurrenceSort";
+import Overlay from "../../../components/ui/Overlay/Overlay";
 
 interface FilterDrawerProps {
 	setIsFilterDrawerOpen: (isOpen: boolean) => void;
@@ -32,11 +33,16 @@ function FilterDrawer({
 	clearFilters
 }: FilterDrawerProps) {
 	return (
-		<div className="fixed inset-0 z-500 flex justify-end">
+		<Overlay
+			className="filter-drawer-root fixed inset-0 z-[100] flex justify-end"
+      onClose={() => setIsFilterDrawerOpen(false)}
+		>
 			<div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsFilterDrawerOpen(false)} />
 			
-			<div className="relative w-full max-w-[340px] flex flex-col animate-drawer shadow-[-20px_0_60px_rgba(0,0,0,0.5)] border-l border-white/[0.08]"
-						style={{ background: 'linear-gradient(to bottom, #111113, #0D0D0F)' }}>
+			<div
+				className="relative w-full max-w-[340px] flex flex-col animate-drawer shadow-[-20px_0_60px_rgba(0,0,0,0.5)] border-l border-white/[0.08] overflow-y-auto"
+        style={{ background: 'linear-gradient(to bottom, #111113, #0D0D0F)' }}
+			>
 				
 				<div className="p-[20px] border-b border-white/[0.06] flex items-center justify-between">
 					<div className="flex items-center gap-[10px]">
@@ -174,7 +180,7 @@ function FilterDrawer({
 				</div>
 
 			</div>
-		</div>
+		</Overlay>
 	)
 }
 

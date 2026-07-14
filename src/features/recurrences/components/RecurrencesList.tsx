@@ -31,11 +31,13 @@ const getOccurrenceText = (recurrence: RecurrenceResponse) => {
 };
 
 interface RecurrenceCardProps {
-	recurrence: RecurrenceResponse
+	recurrence: RecurrenceResponse;
+	onEdit: (recurrence: RecurrenceResponse | null) => void;
 }
 
 const RecurrenceCardToList = ({
-	recurrence
+	recurrence,
+	onEdit
 }: RecurrenceCardProps) => {
 	const isIncome = recurrence.type === 'CREDIT';
 	const isPaused = recurrence.active === false;
@@ -74,8 +76,8 @@ const RecurrenceCardToList = ({
 						</span>
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
 						<span className="font-['Inter'] text-[11px] text-zinc-500">{getOccurrenceText(recurrence)}</span>
-						{/* <span className="text-zinc-600 font-bold text-[14px] leading-none">·</span> */}
-						{/* <span className="font-['Inter'] text-[11px] text-zinc-500">{recurrence.category}</span> */}
+						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
+						<span className="font-['Inter'] text-[11px] text-zinc-500">{recurrence.category.name}</span>
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
 						<span className="font-['Inter'] text-[11px] text-zinc-500 truncate">Conta Corrente</span>
 						<span className="text-zinc-600 font-bold text-[14px] leading-none">·</span>
@@ -103,7 +105,10 @@ const RecurrenceCardToList = ({
 						{false ? <Play size={13} color="#34D399" /> : <Pause size={13} color="#71717A" />}
 					</button> */}
 					<button 
-						// onClick={(e) => { e.stopPropagation(); onEditRecurrence(rec); }}
+						onClick={(e) => {
+							e.stopPropagation();
+							onEdit(recurrence);
+						}}
 						className="w-[30px] h-[30px] rounded-lg flex items-center justify-center transition-colors outline-none hover:bg-white/[0.06] group/btn"
 						title="Editar"
 					>
@@ -124,10 +129,15 @@ const RecurrenceCardToList = ({
 }
 
 interface RecurrencesListProps {
-	recurrences: RecurrenceResponse[]
+	recurrences: RecurrenceResponse[];
+	onEdit: (recurrence: RecurrenceResponse | null) => void;
+	onDelete: (id: string) => void;
 }
 
-function RecurrencesList({ recurrences } : RecurrencesListProps) {
+function RecurrencesList({
+	recurrences,
+	onEdit
+} : RecurrencesListProps) {
 	return (
 		<div
 			className="w-full rounded-[24px] overflow-hidden" 
@@ -141,7 +151,11 @@ function RecurrencesList({ recurrences } : RecurrencesListProps) {
 			<div className="grid grid-cols-1 gap-0">
 				{recurrences.length > 0 ? (
 					recurrences.map((rec) => (
-						<RecurrenceCardToList recurrence={rec} />
+						<RecurrenceCardToList
+							key={rec.id}
+							recurrence={rec}
+							onEdit={onEdit}
+						/>
 					))
 				) : (
 					<div className="col-span-1 py-[56px] px-[24px] flex flex-col items-center justify-center text-center">

@@ -70,7 +70,27 @@ class RecurrenceService {
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao salvar recorrência');
+				throw new InternalServerError('Erro ao salvar Recorrência');
+			}
+
+			throw err;
+		}
+	}
+
+	public async update(recurrence: RecurrenceRequest) {
+		try {
+			const response = await api.put<RecurrenceResponse>(this.BASE_URL, recurrence, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao atualizar Recorrência');
 			}
 
 			throw err;

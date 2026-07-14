@@ -10,10 +10,8 @@ import RecentTransactions from './RecentTransactions';
 import ActivitiesSkeleton from './ActivitiesSkeleton';
 import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
 import TransactionModal from '../../transactionModal/components/TransactionModal';
-import type { TransactionModalType } from '../../transactionModal/types/TransactionModalType';
 import Confirm from '../../../components/ui/Confirm/Confirm';
-import RecurrencesSection from './RecurrenceSection';
-import { RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
+import type { TransactionType } from '../../../types/TransactionType';
 
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
@@ -55,14 +53,14 @@ function Activities() {
     }
   }, [error]);
 
-  const type: TransactionModalType = transaction?.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
+  const type: TransactionType = transaction?.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
   return (
     <main className="flex-1 w-full min-w-0 flex flex-col transition-all duration-300 relative z-10">
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex flex-col flex-1">
         {(loadingQuery || fetching) && <TopProgressBar />}
 
-        {loadingQuery  ? (
+        {loadingQuery ? (
           <ActivitiesSkeleton />
         ) : (
           <section>

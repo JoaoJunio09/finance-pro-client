@@ -5,16 +5,13 @@ import { useAccountContext } from "../../../context/AccountContext";
 import useCategoryService from "../../../hooks/useCategoryService";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
 import useTransactionService from "../../../hooks/useTransactionService";
+import useWalletService from "../../../hooks/useWalletService";
 import type { RecurrenceRequest } from "../../../models/recurrence/RecurrenceRequest";
 import type { TransactionRequest } from "../../../models/transaction/TransactionRequest";
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
-import type { FrequencyType } from "../../../types/FrequencyType";
-import type { RecurrenceType } from "../../../types/RecurrenceType";
 import type { TransactionType } from "../../../types/TransactionType";
 import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 import type { FormData } from "../types/FormData";
-import type { TransactionModalType } from "../types/TransactionModalType";
-import useWalletService from "../../../hooks/useWalletService";
 
 function useTransactionModal(
 	onClose: () => void,
@@ -48,26 +45,10 @@ function useTransactionModal(
 			observation: transaction.observation,
 			categoryId: transaction.category.id,
 			walletId: transaction.wallet.id,
-			toWalletId: '',
-			fromWalletId: '',
 			registeredAt: transaction.registeredAt,
 			type: transaction.type,
-			recurrenceId: transaction.recurrenceId,
-			recDayOne: '',
-			recDayTwo: '',
-			frequencyType: 'MONTHLY',
-			month: '',
-			recurrenceType: 'CREDIT'
 		});
 	}, [transaction]);
-
-	let typeParam: TransactionType | undefined = undefined;
-
-	if (form.type === 'RECURRING') {
-		typeParam = form.recurrenceType;
-	} else if (form.type === 'CREDIT' || form.type === 'DEBIT') {
-		typeParam = form.type;
-	}
 
 	function removeError(field: string) {
 		setInputsError(prev => {
@@ -86,18 +67,11 @@ function useTransactionModal(
 			id: null,
 			amount: '',
 			description: '',
+			observation: '',
 			categoryId: '',
 			walletId: '',
-			toWalletId: '',
-			fromWalletId: '',
 			registeredAt: '',
 			type: 'CREDIT',
-			recDayOne: '',
-			recDayTwo: '',
-			frequencyType: 'MONTHLY',
-			month: '',
-			observation: '',
-			recurrenceType: 'CREDIT'
 		});
 	}
 
@@ -114,14 +88,9 @@ function useTransactionModal(
 	const queryCategories = useQuery({
 		queryKey: [
 			'categories',
-			typeParam,
-			form.recurrenceType
+			form.type,
 		],
-		queryFn: () => categoryService.getAll(
-			typeParam !== undefined
-				? { type: typeParam }
-				: {}
-		),
+		queryFn: () => categoryService.getAll({ type: form.type }),
 		retry: 3
 	});
 
@@ -249,41 +218,14 @@ function useTransactionModal(
 		}
 	}
 
-	function setType(type: TransactionModalType) {
+	function setType(type: TransactionType) {
 		setForm((prev) => ({
 			...prev,
 			type: type
 		}));
 	}
 
-	function setFrequency(freq: FrequencyType) {
-		setForm((prev) => ({
-			...prev,
-			frequencyType: freq
-		}));
-		removeError('frequencyType');
-	}
-
-	function setRecurrenceType(recurrenceType: RecurrenceType) {
-		setForm((prev) => ({
-			...prev,
-			recurrenceType: recurrenceType
-		}));
-		removeError('recurrenceType');
-	}
-
 	function saveOrUpdate() {
-		const isRecurring: boolean = form.type === "RECURRING";	
-
-		if (!isRecurring) {
-			saveOrUpdateTransaction();
-			return;
-		}
-
-		registerRecurrence();
-	}
-
-	function saveOrUpdateTransaction() {
 		if (!account) {
 			return;
 		}
@@ -340,76 +282,11 @@ function useTransactionModal(
 		}
 	}
 
-	function registerRecurrence() {
-		if (!account) {
-			return;
-		}
-		
-		const localErrors: Record<string, string> = {};
-
-		if (!form.amount || form.amount === '' || formatCurrencyToAPI(form.amount) <= 0) {
-			localErrors['amount'] = 'Digite um valor';
-		}
-
-		if (!form.description || form.description === '') {
-			localErrors['description'] = 'Preencha a descrição';
-		}
-
-		if (!form.recurrenceType) {
-			localErrors['recurrenceType'] = 'Escolha o tipo da Recorrência';
-		}
-
-		if (!form.frequencyType) {
-			localErrors['frequencyType'] = 'Escolha a frequência da Recorrência';
-		}
-
-		if (!form.walletId || form.walletId === '') {
-			localErrors['wallet'] = 'Selecione uma carteira';
-		}
-
-		if (!form.categoryId || form.categoryId === '') {
-			localErrors['category'] = 'Selecione uma categoria';
-		}
-
-		setInputsError(localErrors);
-
-		if (Object.keys(localErrors).length > 0 || !form.walletId || !form.frequencyType || !form.recurrenceType) {
-			return;
-		}
-
-		let recurrence:RecurrenceRequest = {
-			amount: formatCurrencyToAPI(form.amount),
-			description: form.description,
-			type: form.recurrenceType,
-			frequencyType: form.frequencyType,
-			walletId: form.walletId,
-			accountId: account.id
-		}
-
-		if (form.frequencyType === 'MONTHLY' && form.recDayOne) {
-			recurrence.dayOne = Number(form.recDayOne);
-		}
-
-		if (form.frequencyType === 'BIWEEKLY' && form.recDayOne && form.recDayTwo) {
-			recurrence.dayOne = Number(form.recDayOne);
-			recurrence.dayTwo = Number(form.recDayTwo);
-		}
-
-		if (form.frequencyType === 'YEARLY' && form.recDayOne && form.month) {
-			recurrence.dayOne = Number(form.recDayOne);
-			recurrence.monthOfTheYear = Number(form.month);
-		}
-
-		recurrenceMutation.mutate(recurrence);
-	}
-
 	return {
 		categories: queryCategories.data ?? [],
 		wallets: queryWallets.data ?? [],
 		handleOnChange,
-		setFrequency,
 		setType,
-		setRecurrenceType,
 		form,
 		saveOrUpdate,
 		isLoading: transactionMutationSave.isPending || transactionMutationUpdate.isPending || recurrenceMutation.isPending,

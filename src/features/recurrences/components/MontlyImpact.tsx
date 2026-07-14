@@ -16,7 +16,7 @@ function MonthlyImpact({
 }: MonthlyImpactProps) {
 	return (
 		<div
-			className="w-full relative overflow-hidden rounded-[24px] p-[24px] sm:p-[28px] mb-[24px] shadow-2xl border border-white/[0.06]"
+			className="w-full relative overflow-hidden rounded-[24px] p-[24px] sm:p-[28px] mb-[24px] shadow-2xl border border-white/[0.06] animate-slide-up delay-100"
 			style={{ background: 'linear-gradient(to bottom right, #111113, #151518)' }}
 		>
 			

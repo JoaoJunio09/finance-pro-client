@@ -1,6 +1,15 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 import type { CalendarDay } from "../types/CalendarDay";
+
+type CalendarItem = {
+	id: string;
+	type: "transaction" | "recurrence";
+	description: string;
+	amount: number;
+	movementType: "CREDIT" | "DEBIT";
+	recurrence: boolean;
+	executed: boolean;
+};
 
 interface CalendarProps {
 	calendarDays: CalendarDay[];
@@ -73,6 +82,40 @@ function Calendar({
 						const isToday = item.date === currentDate;
 						const hasFuture = (item.futureTotal ? item.futureTotal > 0 : false);
 						const isSelected = selectedDate === item.date;
+						
+						const calendarItems: CalendarItem[] = [];
+
+						for (const tx of item.transactions) {
+							calendarItems.push({
+								id: tx.id,
+								type: "transaction",
+								description: tx.description,
+								amount: tx.amount,
+								movementType: tx.type,
+								recurrence: tx.recurrenceId !== null,
+								executed: true
+							});
+						}
+
+						for (const rec of item.recurrences) {
+							const executed = item.transactions.some(
+								tx => tx.recurrenceId === rec.id
+							);
+
+							if (executed) {
+								continue;
+							}
+
+							calendarItems.push({
+								id: rec.id,
+								type: "recurrence",
+								description: rec.description,
+								amount: rec.amount,
+								movementType: rec.type,
+								recurrence: true,
+								executed: false
+							});
+					}
 
 						return (
 							<div
@@ -106,46 +149,23 @@ function Calendar({
 
 								{/* Conteúdo Desktop/Tablet */}
 								<div className="hidden sm:flex flex-col gap-1 flex-1 w-full min-w-0 mt-2">
-									{item.transactions.slice(0, 2).map(tx => (
-										<>
-											{tx.recurrenceId !== null ? (
-												// Recorrência que já aconteceu, e registrou uma transação.
-												<div key={tx.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
-													<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
-														${tx.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
-													/>	
-													<span className={`truncate font-medium ${tx.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
-														{tx.description}
-													</span>
-												</div>
-											) : (
-												<div key={tx.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
-													
-													<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
-														${tx.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
-													/>	
-													<span className={`truncate font-medium ${tx.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
-														{tx.description}
-													</span>
-												</div>
-											)}
-										</>
-									))}
-									{item.recurrences.slice(0, 2).map(rec => (
-										<>
-											{item.date !== null && item.date <= rec.lastExecutionDate ? (
-												null
-											) : (
-												<div key={rec.id} className="flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate">
-													<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
-														${rec.type === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
-													/>	
-													<span className={`truncate font-medium ${rec.description === 'future' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
-														{rec.description}
-													</span>
-												</div>
-											)}
-										</>
+									{calendarItems
+										.slice(0, 2)
+										.map(item => (
+										<div
+											key={`${item.type}-${item.id}`}
+											className={`
+												flex items-center gap-1.5 text-[10px] md:text-[11px] text-zinc-400 truncate
+												
+											`}
+										>
+											<span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 
+												${item.movementType === 'CREDIT' ? 'bg-emerald-500' : 'bg-rose-500'}`} 
+											/>	
+											<span className={`truncate font-medium ${item.type === 'recurrence' ? 'text-amber-500/80' : 'text-zinc-300'}`}>
+												{item.description}
+											</span>
+										</div>
 									))}
 									{item.transactions.length > 2 ? (
 										<div className="text-[9px] md:text-[10px] text-[#8B5CF6] font-semibold pl-3 mt-0.5">

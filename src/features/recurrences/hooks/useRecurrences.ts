@@ -1,14 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
+import type { AllRecurrenceResponse } from "../../../models/recurrence/AllRecurrenceResponse";
 import type { ExecutionType } from "../../../types/ExecutionType";
 import type { FrequencyType } from "../../../types/FrequencyType";
 import type { RecurrenceSort } from "../../../types/RecurrenceSort";
 import type { RecurrenceType } from "../../../types/RecurrenceType";
-import type { AllRecurrenceResponse } from "../../../models/recurrence/AllRecurrenceResponse";
 
 function useRecurrences() {
+	const [recurrenceDeleteId, setRecurrenceDeleteId] = useState<string | null>(null);
 	const [type, setType] = useState<RecurrenceType | undefined>(undefined);
 	const [frequencyType, setFrequencyType] = useState<FrequencyType | undefined>(undefined);
 	const [executionType, setExecutionType] = useState<ExecutionType | undefined>(undefined);
@@ -34,11 +35,8 @@ function useRecurrences() {
 			executionType: executionType,
 			sort: sort
 		}),
-		enabled: Boolean(account?.id)
-			|| Boolean(type)
-			|| Boolean(frequencyType)
-			|| Boolean(executionType)
-			|| Boolean(sort),
+		enabled: Boolean(account?.id),
+		placeholderData: keepPreviousData,
 		retry: 1
 	});
 
@@ -64,7 +62,8 @@ function useRecurrences() {
 
 	return {
 		allRecurrences,
-		loading: queryOverview.isFetching,
+		isLoading: queryOverview.isLoading,
+		isFetching: queryOverview.isFetching,
 		setType,
 		type,
 		setFrequencyType,

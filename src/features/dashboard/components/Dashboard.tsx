@@ -8,14 +8,14 @@ import Insights from './Insights';
 import MonthOverview from './MonthOverview';
 import PerfomTransaction from './PerfomTransaction';
 import RecentActivities from './RecentActivities';
-import type { TransactionModalType } from '../../transactionModal/types/TransactionModalType';
 import TransactionModal from '../../transactionModal/components/TransactionModal';
 import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
+import type { TransactionType } from '../../../types/TransactionType';
 
 function Dashboard() {
   const [transaction, setTransaction] = useState<TransactionResponse | null>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [type, setType] = useState<TransactionModalType>('CREDIT');
+  const [type, setType] = useState<TransactionType>('CREDIT');
   const { account, transactions, loading } = useDashboard();
   const { setAccountByUser } = useAccountContext();
 

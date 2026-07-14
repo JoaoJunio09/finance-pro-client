@@ -2,6 +2,37 @@ import { CalendarClock } from "lucide-react";
 import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
 import { formatCurrencyLabel } from "../../../utils/FormatCurrency";
 
+/**
+ * Parseia uma data no formato "YYYY-MM-DD" (LocalDate do backend) como data LOCAL,
+ * evitando o bug clássico de `new Date("YYYY-MM-DD")` interpretar como UTC e
+ * "voltar um dia" em fusos negativos (ex: Brasil, UTC-3).
+ */
+const parseLocalDate = (isoDate: string): Date => {
+	const [year, month, day] = isoDate.split('-').map(Number);
+	return new Date(year, month - 1, day);
+};
+
+const formatUpcoming = (nextExecutionDate: string): { relative: string; formatted: string } => {
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	const next = parseLocalDate(nextExecutionDate);
+	next.setHours(0, 0, 0, 0);
+
+	const diffDays = Math.round((next.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+	const relative =
+		diffDays <= 0 ? 'Hoje' :
+		diffDays === 1 ? 'Amanhã' :
+		`Em ${diffDays} dias`;
+
+	const formatted = next
+		.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+		.replace('.', '');
+
+	return { relative, formatted };
+};
+
 interface RecurrenceCardToUpcomingListProps {
 	recurrence: RecurrenceResponse
 }
@@ -9,14 +40,16 @@ interface RecurrenceCardToUpcomingListProps {
 const RecurrenceCardToUpcomingList = ({
 	recurrence
 }: RecurrenceCardToUpcomingListProps) => {
+	const { relative, formatted } = formatUpcoming(recurrence.nextExecutionDate);
+
 	return (
-		<div key={recurrence.id} className="flex flex-row justify-between items-center p-[10px] rounded-[12px]" style={{ backgroundColor: 'rgba(17,17,19,0.5)' }}>
+		<div className="flex flex-row justify-between items-center p-[10px] rounded-[12px]" style={{ backgroundColor: 'rgba(17,17,19,0.5)' }}>
 			<div className="flex flex-col min-w-0 pr-[8px]">
 				<span className="font-['Inter'] text-[13px] font-medium text-[#FFFFFF] truncate">
 					{recurrence.description}
 				</span>
 				<span className="font-['Inter'] text-[10px] text-[#C4B5FD]">
-					Em {recurrence.dayOne - new Date().getDate()} dia{recurrence.dayOne - new Date().getDate() > 1 ? 's' : ''} — {recurrence.dayOne} jul
+					{relative} — {formatted}
 				</span>
 			</div>
 			<span className="font-['Outfit'] text-[13px] font-bold tabular-nums text-white flex-shrink-0">
@@ -43,7 +76,7 @@ function RecurrencesUpcomingList({
 			{recurrences.length > 0 ? (
 				<div className="flex flex-col gap-[8px]">
 					{recurrences.map(recurrence => (
-						<RecurrenceCardToUpcomingList recurrence={recurrence} />
+						<RecurrenceCardToUpcomingList key={recurrence.id} recurrence={recurrence} />
 					))}
 				</div>
 			) : (

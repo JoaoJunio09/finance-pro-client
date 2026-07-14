@@ -1,10 +1,13 @@
 import type { ExecutionType } from "../../types/ExecutionType";
 import type { FrequencyType } from "../../types/FrequencyType";
 import type { RecurrenceType } from "../../types/RecurrenceType";
+import type { CategoryResponse } from "../category/CategoryResponse";
+import type { WalletResponse } from "../wallet/WalletResponse";
 
 export interface RecurrenceResponse {
-	id: number;
+	id: string;
 	amount: number;
+	description: string;
 	type: RecurrenceType;
 	frequencyType: FrequencyType;
 	executionType: ExecutionType;
@@ -14,5 +17,6 @@ export interface RecurrenceResponse {
 	nextExecutionDate: string;
 	lastExecutionDate: string;
 	active: boolean;
-	description: string;
+	category: CategoryResponse,
+	wallet: WalletResponse
 }

@@ -1,21 +1,10 @@
 @import "tailwindcss";
 
-body {
-	overflow-x: hidden !important;
-}
-
-.font-money {
-	font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.font-sans {
-	font-family: 'Inter', sans-serif;
-}
-
 /* Firefox */
 html {
   scrollbar-width: thin;
   scrollbar-color: #312E81 #0A0A0A;
+	scrollbar-gutter: stable;
 }
 
 /* Chrome, Edge e Safari */
@@ -34,6 +23,22 @@ html::-webkit-scrollbar-thumb {
 
 html::-webkit-scrollbar-thumb:hover {
   background: #3730A3;
+}
+
+body {
+	overflow-x: hidden !important;
+}
+
+body:has(.filter-drawer-root) {
+  overflow: hidden;
+}
+
+.font-money {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-sans {
+	font-family: 'Inter', sans-serif;
 }
 
 .animate-slide-up {

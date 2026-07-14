@@ -1,80 +1,68 @@
-import { CheckCircle2, Wallet } from 'lucide-react';
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
-import { useEffect, useRef } from 'react';
-import type { TransactionResponse } from '../../../models/transaction/TransactionResponse';
-import type { TransactionType } from '../../../types/TransactionType';
-import { formatCurrencyInput } from '../../../utils/FormatCurrency';
-import useTransactionModal from '../hooks/useTransactionModal';
-import FormTransaction from './FormTransaction';
+import { CheckCircle2, Wallet } from "lucide-react";
+import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { useEffect, useRef } from "react";
+import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
+import type { RecurrenceType } from "../../../types/RecurrenceType";
+import { formatCurrencyInput } from "../../../utils/FormatCurrency";
+import useRecurrenceModal from "../hooks/useRecurrenceModal";
+import RecurrenceForm from "./RecurrenceForm";
 
-const getTodayDate = () => new Date().toISOString().split('T')[0];
-
-const formatDateBR = (dateStr: string) => {
-  if (!dateStr) return '';
-
-  const [datePart, timePart = ''] = dateStr.split('T');
-  const [y, m, d] = datePart.split('-');
-  const dateFormatted = `${d}/${m}/${y}`;
-
-  if (!timePart) return dateFormatted;
-
-  const [hh, mm] = timePart.split(':'); // ignora segundos, se vierem
-  return `${dateFormatted} às ${hh}:${mm}`;
-};
-
-interface TransactionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  type: TransactionType | null,
-  transaction: TransactionResponse | null;
+interface RecurrenceModalProps {
+	isOpen: boolean;
+	onClose: () => void;
+	type: RecurrenceType | null,
+	recurrence: RecurrenceResponse | null;
 }
 
-function TransactionModal({ isOpen, onClose, type, transaction }: TransactionModalProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const {
+function RecurrenceModal({ isOpen, onClose, type, recurrence }: RecurrenceModalProps) {
+	const inputRef = useRef<HTMLInputElement>(null);
+	const {
     form,
+		saveOrUpdate,
     handleOnChange,
+		setType,
+		setFrequencyType,
+    setExecutionType,
+    setAlreadyOccurred,
     categories,
     wallets,
-    saveOrUpdate,
-    isLoading,
-    setType,
     inputsError,
     clearErrors,
     resetForm
-  } = useTransactionModal(onClose, transaction);
+  } = useRecurrenceModal(onClose, recurrence);
 
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+	useEffect(() => {
+		if (isOpen) {
+			setTimeout(() => inputRef.current?.focus(), 100);
+		}
 
-    if (type) setType(type);
-  }, [isOpen, type]);
+		if (type) setType(type);
+	}, [isOpen, type]);
 
-  if (!isOpen) return null;
+	if (!isOpen) return null;
 
-  const isIncome = form.type === 'CREDIT';
-  const isRecurring = false;
-  const themeHex = isIncome ? 'text-emerald-400' : 'text-rose-400';
+  const themeHex = 'text-[#8B5CF6]';
 
   const selectedCategory = categories.find(c => c.id === form.categoryId);
   const selectedWallet = wallets.find(w => w.id === form.walletId);
 
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto animate-overlay bg-black/70 px-0 sm:px-6">
+	return (
+		<div className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto animate-overlay bg-black/70 px-0 sm:px-6">
       <div className="fixed inset-0 min-h-full" onClick={onClose} />
       
       <div className="flex-grow hidden sm:block pointer-events-none min-h-[2rem]" />
       <div className="flex-grow sm:hidden pointer-events-none" />
       
       <div className="relative w-full sm:max-w-5xl bg-[#09090B] sm:border border-white/[0.06] rounded-t-[32px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex flex-col sm:flex-row animate-bottom-sheet sm:animate-modal h-[95vh] sm:h-auto sm:max-h-[90vh] overflow-hidden flex-shrink-0 z-10 min-h-0">
-        <FormTransaction
+        <RecurrenceForm
           form={form}
           handleOnChange={handleOnChange}
           inputRef={inputRef}
           onClose={onClose}
-          setType={setType}
+					setFrequency={setFrequencyType}
+          setRecurrenceType={setType}
+          setExecutionType={setExecutionType}
+          setAlreadyOccurred={setAlreadyOccurred}
           themeHex={themeHex}
           inputsError={inputsError}
           clearErrors={clearErrors}       
@@ -144,13 +132,15 @@ function TransactionModal({ isOpen, onClose, type, transaction }: TransactionMod
                     ) : <span className="text-xs text-zinc-600">-</span>}
                   </div>
                 </div>
-
-                {!isRecurring && (
-                  <div className="pt-2">
-                    <span className="text-[10px] uppercase text-zinc-500 block mb-1">Data</span>
-                    <span className="text-xs font-medium text-zinc-300">{form.registeredAt === getTodayDate() ? 'Hoje, ' : ''}{formatDateBR(form.registeredAt)}</span>
-                  </div>
-                )}
+                
+                
+								<div className="pt-2">
+									<span className="text-[10px] uppercase text-[#8B5CF6] block mb-1">Frequência Automática</span>
+									<span className="text-xs font-medium text-zinc-300 capitalize">
+										{form.type} • {form.type === 'CREDIT' ? 'Receita' : 'Despesa'}
+									</span>
+								</div>
+                
               </div>
             </div>
           </div>
@@ -159,16 +149,15 @@ function TransactionModal({ isOpen, onClose, type, transaction }: TransactionMod
           <div className="flex flex-col gap-3 p-6 sm:p-8 pt-6 sm:pt-0 shrink-0 bg-[#09090B] sm:bg-[#111113] border-t border-white/[0.04] sm:border-t-0">
             <button
               onClick={saveOrUpdate}
-              className={`cursor-pointer w-full py-4 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 shadow-xl active:scale-[0.98] ${
-                isIncome ? 'bg-emerald-500 text-emerald-950 hover:bg-emerald-400 shadow-emerald-500/20' : 
-                isRecurring ? 'bg-[#8B5CF6] text-white hover:bg-[#7C3AED] shadow-[#8B5CF6]/20' : 
-                'bg-rose-500 text-rose-950 hover:bg-rose-400 shadow-rose-500/20'
-              }`}
+              className={`
+								cursor-pointer w-full py-4 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 shadow-xl active:scale-[0.98]
+                bg-[#8B5CF6] text-white hover:bg-[#7C3AED] shadow-[#8B5CF6]/20
+              `}
             >
-              {isLoading ? (
+              {false ? (
                 'Salvando...'
               ) : (
-                `${isRecurring ? 'Salvar Recorrência' : 'Salvar Movimentação'}`
+                `Salvar Recorrência`
               )}
               
             </button>
@@ -188,7 +177,7 @@ function TransactionModal({ isOpen, onClose, type, transaction }: TransactionMod
       
       <div className="flex-grow hidden sm:block pointer-events-none min-h-[2rem]" />
     </div>
-  );
-};
+	)
+}
 
-export default TransactionModal
+export default RecurrenceModal;
