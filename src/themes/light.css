@@ -1,0 +1,30 @@
+[data-theme="light"] {
+  --color-background: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-overlay: rgba(250,250,250,.70);
+  --color-foreground: #09090B;
+  --color-foreground-muted: #71717A;
+  --color-primary: #7C3AED;
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  --border-subtle: rgba(139,92,246,.08);
+  --border-default: rgba(139,92,246,.06);
+  --border-strong: rgba(139,92,246,.15);
+
+  --shadow-surface: 0 20px 40px -10px rgba(139,92,246,.05);
+  --shadow-overlay: 0 30px 60px -15px rgba(139,92,246,.12);
+
+  --gradient-surface:
+    linear-gradient(
+      180deg,
+      rgba(243,239,255,.95) 0%,
+      rgba(255,255,255,.98) 100%
+    );
+
+  --effect-glow-primary: rgba(124,58,237,.12);
+  --effect-glow-success: rgba(16,185,129,.05);
+  --effect-glow-danger: rgba(239,68,68,.03);
+}

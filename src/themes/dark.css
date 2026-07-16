@@ -1,0 +1,50 @@
+[data-theme="dark"] {
+	--color-background: #09090B;
+  --color-surface: #111113;
+  --color-overlay: rgba(9, 9, 11, .60);
+  --color-foreground: #FFFFFF;
+  --color-foreground-muted: #A1A1AA;
+  --color-primary: #8B5CF6;
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  --border-subtle: rgba(255,255,255,.04);
+  --border-default: rgba(255,255,255,.06);
+  --border-strong: rgba(255,255,255,.08);
+
+  --shadow-surface: 0 20px 40px -10px rgba(0,0,0,.7);
+  --shadow-overlay: 0 30px 60px -15px rgba(0,0,0,.7);
+  --gradient-surface:
+    linear-gradient(
+      180deg,
+      rgba(17,17,19,.95) 0%,
+      rgba(9,9,11,.95) 100%
+    );
+
+  --effect-glow-primary: rgba(139,92,246,.15);
+  --effect-glow-success: rgba(16,185,129,.08);
+  --effect-glow-danger: rgba(239,68,68,.05);
+}
+
+/* [data-theme="dark"]{
+	--bg-base: #09090B;
+	--bg-surface: #111113;
+	--text-main: #FFFFFF;
+	--text-muted: #A1A1AA;
+	--border-subtle: rgba(255, 255, 255, 0.04);
+	--border-strong: rgba(255, 255, 255, 0.08);
+	--plasma-primary: rgba(139, 92, 246, 0.15); 
+	--plasma-income: rgba(16, 185, 129, 0.08); 
+	--plasma-expense: rgba(239, 68, 68, 0.05); 
+	--glass-bg: rgba(9, 9, 11, 0.6);
+	--card-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+	--dock-bg: rgba(17, 17, 19, 0.55);
+	--dock-border: rgba(255, 255, 255, 0.06);
+	--dock-glow: rgba(139, 92, 246, 0.15);
+	--key-cap-bg: #1C1C1F;
+	--drawer-bg: linear-gradient(180deg, rgba(17, 17, 19, 0.95) 0%, rgba(9, 9, 11, 0.95) 100%);
+	--drawer-border: rgba(255, 255, 255, 0.04);
+	--drawer-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+} */
