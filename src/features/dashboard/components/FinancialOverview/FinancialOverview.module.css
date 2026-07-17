@@ -1,0 +1,58 @@
+.boxOverview {
+	color: var(--color-foreground-muted);
+}
+
+.iconOverview {
+	height: 14px;
+	width: 14px;
+	color: var(--color-primary);
+}
+
+.currentBalanceOverview {
+	color: var(--color-foreground);
+	font-family: 'Outfit', sans-serif;
+	font-weight: 300;
+	letter-spacing: -0.05em;
+	line-height: 1;
+}
+
+.descriptionMonthOverview {
+	font-size: 12px;
+	font-weight: 300;
+	opacity: 60%;
+	letter-spacing: 0.025em;
+	margin-bottom: 2.5rem;
+}
+
+.boxIncomeOverview:hover .iconIncomeOverview,
+.boxExpensesverview:hover .iconExpensesOverview {
+	transform: translateY(-4px);
+}
+
+.overviewIcon {
+	height: 1rem;
+	width: 1rem;
+	transition: transform ease-out .3s;
+}
+
+.iconIncomeOverview {
+	color: var(--color-success);
+}
+
+.iconExpensesOverview {
+	color: var(--color-danger);
+}
+
+.amount {
+	font-family: 'Outfit', sans-serif;
+	font-variant-numeric: tabular-nums;
+	font-weight: 500;
+}
+
+.income {
+	color: var(--color-success);
+}
+
+.expenses {
+	color: var(--color-danger);
+}
