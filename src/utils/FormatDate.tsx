@@ -1,44 +1,91 @@
-export function formatRelativeDateTime(localDateTime: string): string {
-  const date = new Date(localDateTime);
+const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+export function formatRelativeDateTime(
+  localDateTime: string | null | undefined
+): string {
+  // A API não enviou uma data válida
+  if (!localDateTime) {
+    return '';
+  }
+
   const now = new Date();
 
-  // Zera horas para comparar apenas os dias (evita bug de fuso/horário)
-  const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  let date: Date;
+  let hasTime = false;
+
+  // LocalDate: YYYY-MM-DD
+  // Exemplo: 2026-07-30
+  if (!localDateTime.includes('T')) {
+    const [year, month, day] = localDateTime
+      .split('-')
+      .map(Number);
+
+    date = new Date(year, month - 1, day);
+  } else {
+    // LocalDateTime: YYYY-MM-DDTHH:mm:ss
+    // Exemplo: 2026-07-20T15:30:00
+    date = new Date(localDateTime);
+    hasTime = true;
+  }
+
+  const startOfDay = (d: Date) =>
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate()
+    );
 
   const dateDay = startOfDay(date);
   const today = startOfDay(now);
 
-  const diffInDays = Math.round((today.getTime() - dateDay.getTime()) / (1000 * 60 * 60 * 24));
+  const diffInDays = Math.round(
+    (today.getTime() - dateDay.getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
 
-  const hour = date.getHours();
-  const horaTexto = `${hour} hora${hour === 1 ? '' : 's'}`;
+  let hourText = '';
+
+  if (hasTime) {
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+
+    if (hour !== 0 || minute !== 0) {
+      hourText = ` às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+  }
 
   if (diffInDays === 0) {
-    return `Hoje às ${horaTexto}`;
+    return `Hoje${hourText}`;
   }
 
   if (diffInDays === 1) {
-    return `Ontem às ${horaTexto}`;
+    return `Ontem${hourText}`;
   }
 
   if (diffInDays === 2) {
-    return `Anteontem às ${horaTexto}`;
+    return `Anteontem${hourText}`;
   }
 
-  // A partir de 3 dias atrás (e também datas futuras): "27 de junho às 15 horas"
-  const meses = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
-  ];
-
   const dia = date.getDate();
-  const mes = meses[date.getMonth()];
+  const mes = MONTHS[date.getMonth()];
 
-  return `${dia} de ${mes} às ${horaTexto}`;
+  return `${dia} de ${mes}${hourText}`;
 }
 
-export function formatDateLabel(dateString: string, MONTHS: string[]): string {
-  const [, month, day] = dateString.split('-').map(Number);
-  const dayFormatted = day < 10 ? `0${day}` : `${day}`;
+export function formatDateLabel(
+  dateString: string | null | undefined
+): string {
+  if (!dateString) {
+    return '';
+  }
+
+  const [, month, day] = dateString
+    .split('-')
+    .map(Number);
+
+  const dayFormatted = day < 10
+    ? `0${day}`
+    : `${day}`;
+
   return `${dayFormatted} de ${MONTHS[month - 1]}`;
 }

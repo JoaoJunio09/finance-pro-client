@@ -1,0 +1,37 @@
+.sectionLink {
+	color: var(--color-primary);
+	transition: filter .2s ease-out;
+}
+
+.sectionLink:hover {
+	filter: brightness(0.85);
+}
+
+.activityRow {
+	transition:
+		background-color .3s ease-out,
+		border-color .3s ease-out;
+}
+
+.activityRow:hover {
+	background-color: var(--color-surface);
+	border-color: var(--border-subtle);
+}
+
+.activityIcon {
+	transition: transform .3s ease-out;
+}
+
+.activityIconIncome {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+
+.activityIconExpense {
+	color: var(--color-danger);
+	background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+
+.activityAmountIncome {
+	color: var(--color-success);
+}

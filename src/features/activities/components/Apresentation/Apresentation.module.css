@@ -1,0 +1,87 @@
+/* =========================================
+   Estrutura e Tipografia
+========================================= */
+.headerPresentation {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.textTagPrimary {
+  font-size: 0.625rem; /* 10px */
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.textTagMuted {
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+
+.metaSeparator {
+  color: var(--color-foreground-subtle);
+  font-size: 0.75rem;
+}
+
+.presentationTitle {
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+.presentationSubtitle {
+  color: var(--color-foreground-muted);
+  max-width: 580px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================================
+   Animações CSS (SVG)
+========================================= */
+.animatePulseSlow {
+  animation: pulseSlow 6s infinite ease-in-out;
+}
+
+.animatePulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.animateSpinSlow {
+  animation: spinSlow 20s infinite linear;
+  transform-origin: center;
+}
+
+.animateFloat {
+  animation: floatY 5s infinite ease-in-out;
+}
+
+.animateOrbit {
+  animation: spinSlow 12s infinite linear;
+  transform-origin: center;
+}
+
+/* Keyframes */
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.2; transform: scale(0.95); }
+  50% { opacity: 0.4; transform: scale(1.05); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

@@ -1,0 +1,178 @@
+/* MonthMap.module.css */
+
+.container {
+  background: var(--color-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 32px;
+  box-shadow: var(--shadow-surface);
+  width: 100%;
+}
+
+.header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.title {
+  color: var(--color-foreground);
+}
+
+.iconMuted {
+  color: var(--color-foreground-muted);
+}
+
+.clearFilterBtn {
+  color: var(--color-primary);
+  transition: opacity 0.2s;
+}
+
+.clearFilterBtn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.weekday {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--color-foreground-subtle);
+}
+
+/* =========================================
+   Célula do Dia
+========================================= */
+.dayCell {
+  position: relative;
+  border-radius: 20px;
+  min-height: 100px;
+  padding: 12px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
+  outline: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.dayCell:disabled {
+  cursor: default;
+}
+
+.dayBg {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: var(--color-surface-elevated);
+  opacity: 0.35;
+  transition: opacity 0.3s, border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  z-index: -1;
+  border: 1px solid var(--border-subtle);
+}
+
+.dayCell:not(:disabled):hover .dayBg {
+  opacity: 1;
+  background: var(--color-glass);
+  border-color: var(--border-strong);
+}
+
+.dateNumber {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  z-index: 1;
+  font-weight: 400;
+  color: var(--color-foreground);
+  transition: color 0.3s;
+}
+
+/* Estados da Célula */
+.dimmed {
+  opacity: 0.22;
+}
+
+.today .dateNumber {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.today .dayBg {
+  border-color: var(--effect-glow-primary);
+  opacity: 0.8;
+}
+
+.selected {
+  transform: scale(1.03);
+  z-index: 10;
+}
+
+.selected .dayBg {
+  opacity: 1;
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 35px var(--effect-glow-primary), 0 0 0 1.5px var(--color-primary);
+}
+
+/* =========================================
+   Indicadores de Transação (Dots)
+========================================= */
+.dayIndicators {
+  width: 100%;
+  margin-top: auto;
+  z-index: 1;
+}
+
+.barWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+}
+
+.indicatorDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.indicatorDot.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dotInc {
+  background: var(--color-success);
+  box-shadow: 0 0 8px var(--effect-glow-success);
+}
+
+.dotExp {
+  background: var(--color-danger);
+  box-shadow: 0 0 8px var(--effect-glow-danger);
+}
+
+.dotRec {
+  background: var(--color-primary);
+  box-shadow: 0 0 8px var(--effect-glow-primary);
+}
+
+/* =========================================
+   Responsividade
+========================================= */
+@media (max-width: 768px) {
+  .dayCell {
+    min-height: 80px;
+    border-radius: 14px;
+    padding: 12px;
+  }
+  .dayBg {
+    border-radius: 14px;
+  }
+  .indicatorDot {
+    width: 4px;
+    height: 4px;
+  }
+  .barWrapper {
+    gap: 2.5px;
+  }
+}

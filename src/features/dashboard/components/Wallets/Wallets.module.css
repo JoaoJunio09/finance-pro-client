@@ -1,0 +1,25 @@
+.remainingBadge {
+	color: var(--color-primary);
+	background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.addIcon {
+	color: var(--color-primary);
+}
+
+.walletCardBorder {
+	border: 1px solid var(--border-strong);
+}
+
+.walletCardDesktop {
+	transform: scale(var(--wallet-scale)) translateY(0) translateZ(0);
+	transition:
+		transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	will-change: transform;
+}
+
+.walletCardDesktop:hover {
+	transform: scale(var(--wallet-scale)) translateY(-32px) translateZ(0);
+}

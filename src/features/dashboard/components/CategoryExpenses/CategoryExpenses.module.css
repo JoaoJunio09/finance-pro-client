@@ -1,0 +1,81 @@
+.sectionLink {
+	color: var(--color-primary);
+	transition: filter .2s ease-out;
+}
+
+.sectionLink:hover {
+	filter: brightness(0.85);
+}
+
+.categoryCard {
+	transition:
+		transform .3s ease-out,
+		box-shadow .3s ease-out,
+		background-color .3s ease-out;
+	box-shadow: var(--shadow-card);
+}
+
+.categoryCard:hover {
+	transform: translateY(-4px);
+}
+
+.categoryGlow {
+	opacity: 0.1;
+	filter: blur(48px);
+	transition: opacity .3s ease-out;
+}
+
+.categoryCard:hover .categoryGlow {
+	opacity: 0.25;
+}
+
+.categoryIcon {
+	transition: transform .3s ease-out;
+}
+
+.categoryCard:hover .categoryIcon {
+	transform: scale(1.1);
+}
+
+.progressTrack {
+	background-color: var(--border-subtle);
+}
+
+.progressBar {
+	transition: width 1s ease-out;
+}
+
+/* --- Variantes --- */
+
+.glowSuccess { background-color: var(--color-success); }
+.glowInfo { background-color: var(--color-info); }
+.glowWarning { background-color: var(--color-warning); }
+.glowDanger { background-color: var(--color-danger); }
+.glowPrimary { background-color: var(--color-primary); }
+
+.iconSuccess {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+.iconInfo {
+	color: var(--color-info);
+	background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+}
+.iconWarning {
+	color: var(--color-warning);
+	background-color: color-mix(in srgb, var(--color-warning) 10%, transparent);
+}
+.iconDanger {
+	color: var(--color-danger);
+	background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+.iconPrimary {
+	color: var(--color-primary);
+	background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.barSuccess { background-color: var(--color-success); }
+.barInfo { background-color: var(--color-info); }
+.barWarning { background-color: var(--color-warning); }
+.barDanger { background-color: var(--color-danger); }
+.barPrimary { background-color: var(--color-primary); }

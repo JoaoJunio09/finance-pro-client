@@ -1,0 +1,31 @@
+.overlayScrim {
+	background-color: color-mix(in srgb, var(--color-background) 80%, transparent);
+}
+
+.card {
+	background: linear-gradient(135deg, var(--color-surface), var(--color-background));
+}
+
+.statIconIncome {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 20%, transparent);
+}
+
+.statIconExpense {
+	color: var(--color-danger);
+	background-color: color-mix(in srgb, var(--color-danger) 20%, transparent);
+}
+
+.txIconIncome {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 20%, transparent);
+}
+
+.txIconExpense {
+	color: rgba(255, 255, 255, 0.7);
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.txAmountIncome {
+	color: var(--color-success);
+}

@@ -1,22 +1,35 @@
 import { useState } from "react";
-import MobileNav from "../components/layout/mobileNav/MobileNav";
-import Sidebar from "../components/layout/sidebar/Sidebar";
-import Activities from "../features/activities/components/Activities";
+import DesktopNav from "../components/layout/nagivation/desktop/DasktopNav";
+import FabRadialMenu from "../components/layout/nagivation/mobile/radial/FabRadialManu";
+import MobileNav from "../components/layout/nagivation/mobile/MobileNav";
+import Activities from "../features/activities/Activities";
 
 function ActivitiesPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [openFabRadialMobile, setOpenFabRadialMobile] = useState(false);
+	const [openFabRadialDesktop, setOpenFabRadialDesktop] = useState(false);
+	const [activeDesktopTab, setActiveDesktopTab] = useState(0);
 
 	return (
-		<div className="min-h-screen flex bg-[#09090B] text-zinc-100 selection:bg-[#7C3AED]/30 font-sans">
-			<div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[100vw] h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.08)_0%,_rgba(9,9,11,0)_60%)]"></div>
-      </div>
-
-			<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="activities" />
-
+		<div className="bg-main min-h-screen relative flex flex-row justify-center overflow-x-hidden selection:bg-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] transition-colors duration-500 w-full">
 			<Activities />
 
-			<MobileNav setIsOpen={setIsSidebarOpen} active="activities" />
+			<MobileNav
+				isFabOpen={openFabRadialMobile}
+				onToggleFab={() => setOpenFabRadialMobile((prev) => !prev)}
+				active="activities"
+			/>
+
+			<DesktopNav
+				activeTab={activeDesktopTab}
+				setActiveTab={setActiveDesktopTab}
+				isDesktopMenuOpen={openFabRadialDesktop}
+				setIsDesktopMenuOpen={setOpenFabRadialDesktop}
+			/>
+
+			<FabRadialMenu
+				isFabOpen={openFabRadialMobile}
+				onClose={() => setOpenFabRadialMobile(false)}
+			/>
 		</div>
 	)
 }

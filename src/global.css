@@ -2,12 +2,14 @@
 
 @import './themes/dark.css';
 @import './themes/light.css';
+@import './themes/utilities.css';
 
 /* Firefox */
 html {
   scrollbar-width: thin;
   scrollbar-color: #312E81 #0A0A0A;
 	scrollbar-gutter: stable;
+	background-color: var(--color-background);
 }
 
 /* Chrome, Edge e Safari */
@@ -31,7 +33,6 @@ html::-webkit-scrollbar-thumb:hover {
 body {
 	overflow-x: hidden !important;
 	font-family: 'Inter', sans-serif;
-	background: var(--back)
 }
 
 body:has(.filter-drawer-root) {

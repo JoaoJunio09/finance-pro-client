@@ -1,5 +1,6 @@
 import { Activity, Fingerprint, Target, TrendingDown, TrendingUp } from "lucide-react";
 
+import { formatCurrencyLabel, getDecimalPart, getIntegerPart } from "../../../../utils/FormatCurrency";
 import styles from './FinancialOverview.module.css';
 
 const InteractiveIllustration = () => {
@@ -21,7 +22,17 @@ const InteractiveIllustration = () => {
 	)
 }
 
-function FinancialOverview() {
+interface FinancialOverviewProps {
+	currentBalance: number;
+	income: number;
+	expenses: number
+}
+
+function FinancialOverview({
+	currentBalance,
+	income,
+	expenses
+}: FinancialOverviewProps) {
 	return (
 		<div className="relative z-10 w-full rounded-[32px] flex flex-col lg:flex-row items-center lg:items-start justify-between overflow-hidden">
 			<div className={`flex flex-col items-center lg:items-start text-center lg:text-left relative z-10 w-full ${styles.boxOverview}`}>
@@ -30,12 +41,10 @@ function FinancialOverview() {
 				</div>
 				
 				<h2 className={`text-5xl lg:text-7xl mb-1 tabular-nums ${styles.currentBalanceOverview}`}>
-					R$ 12.430<span className="text-3xl lg:text-5xl">,22</span>
+					R$ {getIntegerPart(currentBalance)}<span className="text-3xl lg:text-5xl">,{getDecimalPart(currentBalance)}</span>
 				</h2>
 
-				<p className={styles.descriptionMonthOverview}>
-					Resumo financeiro deste mês
-				</p>
+				<p className={styles.descriptionMonthOverview}>Resumo financeiro deste mês</p>
 
 				<div className="flex flex-row items-center justify-center lg:justify-start gap-10 lg:gap-16 w-full">
 					<div className={`flex flex-col items-center lg:items-start cursor-default ${styles.boxIncomeOverview}`}>
@@ -43,7 +52,7 @@ function FinancialOverview() {
 							<TrendingUp className={`${styles.overviewIcon} ${styles.iconIncomeOverview}`} />
 							<span className="text-[11px] uppercase tracking-widest font-bold">Entradas</span>
 						</div>
-						<span className={`text-2xl lg:text-3xl ${styles.amount} ${styles.income}`}>R$ 6.230</span>
+						<span className={`text-2xl lg:text-3xl ${styles.amount} ${styles.income}`}>{formatCurrencyLabel(income)}</span>
 					</div>
 					
 					<div className={`flex flex-col items-center lg:items-start cursor-default ${styles.boxExpensesverview}`}>
@@ -51,7 +60,7 @@ function FinancialOverview() {
 							<TrendingDown className={`${styles.overviewIcon} ${styles.iconExpensesOverview}`} />
 							<span className="text-[11px] uppercase tracking-widest font-bold">Saídas</span>
 						</div>
-						<span className={`text-2xl lg:text-3xl ${styles.amount} ${styles.expenses}`}>R$ 2.110</span>
+						<span className={`text-2xl lg:text-3xl ${styles.amount} ${styles.expenses}`}>{formatCurrencyLabel(expenses)}</span>
 					</div>
 				</div>
 			</div>

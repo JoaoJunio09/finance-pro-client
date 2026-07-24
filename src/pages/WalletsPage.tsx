@@ -1,9 +1,5 @@
-
 import { useState } from "react";
-import MobileNav from "../components/layout/mobileNav/MobileNav";
 
-import Sidebar from "../components/layout/sidebar/Sidebar";
-import Wallets from "../features/wallets/components/Wallets";
 
 function WalletsPage() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,11 +10,11 @@ function WalletsPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[100vw] h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.08)_0%,_rgba(9,9,11,0)_60%)]"></div>
       </div>
 
-			<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="wallets" />
-
+			{/* <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="wallets" /> */}
+{/* 
 			<Wallets />
 
-			<MobileNav setIsOpen={setIsSidebarOpen} active="wallets" />
+			<MobileNav setIsOpen={setIsSidebarOpen} active="wallets" /> */}
 		</div>
 	)
 }

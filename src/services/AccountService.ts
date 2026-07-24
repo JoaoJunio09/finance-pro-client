@@ -1,5 +1,6 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AccountResponse } from "../models/account/AccountResponse";
+import type { DashboardOverview } from "../models/account/DashboardOverview";
 import api from "./api";
 
 class AccountService {
@@ -25,6 +26,27 @@ class AccountService {
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao carregar as todas as Contas');
+			}
+
+			throw err;
+		}
+	}
+
+	public async getDashboardOverview(id: string) {
+		const URL:string = `${this.BASE_URL}/dashboard/overview/${id}`;
+		try {
+			const response = await api.get<DashboardOverview>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+			
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao carregar o dashboard da conta');
 			}
 
 			throw err;

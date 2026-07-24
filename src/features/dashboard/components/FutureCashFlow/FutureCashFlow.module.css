@@ -1,0 +1,45 @@
+.sectionLink {
+	color: var(--color-primary);
+	transition: filter .2s ease-out;
+}
+
+.sectionLink:hover {
+	filter: brightness(0.85);
+}
+
+.timelineLine {
+	border-color: var(--border-subtle);
+}
+
+.futureRow {
+	transition:
+		background-color .3s ease-out,
+		border-color .3s ease-out;
+}
+
+.futureRow:hover {
+	background-color: var(--color-surface);
+	border-color: var(--border-subtle);
+}
+
+.futureIcon {
+	background-color: var(--color-background);
+	border-color: var(--border-subtle);
+	transition: transform .3s ease-out;
+}
+
+.futureIconIncome {
+	color: var(--color-success);
+}
+
+.futureIconExpense {
+	color: var(--color-danger);
+}
+
+.futureAmountIncome {
+	color: var(--color-success);
+}
+
+.futureAmountExpense {
+	color: var(--color-danger);
+}

@@ -1,0 +1,159 @@
+.sectionDivider {
+	font-size: 0.72rem;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	color: var(--color-foreground-subtle);
+	user-select: none;
+}
+.sectionDivider::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	background: var(--border-subtle);
+}
+
+.searchBox {
+	background: var(--color-glass);
+	border: 1px solid var(--border-subtle);
+	transition: border-color .3s var(--ease-apple-spring, cubic-bezier(0.16, 1, 0.3, 1)), background .3s;
+}
+.searchBox:focus-within {
+	border-color: var(--color-primary);
+	background: var(--color-surface);
+}
+
+.searchIcon {
+	color: var(--color-foreground-subtle);
+}
+
+.searchInput {
+	background: transparent;
+	border: none;
+	outline: none;
+	color: var(--color-foreground);
+}
+.searchInput::placeholder {
+	color: var(--color-foreground-subtle);
+}
+
+.filterButton {
+	background: var(--color-glass);
+	border: 1px solid var(--border-subtle);
+	color: var(--color-foreground-muted);
+	transition: all .3s var(--ease-apple-spring, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.filterButton:hover {
+	border-color: var(--border-strong);
+	color: var(--color-foreground);
+	background: var(--color-surface);
+}
+
+.pinnedHighlights {
+	border-color: var(--border-subtle);
+}
+
+.emptyState {
+	/* background: var(--color-glass); */
+	backdrop-filter: blur(20px);
+}
+
+.emptyIconCircle {
+	background: var(--color-surface-elevated);
+}
+
+.emptyIcon {
+	color: var(--color-foreground-muted);
+}
+
+.emptyTitle {
+	color: var(--color-foreground);
+}
+
+.emptyDesc {
+	color: var(--color-foreground-muted);
+}
+
+.flowLine {
+	background: var(--border-subtle);
+}
+
+.dayBadge {
+	background: var(--color-surface-elevated);
+	border: 1px solid var(--border-subtle);
+	color: var(--color-foreground-muted);
+}
+
+.nodePoint {
+	background: var(--color-surface);
+	border: 2px solid var(--border-subtle);
+}
+.nodeInnerIncome { background: var(--color-success); }
+.nodeInnerExpense { background: var(--color-foreground-subtle); }
+.nodeInnerTransfer { background: var(--color-info); }
+
+.txCard {
+	background: var(--color-surface);
+	border: 1px solid var(--border-subtle);
+	box-shadow: var(--shadow-card);
+	transition: transform .4s var(--ease-apple-spring, cubic-bezier(0.16, 1, 0.3, 1)), border-color .4s, box-shadow .4s;
+}
+.txCard:hover {
+	transform: translateY(-3px);
+	border-color: var(--border-strong);
+	box-shadow: var(--shadow-overlay);
+}
+.txCard::before {
+	content: '';
+	position: absolute;
+	top: 0; left: 0; bottom: 0;
+	width: 30%;
+	background: linear-gradient(to right, var(--aura-color, transparent), transparent);
+	z-index: -1;
+	pointer-events: none;
+	opacity: .8;
+	border-radius: 24px 0 0 24px;
+}
+
+.auraIncome { --aura-color: var(--color-aura-income); }
+.auraExpense { --aura-color: var(--color-aura-expense); }
+.auraRecurring { --aura-color: var(--color-aura-recurring); }
+.auraTransfer { --aura-color: var(--color-aura-transfer); }
+
+.recurringBadge {
+	background: var(--color-primary);
+	color: #FFFFFF;
+	box-shadow: 0 4px 12px var(--effect-glow-primary);
+}
+
+.txTitle {
+	color: var(--color-foreground);
+}
+
+.txMeta {
+	color: var(--color-foreground-muted);
+}
+
+.metaSeparator {
+	color: var(--border-strong);
+	opacity: .5;
+}
+
+.textIncome { color: var(--color-success-soft, var(--color-success)); }
+.textExpenseValue { color: var(--color-danger-soft, var(--color-danger)); }
+.textTransfer { color: var(--color-info-soft, var(--color-info)); }
+.textRecurring { color: var(--color-primary); }
+
+/* TODO: remover quando cor de carteira vier do backend */
+.walletBadge {
+	border-radius: 8px;
+	padding: 3px 10px;
+	font-size: 0.72rem;
+	font-weight: 600;
+}
+
+.walletManual {
+	background: rgba(139, 92, 246, 0.04);
+	color: var(--color-foreground-muted);
+	border: 1px solid var(--border-subtle);
+}

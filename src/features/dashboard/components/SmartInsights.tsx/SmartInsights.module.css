@@ -1,0 +1,17 @@
+.headerIcon {
+	color: var(--color-primary);
+}
+
+.insightCard {
+	border: 1px solid var(--border-subtle);
+	transition: border-color .3s ease-out;
+}
+
+.insightCard:hover {
+	border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.insightIcon {
+	color: var(--color-primary);
+	background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}

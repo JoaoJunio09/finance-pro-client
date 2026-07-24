@@ -1,0 +1,12 @@
+@layer utilities {
+  .bg-main { background-color: var(--color-background); }
+  .bg-surface { background-color: var(--color-surface); }
+  .bg-glass {
+    background: var(--color-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  .border-glass { border: 1px solid var(--border-subtle); }
+  .text-main { color: var(--color-foreground); }
+  .text-muted { color: var(--color-foreground-muted); }
+}

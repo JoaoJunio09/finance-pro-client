@@ -1,0 +1,36 @@
+.scrim {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.expandCircle {
+	background-color: var(--color-surface);
+}
+
+.actionButton {
+	background-color: var(--color-background);
+	border: 1px solid var(--border-subtle);
+}
+
+.actionButton:hover {
+	border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.iconSuccess {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+
+.iconDanger {
+	color: var(--color-danger);
+	background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+
+.iconInfo {
+	color: var(--color-info);
+	background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+}
+
+.iconPrimary {
+	color: var(--color-primary);
+	background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}

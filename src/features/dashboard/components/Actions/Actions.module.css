@@ -1,0 +1,42 @@
+.actionButton {
+	background-color: var(--color-surface);
+	border: 1px solid transparent;
+	transition:
+		background-color .3s ease-out,
+		border-color .3s ease-out,
+		transform .3s ease-out;
+}
+
+.actionButton:hover {
+	transform: scale(0.95);
+	border-color: var(--border-subtle);
+	background-color: var(--border-subtle);
+}
+
+.actionButton:hover .actionIcon {
+	transform: scale(1.1);
+}
+
+.actionIcon {
+	transition: transform .3s ease-out;
+}
+
+.actionIconSuccess {
+	color: var(--color-success);
+	background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+
+.actionIconDanger {
+	color: var(--color-danger);
+	background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+
+.actionIconInfo {
+	color: var(--color-info);
+	background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+}
+
+.actionIconPrimary {
+	color: var(--color-primary);
+	background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}

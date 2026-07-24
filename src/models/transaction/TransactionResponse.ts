@@ -1,6 +1,6 @@
 import type { TransactionType } from "../../types/TransactionType";
 import type { CategoryResponse } from "../category/CategoryResponse";
-import type { WalletSummary } from "../wallet/WalletSummary";
+import type { WalletResponse } from "../wallet/WalletResponse";
 
 export interface TransactionResponse {
 	id: string,
@@ -10,6 +10,6 @@ export interface TransactionResponse {
 	type: TransactionType,
 	category: CategoryResponse,
 	registeredAt: string,
-	wallet: WalletSummary,
+	wallet: WalletResponse,
 	recurrenceId: string
 }

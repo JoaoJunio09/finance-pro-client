@@ -27,3 +27,11 @@ export function formatCurrencyToAPI(value: string) {
 				.replace(',', '.')
 		);
 }
+
+export function getIntegerPart(value: number): string {
+	return Math.trunc(value).toLocaleString('pt-BR');
+}
+
+export function getDecimalPart(value: number): string {
+	return value.toFixed(2).split('.')[1];
+}

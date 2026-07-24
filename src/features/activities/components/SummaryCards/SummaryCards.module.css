@@ -1,0 +1,102 @@
+/* SummaryCards.module.css */
+
+.section {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* =========================================
+   Estrutura do Card
+========================================= */
+.statCard {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 28px;
+  box-shadow: var(--shadow-surface);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem; /* Equivalente ao p-6 */
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+/* =========================================
+   Círculos de Ícone
+========================================= */
+.iconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconIncome {
+  background-color: var(--effect-glow-success);
+  color: var(--color-success);
+}
+
+.iconExpense {
+  background-color: var(--effect-glow-danger);
+  color: var(--color-danger);
+}
+
+.iconBalance {
+  background-color: var(--color-surface);
+  border: 1px solid var(--border-subtle);
+}
+
+.iconBalanceSuccess { color: var(--color-success); }
+.iconBalanceDanger { color: var(--color-danger); }
+
+/* =========================================
+   Textos e Tipografia
+========================================= */
+.title {
+  font-size: 0.75rem;
+  color: var(--color-foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 1.875rem; /* Equivalente ao text-3xl */
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin-bottom: 0.25rem;
+  position: relative;
+  z-index: 10;
+}
+
+.valueSuccess { color: var(--color-success); }
+.valueDanger { color: var(--color-danger); }
+
+/* =========================================
+   Efeitos Visuais
+========================================= */
+.cardGlowBg {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background-color: var(--color-primary);
+  opacity: 0.1;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* Animação de Entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
