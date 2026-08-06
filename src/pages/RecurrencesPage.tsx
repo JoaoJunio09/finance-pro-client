@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Recurrences from "../features/recurrences/components/Recurrences";
 
 function RecurrencesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

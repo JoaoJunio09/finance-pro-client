@@ -73,7 +73,7 @@ function useActivities() {
       year,
 			currentDate
 		],
-		queryFn: () => transactionService.getAll({
+		queryFn: () => transactionService.getOverview({
       accountId: accountId,
       month: month+1,
       year: year

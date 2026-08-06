@@ -1,0 +1,36 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.actionLink {
+	color: var(--accent);
+}
+.actionLink:hover {
+	text-decoration: underline;
+}
+
+.iconWrap {
+	background: var(--accent-muted);
+	color: var(--accent);
+	border-color: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.row:hover .iconWrap {
+	background: var(--accent);
+	color: #FFFFFF;
+}
+
+.categoryName {
+	color: var(--text-main);
+}
+.row:hover .categoryName {
+	color: var(--accent);
+}
+
+.amount {
+	color: var(--text-main);
+}

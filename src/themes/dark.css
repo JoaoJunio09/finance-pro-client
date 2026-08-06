@@ -1,51 +1,30 @@
 [data-theme="dark"] {
-	--color-background: #09090B;
-  --color-surface: #111113;
-  --color-overlay: rgba(9, 9, 11, .60);
-  --color-foreground: #FFFFFF;
-  --color-foreground-muted: #A1A1AA;
-  --color-primary: #8B5CF6;
-  --color-primary-dark: #6D28D9;
-  --color-success: #10B981;
-  --color-danger: #EF4444;
-  --color-warning: #F59E0B;
-  --color-info: #3B82F6;
-  --color-aura-income: rgba(52, 211, 153, 0.12);
-  --color-aura-expense: rgba(248, 113, 113, 0.12);
-  --color-aura-recurring: rgba(139, 92, 246, 0.15);
-  --color-aura-transfer: rgba(96, 165, 250, 0.12);
-  --color-success-soft: #34D399;
-  --color-danger-soft: #F87171;
-  --color-info-soft: #60A5FA;
-  --border-subtle: rgba(255,255,255,.04);
-  --border-default: rgba(255,255,255,.06);
-  --border-strong: rgba(255,255,255,.08);
+	--bg-base: #09090B;
+	--bg-surface: #121214;
+	--bg-elevated: #18181B;
+	
+	--text-main: #FAFAFA;
+	--text-muted: #A1A1AA;
+	
+	--border-color: rgba(255, 255, 255, 0.08);
+	--border-light: rgba(255, 255, 255, 0.04);
+	--border-hover: rgba(255, 255, 255, 0.12);
+	
+	--accent: #7C3AED;
+	--accent-muted: rgba(124, 58, 237, 0.1);
+	
+	--income: #10B981;
+	--income-muted: rgba(16, 185, 129, 0.1);
+	
+	--expense: #EF4444;
+	--expense-muted: rgba(239, 68, 68, 0.1);
+	
+	--warning: #F59E0B;
+	--warning-muted: rgba(245, 158, 11, 0.1);
 
-  --shadow-surface: 0 20px 40px -10px rgba(0,0,0,.7);
-  --shadow-overlay: 0 30px 60px -15px rgba(0,0,0,.7);
-
-  --gradient-surface:
-    linear-gradient(
-      180deg,
-      rgba(17,17,19,.95) 0%,
-      rgba(9,9,11,.95) 100%
-    );
-
-    /* dark */
-  --color-glass: rgba(9, 9, 11, 0.6);
-  --effect-glow-header-primary: rgba(139, 92, 246, 0.15);
-  --effect-glow-header-income: rgba(16, 185, 129, 0.08);
-  --shadow-card: 0 20px 40px -10px rgba(0, 0, 0, 0.35);
-
-  --effect-glow-primary: rgba(139,92,246,.15);
-  --effect-glow-success: rgba(16,185,129,.08);
-  --effect-glow-danger: rgba(239,68,68,.05);
-
-  --color-surface-elevated: #151518; 
-  --color-foreground-subtle: #71717A;
-
-  /* TODO: remover quando cor de categoria vier do backend */
-  --color-category-shopping: #EC4899;
-  --color-category-tech: #3B82F6;
-  --color-category-housing: #A855F7;
+	--chart-grid: rgba(255, 255, 255, 0.04);
+	--chart-tooltip-bg: rgba(24, 24, 27, 0.95);
+	
+	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
+	--shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
 }

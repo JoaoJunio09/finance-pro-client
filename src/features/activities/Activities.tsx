@@ -1,16 +1,16 @@
+import { useState } from 'react';
+import TopProgressBar from '../../components/ui/TopProgressBar/TopProgressBar';
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 import Apresentation from './components/Apresentation/Apresentation';
 import Calendar from './components/Calendar/Calendar';
 import MonthSelector from './components/MonthSelector/MonthSelector';
+import ActivitiesSkeleton from './components/Skeleton/ActivitiesSkeleton';
 import SummaryCards from './components/SummaryCards/SummaryCards';
+import TransactionDetails from './components/TransactionDetails/TransactionDetails';
 import TransactionsTimeline from './components/TransactionsTimeline/TransactionsTimeline';
 import useActivities from './hooks/useActivities';
 
 import styles from './Activities.module.css';
-import TransactionDetails from './components/TransactionDetails/TransactionDetails';
-import { useState } from 'react';
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
-import TopProgressBar from '../../components/ui/TopProgressBar/TopProgressBar';
-import ActivitiesSkeleton from './components/Skeleton/ActivitiesSkeleton';
 
 const BackgroundGlow = () => {
   return (

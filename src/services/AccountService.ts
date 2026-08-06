@@ -1,6 +1,6 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AccountResponse } from "../models/account/AccountResponse";
-import type { DashboardOverview } from "../models/account/DashboardOverview";
+import type { DashboardResponse } from "../models/account/DashboardResponse";
 import api from "./api";
 
 class AccountService {
@@ -33,9 +33,9 @@ class AccountService {
 	}
 
 	public async getDashboardOverview(id: string) {
-		const URL:string = `${this.BASE_URL}/dashboard/overview/${id}`;
+		const URL:string = `${this.BASE_URL}/dashboard/${id}`;
 		try {
-			const response = await api.get<DashboardOverview>(URL, {
+			const response = await api.get<DashboardResponse>(URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`

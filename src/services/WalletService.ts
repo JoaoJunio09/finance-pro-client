@@ -1,8 +1,8 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { ParamsWalletAPI } from "../models/wallet/ParamsWalletAPI";
-import type { WalletDetailsResponse } from "../models/wallet/WalletDetails";
 import type { WalletRequest } from "../models/wallet/WalletRequest";
 import type { WalletResponse } from "../models/wallet/WalletResponse";
+import type { WalletSummaryResponse } from "../models/wallet/WalletSummary";
 import api from "./api";
 
 class WalletService {
@@ -35,10 +35,10 @@ class WalletService {
 		}
 	}
 
-	public async details(accountId: string, walletId: string) {
-		const URL = `${this.BASE_URL}/details/${accountId}/${walletId}`;
+	public async getSummary(accountId: string, walletId: string) {
+		const URL = `${this.BASE_URL}/summary/${accountId}/${walletId}`;
 		try {
-			const response = await api.get<WalletDetailsResponse>(URL, {
+			const response = await api.get<WalletSummaryResponse>(URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`

@@ -1,6 +1,5 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AllTransactionResponse } from "../models/transaction/AllTransactionResponse";
-import type { OverviewResponse } from "../models/transaction/OverviewResponse";
 import type { ParamsTransactionAPI } from "../models/transaction/ParamsTransactionAPI";
 import type { TransactionRequest } from "../models/transaction/TransactionRequest";
 import type { TransactionResponse } from "../models/transaction/TransactionResponse";
@@ -17,7 +16,7 @@ class TransactionService {
 
 	public async getAll(params: ParamsTransactionAPI) {
 		try {
-			const response = await api.get<AllTransactionResponse>(this.BASE_URL, {
+			const response = await api.get<TransactionResponse[]>(this.BASE_URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`
@@ -36,21 +35,22 @@ class TransactionService {
 		}
 	}
 
-	public async overview(accountId: string | undefined) {
-		const URL = `${this.BASE_URL}/overview/${accountId}`;
+	public async getOverview(params: ParamsTransactionAPI) {
+		const URL = `${this.BASE_URL}/overview`;
 		try {
-			const response = await api.get<OverviewResponse>(URL, {
+			const response = await api.get<AllTransactionResponse>(URL, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`
-				}
+				},
+				params
 			});
 
 			return response.data
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao carregar overview das transações');
+				throw new InternalServerError('Erro ao carregar visão geral de Transações');
 			}
 
 			throw err;

@@ -1,0 +1,60 @@
+.section {
+	background: linear-gradient(to right, var(--accent-muted), transparent);
+	border-color: var(--border-light);
+}
+
+.decorBlobTop,
+.decorBlobBottom {
+	background: var(--accent);
+	opacity: 0.1;
+}
+
+.eyebrow {
+	color: var(--accent);
+	background: color-mix(in srgb, var(--bg-surface) 60%, transparent);
+	border-color: var(--border-light);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.subtitle {
+	color: var(--text-muted);
+}
+
+.subHeaderBorder {
+	border-color: var(--border-light);
+}
+
+.pacingLabel {
+	color: var(--accent);
+}
+
+.pacingValue {
+	color: var(--text-main);
+}
+
+.pacingIcon {
+	color: var(--accent);
+}
+
+.pacingMuted {
+	color: var(--text-muted);
+}
+
+.pacingMutedStrong {
+	color: var(--text-main);
+	font-weight: 600;
+}
+
+.toggleBtn {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+	color: var(--text-muted);
+	transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.toggleBtn:hover {
+	color: var(--accent);
+	border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}

@@ -1,0 +1,40 @@
+.cardDefault {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardAccent {
+	background: var(--accent-muted);
+	border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.titleDefault {
+	color: var(--text-muted);
+}
+
+.titleAccent {
+	color: var(--accent);
+}
+
+.valueDefault {
+	color: var(--text-main);
+}
+
+.valueAccent {
+	color: var(--accent);
+}
+
+.iconIncome {
+	background: var(--income-muted);
+	color: var(--income);
+}
+
+.iconExpense {
+	background: var(--expense-muted);
+	color: var(--expense);
+}
+
+.iconAccent {
+	background: var(--accent-muted);
+	color: var(--accent);
+}

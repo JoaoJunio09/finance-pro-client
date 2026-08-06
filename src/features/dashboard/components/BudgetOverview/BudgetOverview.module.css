@@ -1,0 +1,45 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.actionLink {
+	color: var(--text-muted);
+}
+.actionLink:hover {
+	color: var(--accent);
+}
+
+.rowLabel {
+	color: var(--text-muted);
+}
+
+.incomeValue {
+	color: var(--income);
+}
+
+.expenseValue {
+	color: var(--expense);
+}
+
+.footerBorder {
+	border-color: var(--border-light);
+}
+
+.footerIcon {
+	background: var(--accent-muted);
+	color: var(--accent);
+}
+
+.footerText {
+	color: var(--text-muted);
+}
+
+.footerTextStrong {
+	color: var(--text-main);
+	font-weight: 700;
+}

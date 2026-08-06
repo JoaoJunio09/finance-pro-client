@@ -1,0 +1,53 @@
+.card {
+	background: linear-gradient(to bottom, var(--accent-muted), transparent);
+	border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.titleIcon {
+	color: var(--accent);
+}
+
+.item {
+	background: var(--bg-surface);
+}
+
+.itemDueToday {
+	border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.itemDueToday:hover {
+	border-color: var(--accent);
+}
+
+.itemWarning {
+	border-color: var(--border-light);
+}
+.itemWarning:hover {
+	border-color: var(--border-hover);
+}
+
+.tagDueToday {
+	color: var(--accent);
+	background: var(--accent-muted);
+}
+
+.tagWarning {
+	color: var(--warning);
+	background: var(--warning-muted);
+}
+
+.itemTitle {
+	color: var(--text-main);
+}
+
+.itemMeta {
+	color: var(--text-muted);
+}
+
+.itemMetaStrong {
+	color: var(--text-main);
+	font-weight: 700;
+}
