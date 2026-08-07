@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../services/AuthService";
 import type { Token } from "../models/auth/Token";
 import type { AccountCredentials } from "../models/auth/AccountCredentials";
+import { useAccountContext } from "./AccountContext";
+import useAccountService from "../hooks/useAccountService";
 
 type AuthContextType = {
 	auth: Token | null;
@@ -48,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			'auth',
 			JSON.stringify(auth)
 		)
-		setAuth(auth);
+		setAuth(auth);	
 
 		navigate('/dashboard');
 	}

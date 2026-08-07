@@ -32,7 +32,7 @@ class AccountService {
 		}
 	}
 
-	public async getDashboardOverview(id: string) {
+	public async getDashboard(id: string) {
 		const URL:string = `${this.BASE_URL}/dashboard/${id}`;
 		try {
 			const response = await api.get<DashboardResponse>(URL, {

@@ -1,3 +1,4 @@
+import type { WalletResponse } from '../../../../../models/wallet/WalletResponse';
 import { formatCurrencyLabel } from '../../../../../utils/FormatCurrency';
 import WalletBrandMark, { type WalletIconType } from '../WalletBrand/WalletBrand';
 
@@ -8,22 +9,23 @@ export interface Wallet {
   name: string;
   type: string;
   balance: number;
-  gradient: string; // classes Tailwind 'from-[...] to-[...]', hoje mock; futuramente vem de banks.gradient
+  gradient: string;
   icon: WalletIconType;
   textDark?: boolean;
 }
 
 interface WalletCardProps {
-  wallet: Wallet;
+  wallet: WalletResponse;
   showBalance: boolean;
 }
 
 export function WalletCard({ wallet, showBalance }: WalletCardProps) {
-  const isTextDark = Boolean(wallet.textDark);
+  // const isTextDark = Boolean(wallet.textDark);
+  const isTextDark = false;
 
   return (
     <div
-      className={`relative p-6 rounded-[1.25rem] aspect-[1.58/1] bg-gradient-to-br ${wallet.gradient} shadow-md overflow-hidden flex flex-col justify-between interactive-card border ${
+      className={`relative p-6 rounded-[1.25rem] aspect-[1.58/1] bg-gradient-to-br ${wallet.bank.gradient} shadow-md overflow-hidden flex flex-col justify-between interactive-card border ${
         isTextDark ? styles.cardSurfaceVariant : styles.cardBrandVariant
       }`}
     >
@@ -32,7 +34,7 @@ export function WalletCard({ wallet, showBalance }: WalletCardProps) {
 
       <div className="flex justify-between items-start relative z-10">
         <div className="flex items-center gap-2">
-          <WalletBrandMark icon={wallet.icon} />
+          <WalletBrandMark icon={'nubank'} />
         </div>
 
         {/* Imitação visual de um "Chip" bancário */}

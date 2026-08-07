@@ -15,12 +15,16 @@ export interface WatchListItem {
 }
 
 interface WatchListProps {
-  items: WatchListItem[];
   showBalance: boolean;
   onItemClick: (itemId: string) => void;
 }
 
-export function WatchList({ items, showBalance, onItemClick }: WatchListProps) {
+export function WatchList({ showBalance, onItemClick }: WatchListProps) {
+  const watchlistItems: WatchListItem[] = [
+    { id: 'w1', variant: 'due-today', tagLabel: 'Vence Hoje', title: 'Fatura Cartão Black', amount: 3240.50 },
+    { id: 'w2', variant: 'warning', tagLabel: 'Atenção', title: 'Orçamento de Lazer', message: 'Você atingiu 90% do limite definido para este mês.' },
+  ];
+
   return (
     <div className={`interactive-card rounded-[2rem] p-6 sm:p-8 flex flex-col gap-5 shadow-sm border ${styles.card}`}>
       <h3 className={`text-base font-semibold flex items-center gap-2 ${styles.title}`}>
@@ -28,7 +32,7 @@ export function WatchList({ items, showBalance, onItemClick }: WatchListProps) {
       </h3>
 
       <div className="flex flex-col gap-3">
-        {items.map((item) => {
+        {watchlistItems.map((item) => {
           const isDueToday = item.variant === 'due-today';
           return (
             <div

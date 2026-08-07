@@ -1,22 +1,12 @@
-import type { ElementType } from 'react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import type { TransactionResponse } from '../../../../models/transaction/TransactionResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
+import { formatRelativeDateTime } from '../../../../utils/FormatDate';
 
 import styles from './RecentTransactions.module.css';
 
-export type TransactionMovementType = 'income' | 'expense';
-
-export interface RecentTransactionItem {
-  id: string;
-  description: string;
-  category: string;
-  date: string;
-  amount: number;
-  type: TransactionMovementType;
-  icon: ElementType;
-}
-
 interface RecentTransactionsProps {
-  transactions: RecentTransactionItem[];
+  transactions: TransactionResponse[];
   showBalance: boolean;
   onViewAll: () => void;
   onTransactionClick: (transactionId: string) => void;
@@ -39,7 +29,7 @@ export function RecentTransactions({
 
       <div className="flex flex-col gap-1.5">
         {transactions.map((tx) => {
-          const isIncome = tx.type === 'income';
+          const isIncome = tx.type === 'CREDIT';
           return (
             <div
               key={tx.id}
@@ -48,11 +38,11 @@ export function RecentTransactions({
             >
               <div className="flex items-center gap-3.5">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${isIncome ? styles.iconIncome : styles.iconExpense}`}>
-                  <tx.icon size={18} />
+                  <DynamicIcon name={tx.category.icon as IconName} size={18} />
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <span className={`text-sm font-medium leading-none ${styles.description}`}>{tx.description}</span>
-                  <span className={`text-[11px] font-normal ${styles.meta}`}>{tx.category} • {tx.date}</span>
+                  <span className={`text-[11px] font-normal ${styles.meta}`}>{tx.category.name} • {formatRelativeDateTime(tx.registeredAt)}</span>
                 </div>
               </div>
               <span className={`text-sm font-bold ${isIncome ? styles.amountIncome : styles.amountDefault}`}>

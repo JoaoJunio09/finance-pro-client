@@ -14,6 +14,7 @@ export interface DashboardResponse {
 	currentBalance: number,
 	income: number,
 	expenses: number,
+	availableToSpend: number,
 	wallets: WalletResponse[],
 	transactions: TransactionResponse[],
 	recurrences: RecurrenceSummary[],

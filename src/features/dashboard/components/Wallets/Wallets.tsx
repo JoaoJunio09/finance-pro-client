@@ -1,7 +1,8 @@
-import { WalletCard, type Wallet } from "./WalletCard/WalletCard";
+import type { WalletResponse } from "../../../../models/wallet/WalletResponse";
+import { WalletCard } from "./WalletCard/WalletCard";
 
 interface WalletsProps {
-  wallets: Wallet[];
+  wallets: WalletResponse[];
   showBalance: boolean;
 }
 

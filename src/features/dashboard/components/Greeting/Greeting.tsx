@@ -2,17 +2,24 @@ import { Activity, Eye, EyeOff } from 'lucide-react';
 
 import styles from './Greeting.module.css';
 
+const today = new Date();
+
+const lastDayOfMonth = new Date(
+  today.getFullYear(),
+  today.getMonth() + 1,
+  0
+);
+
 interface GreetingProps {
   userName: string;
   showBalance: boolean;
   onToggleBalance: () => void;
 }
 
-// --- MOCK: dados de ritmo de gastos (fixos por enquanto) ---
-const DAYS_REMAINING_IN_MONTH = 17;
-const SAFE_DAILY_LIMIT_LABEL = 'R$ 225,00';
-
 export function Greeting({ userName, showBalance, onToggleBalance }: GreetingProps) {
+  const daysRemaining = lastDayOfMonth.getDate() - today.getDate();
+  const SAFE_DAILY_LIMIT_LABEL = 'R$ 00,00';
+
   return (
     <section className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-sm ${styles.section}`}>
       {/* Background Decorativo Suave */}
@@ -40,7 +47,7 @@ export function Greeting({ userName, showBalance, onToggleBalance }: GreetingPro
             Ritmo de Gastos
           </span>
           <span className={`text-sm font-semibold flex items-center gap-1.5 ${styles.pacingValue}`}>
-            <Activity size={15} className={styles.pacingIcon} /> {DAYS_REMAINING_IN_MONTH} dias restantes no mês
+            <Activity size={15} className={styles.pacingIcon} /> {daysRemaining} dias restantes no mês
           </span>
           <span className={`text-[11px] font-medium mt-0.5 ${styles.pacingMuted}`}>
             Limite diário seguro: <span className={styles.pacingMutedStrong}>{showBalance ? SAFE_DAILY_LIMIT_LABEL : '••••'}</span>
