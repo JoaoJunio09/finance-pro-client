@@ -4,10 +4,15 @@ import Sidebar from "../components/layout/Navigation/Desktop/Sidebar";
 import MobileBottomNav from "../components/layout/Navigation/Mobile/MobileBottomNav";
 import QuickActions from "../components/layout/QuickActions/QuickActions";
 import Dashboard from "../features/dashboard/Dashboard";
+import TransactionModal from "../features/transactionModal/TransactionModal";
+import type { TransactionType } from "../types/TransactionType";
 
 function DashboardPage() {
 	const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 	const [isOpenQuickActions, setIsOpenQuickActions] = useState(false);
+
+	const [isOpenTxModal, setIsOpenTxModal] = useState(false);
+	const [txType, setTxType] = useState<TransactionType>('CREDIT');
 
 	return (
 		<div className={`min-h-screen ${false ? 'theme-dark' : 'theme-light'} bg-[var(--bg-base)] text-[var(--text-main)] relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)]`}>
@@ -27,6 +32,8 @@ function DashboardPage() {
 			<QuickActions
 				isOpen={isOpenQuickActions}
 				onToggle={() => setIsOpenQuickActions(!isOpenQuickActions)}
+				handleOpenTxModal={() => setIsOpenTxModal(true)}
+				selectTxType={setTxType}
 			/>
 
 			<div className="w-full">
@@ -34,6 +41,12 @@ function DashboardPage() {
 					<Dashboard />
 				</div>
 			</div>
+
+			<TransactionModal
+        isOpen={isOpenTxModal}
+        onClose={() => setIsOpenTxModal(false)}
+        initialType={txType}
+      />
 		</div>		
 	)
 }

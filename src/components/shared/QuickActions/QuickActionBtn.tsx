@@ -12,6 +12,7 @@ interface QuickActionBtnProps {
   isOpen: boolean;
   openPos: string;
   closedPos?: string;
+  onClick: () => void
 }
 
 export function QuickActionBtn({
@@ -24,6 +25,7 @@ export function QuickActionBtn({
   isOpen,
   openPos,
   closedPos = 'bottom-[45px] left-[50%] -translate-x-1/2',
+  onClick
 }: QuickActionBtnProps) {
   const posClass = isOpen ? openPos : closedPos;
   const background = colorHex ?? (colorVar ? `var(${colorVar})` : undefined);
@@ -38,6 +40,7 @@ export function QuickActionBtn({
       style={{ transitionDelay: isOpen ? delay : closeDelay }}
     >
       <button
+        onClick={onClick}
         className="w-12 h-12 rounded-full text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform"
         style={{ backgroundColor: background }}
         type="button"

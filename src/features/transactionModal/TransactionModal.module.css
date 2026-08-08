@@ -1,0 +1,2 @@
+.overlay { background: rgba(0, 0, 0, 0.6); }
+.modal { background: var(--bg-surface); border-color: var(--border-color); }

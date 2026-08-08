@@ -1,0 +1,33 @@
+.header { border-color: var(--border-light); }
+.title { color: var(--text-main); }
+.closeBtn { color: var(--text-muted); }
+.closeBtn:hover { background: var(--bg-elevated); }
+
+.typeToggleWrap { background: var(--bg-elevated); border-color: var(--border-light); }
+.typeBtnInactive { border-color: transparent; color: var(--text-muted); }
+.typeBtnInactive:hover { color: var(--text-main); }
+.typeBtnIncomeActive { background: var(--bg-surface); color: var(--income); box-shadow: var(--shadow-card); border-color: var(--border-color); }
+.typeBtnExpenseActive { background: var(--bg-surface); color: var(--expense); box-shadow: var(--shadow-card); border-color: var(--border-color); }
+
+.amountLabel { color: var(--text-muted); }
+.amountInput { color: var(--text-main); }
+.amountInput::placeholder { color: var(--border-hover); }
+.amountIncome { color: var(--income); }
+.amountNeutral { color: var(--text-main); }
+.amountPlaceholder { color: var(--text-muted); }
+
+.fieldLabel { color: var(--text-muted); }
+
+.textInput { background: var(--bg-surface); border-color: var(--border-color); color: var(--text-main); }
+.textInput::placeholder { color: var(--text-muted); }
+.textInput:hover { border-color: var(--border-hover); }
+.textInput:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+.categoryIconWrap { background: var(--bg-elevated); border-color: var(--border-light); }
+.categoryName { color: var(--text-main); }
+
+.statusToggleWrap { background: var(--bg-elevated); border-color: var(--border-light); }
+.statusBtnInactive { border-color: transparent; color: var(--text-muted); }
+.statusBtnInactive:hover { color: var(--text-main); }
+.statusBtnCompletedActive { background: var(--bg-surface); color: var(--text-main); box-shadow: var(--shadow-card); border-color: var(--border-color); }
+.statusBtnPendingActive { background: var(--bg-surface); color: var(--warning); box-shadow: var(--shadow-card); border-color: var(--border-color); }

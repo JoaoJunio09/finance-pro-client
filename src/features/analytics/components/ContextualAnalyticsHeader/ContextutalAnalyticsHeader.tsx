@@ -3,19 +3,18 @@ import { ArrowLeft, BarChart3, Calendar, Download } from 'lucide-react';
 
 import styles from './ContextualAnalyticsHeader.module.css';
 import AnalyticsTabs, { SUBPAGES, type AnalyticsSubpage } from '../AnalyticsTabs/AnalyticsTabs';
+import { getCurrentMonth } from '../../../../utils/FormatDate';
 
 interface ContextualAnalyticsHeaderProps {
   currentSubpage: AnalyticsSubpage;
   onSelectSubpage: (sub: AnalyticsSubpage) => void;
   onGoToReports: () => void;
-  periodLabel: string;
 }
 
 export function ContextualAnalyticsHeader({
   currentSubpage,
   onSelectSubpage,
   onGoToReports,
-  periodLabel,
 }: ContextualAnalyticsHeaderProps) {
   const currentOption = SUBPAGES.find((s) => s.id === currentSubpage);
   const isOverview = currentSubpage === 'overview';
@@ -58,7 +57,7 @@ export function ContextualAnalyticsHeader({
             <div className="hidden sm:flex flex-col items-end">
               <span className={`text-[10px] font-bold uppercase tracking-wider ${styles.periodLabel}`}>Período Analisado</span>
               <span className={`text-sm font-semibold flex items-center gap-1.5 mt-0.5 ${styles.periodValue}`}>
-                <Calendar size={14} className={styles.periodIcon} /> {periodLabel}
+                <Calendar size={14} className={styles.periodIcon} /> {getCurrentMonth()}
               </span>
             </div>
             <div className={`h-8 w-px hidden sm:block mx-1 ${styles.divider}`}></div>

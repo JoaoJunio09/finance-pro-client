@@ -1,0 +1,31 @@
+.panel { background: linear-gradient(to bottom right, var(--bg-elevated), var(--bg-surface)); border-color: var(--border-color); }
+.panelTitle { color: var(--text-main); }
+.panelTitleIcon { color: var(--accent); }
+
+.card { background: var(--bg-surface); border-color: var(--border-color); }
+.topBarIncome { background: var(--income); }
+.topBarExpense { background: var(--expense); }
+
+.iconWrapIncome { background: var(--income-muted); color: var(--income); border-color: color-mix(in srgb, var(--income) 20%, transparent); }
+.iconWrapDefault { background: var(--bg-elevated); color: var(--text-main); border-color: var(--border-light); }
+
+.txDescription { color: var(--text-main); }
+.txCategory { color: var(--text-muted); }
+
+.amountIncome { color: var(--income); }
+.amountNeutral { color: var(--text-main); }
+
+.detailsBorder { border-color: var(--border-light); }
+.detailLabel { color: var(--text-muted); }
+.detailValue { color: var(--text-main); }
+
+.statusCompletedIncome { background: var(--bg-elevated); color: var(--income); border-color: var(--border-light); }
+.statusCompletedDefault { background: var(--bg-elevated); color: var(--text-main); border-color: var(--border-light); }
+.statusPending { background: var(--warning-muted); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 20%, transparent); }
+.statusPendingDot { background: var(--warning); }
+
+.cancelBtn { background: var(--bg-surface); color: var(--text-main); border-color: var(--border-color); }
+.cancelBtn:hover { background: var(--bg-elevated); }
+
+.submitBtn { background: linear-gradient(to top right, var(--accent), #9333EA); color: #FFFFFF; }
+.submitBtn:hover { opacity: 0.9; }

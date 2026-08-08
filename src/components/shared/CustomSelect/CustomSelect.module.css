@@ -1,0 +1,38 @@
+.triggerDefault {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+.triggerDefault:hover {
+	border-color: var(--border-hover);
+}
+
+.triggerOpen {
+	background: var(--bg-surface);
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
+}
+
+.placeholder {
+	color: var(--text-muted);
+}
+
+.chevron {
+	color: var(--text-muted);
+}
+
+.dropdown {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.option:hover {
+	background: var(--bg-elevated);
+}
+
+.optionSelected {
+	background: var(--accent-muted);
+}
+
+.checkIcon {
+	color: var(--accent);
+}

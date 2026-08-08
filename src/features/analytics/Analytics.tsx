@@ -235,7 +235,6 @@ function Analytics() {
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
 
   const data = useMemo(() => generateMockData(period), [period]);
-
   const { summary } = data;
 
   return (
@@ -250,7 +249,6 @@ function Analytics() {
             currentSubpage={currentSubpage}
             onSelectSubpage={setCurrentSubpage}
             onGoToReports={() => setCurrentSubpage('reports')}
-            periodLabel={period}
           />
           
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10">

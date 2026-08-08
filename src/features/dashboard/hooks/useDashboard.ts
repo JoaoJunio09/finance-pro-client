@@ -11,11 +11,13 @@ function useDashboard() {
 	const accountService = useAccountService();
 
 	useEffect(() => {
-		const fetchAccount = async () => {
-			const data = await accountService.getByUsername(auth.username ?? '');
-			setAccountByUser(data);
+		if (!account) {
+			const fetchAccount = async () => {
+				const data = await accountService.getByUsername(auth.username ?? '');
+				setAccountByUser(data);
+			}
+			fetchAccount();
 		}
-		fetchAccount();
 	}, [auth.username, account]);
 
 	const queryDashboard = useQuery({

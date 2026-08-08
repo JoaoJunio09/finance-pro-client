@@ -11,7 +11,7 @@ interface NavTab {
   path: string;
 }
 
-const TABS: NavTab[] = [
+const TABS: NavTab[] = [ 
   { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
   { id: 'analytics', label: 'Análises', icon: BarChart3, path: '/analises' },
 ];

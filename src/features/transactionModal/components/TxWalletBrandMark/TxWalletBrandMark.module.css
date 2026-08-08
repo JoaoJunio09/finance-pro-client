@@ -1,0 +1,13 @@
+/* TxWalletBrandMark.module.css */
+.itauBrand {
+	color: #002B5E;
+	background: #EC7000;
+}
+
+.walletNameDefault {
+	color: var(--text-main);
+}
+
+.walletIconMuted {
+	color: var(--text-muted);
+}

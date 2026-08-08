@@ -1,23 +1,23 @@
-import { Activity, Repeat, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
-
+import type { TransactionType } from '../../../../types/TransactionType';
 import QuickActionBtn from '../../../shared/QuickActions/QuickActionBtn';
+import { ACTIONS_MOBILE } from '../config/actions';
+import { handleOnClickBtnAction } from '../utils/handleActionClick';
 
 import styles from './QuickActionsMobile.module.css';
-
-const ACTIONS = [
-  { icon: TrendingUp, label: 'Receita', colorVar: '--income', delay: '150ms', closeDelay: '0ms', openPos: 'bottom-[270px] left-[50%] -translate-x-1/2' },
-  { icon: TrendingDown, label: 'Despesa', colorVar: '--expense', delay: '100ms', closeDelay: '50ms', openPos: 'bottom-[200px] left-[22%] -translate-x-1/2' },
-  { icon: Repeat, label: 'Transferência', colorHex: '#3B82F6', delay: '100ms', closeDelay: '50ms', openPos: 'bottom-[200px] left-[78%] -translate-x-1/2' },
-  { icon: Activity, label: 'Recorrências', colorHex: '#A855F7', delay: '50ms', closeDelay: '100ms', openPos: 'bottom-[130px] left-[15%] -translate-x-1/2' },
-  { icon: Wallet, label: 'Carteiras', colorHex: '#F97316', delay: '50ms', closeDelay: '100ms', openPos: 'bottom-[130px] left-[85%] -translate-x-1/2' },
-];
 
 interface QuickActionsMobileProps {
   isOpen: boolean;
   onToggle: () => void;
+  handleOpenTxModal: () => void;
+  selectTxType: (type: TransactionType) => void;
 }
 
-export function QuickActionsMobile({ isOpen, onToggle }: QuickActionsMobileProps) {
+export function QuickActionsMobile({
+  isOpen,
+  onToggle,
+  handleOpenTxModal,
+  selectTxType
+}: QuickActionsMobileProps) {
   return (
     <div className="lg:hidden">
       <div
@@ -29,9 +29,10 @@ export function QuickActionsMobile({ isOpen, onToggle }: QuickActionsMobileProps
 
       <div className="fixed inset-0 pointer-events-none z-[65]">
         <div className="absolute w-full h-full max-w-md mx-auto left-0 right-0">
-          {ACTIONS.map((action) => (
+          {ACTIONS_MOBILE.map((action) => (
             <QuickActionBtn
               key={action.label}
+              onClick={() => handleOnClickBtnAction(action, selectTxType, handleOpenTxModal, onToggle)}
               icon={action.icon}
               label={action.label}
               colorVar={action.colorVar}
