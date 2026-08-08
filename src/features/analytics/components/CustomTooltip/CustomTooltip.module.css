@@ -1,0 +1,16 @@
+.tooltip {
+	background: var(--chart-tooltip-bg);
+	border-color: var(--border-color);
+}
+
+.label {
+	color: var(--text-muted);
+}
+
+.entryName {
+	color: var(--text-muted);
+}
+
+.entryValue {
+	color: var(--text-main);
+}

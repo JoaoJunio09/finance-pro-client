@@ -1,0 +1,31 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardInteractive {
+	transition: border-color 0.25s ease;
+}
+.cardInteractive:hover {
+	border-color: var(--border-hover);
+}
+
+.label {
+	color: var(--text-muted);
+}
+
+.caption {
+	color: var(--text-muted);
+}
+
+.valueIncome {
+	color: var(--income);
+}
+
+.valueExpense {
+	color: var(--expense);
+}
+
+.valueNeutral {
+	color: var(--text-main);
+}

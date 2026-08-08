@@ -1,0 +1,21 @@
+.overlay {
+	background: var(--bg-base);
+}
+
+.fabClosed {
+	background: linear-gradient(to top right, var(--accent), #9333EA);
+	color: #FFFFFF;
+}
+.fabClosed:hover {
+	transform: scale(1.05);
+}
+.fabClosed:active {
+	transform: scale(0.95);
+}
+
+.fabOpen {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+	box-shadow: none;
+	border: 1px solid var(--border-light);
+}

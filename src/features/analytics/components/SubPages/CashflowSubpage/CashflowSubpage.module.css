@@ -1,0 +1,12 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.cardSubtitle {
+	color: var(--text-muted);
+}

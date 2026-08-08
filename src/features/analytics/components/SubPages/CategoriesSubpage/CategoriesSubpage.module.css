@@ -1,0 +1,25 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.categoryRow {
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+}
+
+.categoryName {
+	color: var(--text-main);
+}
+
+.categoryMeta {
+	color: var(--text-muted);
+}
+
+.categoryAmount {
+	color: var(--text-main);
+}

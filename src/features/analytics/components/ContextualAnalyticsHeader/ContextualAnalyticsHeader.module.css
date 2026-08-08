@@ -1,0 +1,66 @@
+.wrapper {
+	width: 100%;
+	background: var(--bg-surface);
+}
+
+.backLink {
+	color: var(--text-muted);
+}
+.backLink:hover {
+	color: var(--text-main);
+}
+
+.overviewBadge {
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-light);
+	color: var(--text-main);
+}
+
+.overviewLabel {
+	color: var(--text-muted);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.subtitle {
+	color: var(--text-muted);
+}
+
+.actionsBorder {
+	border-color: var(--border-light);
+}
+
+.periodLabel {
+	color: var(--text-muted);
+}
+
+.periodValue {
+	color: var(--text-main);
+}
+
+.periodIcon {
+	color: var(--accent);
+}
+
+.divider {
+	background: var(--border-light);
+}
+
+.exportBtn {
+	color: var(--text-main);
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+.exportBtn:hover {
+	border-color: var(--border-hover);
+	background: var(--bg-elevated);
+}
+
+.exportIcon {
+	color: var(--text-muted);
+}
+.exportBtn:hover .exportIcon {
+	color: var(--accent);
+}

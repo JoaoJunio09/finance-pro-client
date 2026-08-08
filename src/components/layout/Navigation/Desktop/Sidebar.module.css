@@ -1,0 +1,49 @@
+/* Sidebar.module.css */
+.overlay {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.aside {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.header {
+	border-color: var(--border-color);
+}
+
+.logoBadge {
+	background: var(--accent);
+}
+
+.logoText {
+	color: var(--text-main);
+}
+
+.closeBtn {
+	color: var(--text-muted);
+}
+.closeBtn:hover {
+	background: var(--bg-elevated);
+}
+
+.sectionLabel {
+	color: var(--text-muted);
+}
+
+.navItemDefault {
+	color: var(--text-muted);
+}
+.navItemDefault:hover {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+}
+
+.navItemActive {
+	background: var(--accent-muted);
+	color: var(--accent);
+}
+
+.divider {
+	border-color: var(--border-light);
+}

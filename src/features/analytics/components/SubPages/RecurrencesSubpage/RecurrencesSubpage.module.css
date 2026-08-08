@@ -1,0 +1,58 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.cardSubtitle {
+	color: var(--text-muted);
+}
+
+.itemRow {
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+	transition: border-color 0.25s ease;
+}
+.itemRow:hover {
+	border-color: var(--border-hover);
+}
+
+.itemRow:hover .itemDescription {
+	color: var(--accent);
+}
+
+.iconIncome {
+	background: var(--income-muted);
+	color: var(--income);
+	border-color: color-mix(in srgb, var(--income) 20%, transparent);
+}
+
+.iconExpense {
+	background: var(--bg-base);
+	color: var(--text-main);
+	border-color: var(--border-light);
+}
+
+.itemDescription {
+	color: var(--text-main);
+}
+
+.itemMeta {
+	color: var(--text-muted);
+}
+
+.itemMetaStrong {
+	color: var(--text-main);
+	font-weight: 600;
+}
+
+.amountIncome {
+	color: var(--income);
+}
+
+.amountDefault {
+	color: var(--text-main);
+}

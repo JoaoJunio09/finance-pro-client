@@ -1,0 +1,123 @@
+/* OverviewSubpage.module.css */
+
+/* --- Hero (Desktop) --- */
+.heroCard {
+	background: linear-gradient(to bottom right, #4C1D95, #312E81);
+	border: 1px solid rgba(91, 33, 182, 0.5);
+}
+
+.heroPattern {
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+}
+
+.heroBadge {
+	color: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.heroCaption {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- Cards genéricos (Fluxo de Caixa / Distribuição de Gastos) --- */
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.cardSubtitle {
+	color: var(--text-muted);
+}
+
+.linkAccent {
+	color: var(--accent);
+}
+
+/* --- Legenda do gráfico de Fluxo de Caixa --- */
+.legend {
+	color: var(--text-muted);
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+}
+
+.legendIncomeDot {
+	background: var(--income);
+}
+
+.legendExpenseDot {
+	background: var(--expense);
+}
+
+/* --- Linhas de categoria (Distribuição de Gastos) --- */
+.categoryRow:hover .categoryName {
+	color: var(--accent);
+}
+
+.categoryName {
+	color: var(--text-main);
+}
+
+.categoryAmount {
+	color: var(--text-main);
+}
+
+.categoryPercent {
+	color: var(--text-muted);
+}
+
+/* --- Card de Saúde Financeira --- */
+.healthCard {
+	background: linear-gradient(to bottom, var(--bg-surface), var(--bg-elevated));
+	border-color: var(--border-color);
+}
+
+.healthHeader {
+	border-color: var(--border-light);
+}
+
+.helpBtn {
+	background: var(--bg-base);
+	border-color: var(--border-light);
+	color: var(--text-muted);
+	transition: color 0.25s ease, border-color 0.25s ease;
+}
+.helpBtn:hover {
+	color: var(--accent);
+	border-color: var(--accent);
+}
+
+.statTile {
+	background: var(--bg-base);
+	border-color: var(--border-light);
+}
+
+.legendIncomeText {
+	color: var(--income);
+}
+
+.warningText {
+	color: var(--warning);
+}
+
+.secondaryBtn {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+	border-color: var(--border-light);
+	transition: background-color 0.25s ease;
+}
+.secondaryBtn:hover {
+	background: var(--border-color);
+}
+
+.exportBtn {
+	background: var(--text-main);
+	color: var(--bg-base);
+}
+.exportBtn:hover {
+	opacity: 0.9;
+}

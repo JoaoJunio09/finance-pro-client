@@ -1,0 +1,30 @@
+.iconWrap.tonePositive,
+.text.tonePositive {
+	background: var(--income-muted);
+	color: var(--income);
+}
+.text.tonePositive {
+	background: none;
+}
+
+.iconWrap.toneNegative,
+.text.toneNegative {
+	background: var(--expense-muted);
+	color: var(--expense);
+}
+.text.toneNegative {
+	background: none;
+}
+
+.iconWrap.toneNeutral,
+.text.toneNeutral {
+	background: var(--bg-elevated);
+	color: var(--text-muted);
+}
+.text.toneNeutral {
+	background: none;
+}
+
+.label {
+	color: var(--text-muted);
+}

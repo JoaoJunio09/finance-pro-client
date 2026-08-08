@@ -1,0 +1,23 @@
+.trackArc {
+	stroke: var(--bg-elevated);
+}
+
+.progressArc {
+	transition: stroke-dashoffset 1s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.scoreMax {
+	color: var(--text-muted);
+}
+
+.statusBadge {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+	border-color: var(--border-light);
+}
+
+.trendBadge {
+	color: var(--income);
+	background: var(--income-muted);
+	border-color: color-mix(in srgb, var(--income) 20%, transparent);
+}

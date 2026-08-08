@@ -1,0 +1,45 @@
+.heroCard {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.eyebrow {
+	color: var(--accent);
+}
+
+.title {
+	color: var(--text-main);
+}
+
+.subtitle {
+	color: var(--text-muted);
+}
+
+.methodologyBtn {
+	background: var(--accent-muted);
+	color: var(--accent);
+	border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.iconIncome {
+	color: var(--income);
+}
+
+.iconWarning {
+	color: var(--warning);
+}
+
+.insightRow {
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+	color: var(--text-main);
+}

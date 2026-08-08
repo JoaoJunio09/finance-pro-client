@@ -1,10 +1,10 @@
 import { ChevronRight } from 'lucide-react';
 import type { ExpensesByCategory } from '../../../../models/account/DashboardResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-import ProgressBar from '../BudgetOverview/ProgressBar/ProgressBar';
 
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import styles from './TopCategories.module.css';
+import { ProgressBar } from '../../../../components/shared/ProgressBar/ProgressBar';
 
 interface TopCategoriesProps {
   categories: ExpensesByCategory[];

@@ -1,8 +1,8 @@
 import { Info } from 'lucide-react';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-import ProgressBar from './ProgressBar/ProgressBar';
 
 import styles from './BudgetOverview.module.css';
+import { ProgressBar } from '../../../../components/shared/ProgressBar/ProgressBar';
 
 interface BudgetOverviewProps {
   income: number;

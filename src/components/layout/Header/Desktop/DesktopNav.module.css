@@ -1,0 +1,57 @@
+.menuBtn {
+	color: var(--text-muted);
+}
+.menuBtn:hover {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+}
+.menuBtn:focus {
+	--tw-ring-color: var(--accent);
+}
+
+.searchIcon {
+	color: var(--text-muted);
+}
+
+.searchInput {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+	color: var(--text-main);
+}
+.searchInput::placeholder {
+	color: var(--text-muted);
+}
+.searchInput:hover {
+	border-color: var(--border-hover);
+}
+.searchInput:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
+}
+
+.iconBtn {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+.iconBtn:hover {
+	border-color: var(--border-hover);
+	background: var(--bg-elevated);
+}
+
+.iconMuted {
+	color: var(--text-muted);
+}
+
+.notificationDot {
+	background: var(--expense);
+	--tw-ring-color: var(--bg-surface);
+}
+
+.avatarBtn {
+	background: linear-gradient(to top right, var(--accent), #9333EA);
+	border-color: var(--border-color);
+}
+.avatarBtn:hover {
+	opacity: 0.9;
+}

@@ -9,7 +9,7 @@ import RecurrencesPage from "../pages/RecurrencesPage";
 import SignInPage from "../pages/SignInPage";
 import WalletsPage from "../pages/WalletsPage";
 import ScrollToTop from "./ScrollToTop";
-import AnalyticsPage from "../features/analytics/Analytics";
+import AnalyticsPage from "../pages/AnalyticsPage";
 
 function RoutesApp() {
 	return (
@@ -21,11 +21,11 @@ function RoutesApp() {
 						<Routes>
 							<Route path="/" element={<SignInPage />} />
 							<Route path="/dashboard" element={<DashboardPage />} />
-							<Route path="/activities" element={<ActivitiesPage />} />
-							<Route path="/analytics" element={<AnalyticsPage />} />
-							<Route path="/wallets" element={<WalletsPage />} />
-							<Route path="/recurrences" element={<RecurrencesPage />} />
-							<Route path="/settings" element={<Settings />} />
+							<Route path="/atividades" element={<ActivitiesPage />} />
+							<Route path="/analises" element={<AnalyticsPage />} />
+							<Route path="/carteiras" element={<WalletsPage />} />
+							<Route path="/recorrencias" element={<RecurrencesPage />} />
+							<Route path="/configuracoes" element={<Settings />} />
 						</Routes>
 					</ThemeProvider>
 				</AccountProvider>

@@ -1,0 +1,28 @@
+.tabsBorder {
+	border-color: var(--border-color);
+}
+
+.activeIndicator {
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-color);
+	border-bottom-color: var(--bg-elevated);
+}
+
+.tabActive {
+	color: var(--text-main);
+}
+
+.tabInactive {
+	color: var(--text-muted);
+}
+.tabInactive:hover {
+	color: var(--text-main);
+}
+
+.iconActive {
+	color: var(--accent);
+}
+
+.iconInactive {
+	color: var(--text-muted);
+}

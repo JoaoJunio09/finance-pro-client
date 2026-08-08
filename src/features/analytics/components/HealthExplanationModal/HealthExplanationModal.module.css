@@ -1,0 +1,66 @@
+.overlay {
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.dragHandle {
+	background: var(--border-hover);
+}
+
+.header {
+	border-color: var(--border-light);
+}
+
+.headerIcon {
+	background: var(--accent-muted);
+	color: var(--accent);
+}
+
+.headerTitle {
+	color: var(--text-main);
+}
+
+.headerSubtitle {
+	color: var(--text-muted);
+}
+
+.closeBtn {
+	color: var(--text-muted);
+}
+.closeBtn:hover {
+	background: var(--bg-elevated);
+}
+
+.intro {
+	color: var(--text-muted);
+}
+
+.pillarRow {
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+}
+
+.pillarTitle {
+	color: var(--text-main);
+}
+
+.pillarDesc {
+	color: var(--text-muted);
+}
+
+.pillarWeight {
+	color: var(--accent);
+	background: var(--accent-muted);
+}
+
+.confirmBtn {
+	background: var(--accent);
+	color: #FFFFFF;
+}
+.confirmBtn:hover {
+	opacity: 0.9;
+}

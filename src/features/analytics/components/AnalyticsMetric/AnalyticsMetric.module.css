@@ -1,0 +1,38 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.title {
+	color: var(--text-muted);
+}
+
+.amount {
+	color: var(--text-main);
+}
+
+.subtitle {
+	color: var(--text-muted);
+}
+
+.footerBorder {
+	border-color: var(--border-light);
+}
+
+.iconIncome {
+	background: var(--income-muted);
+	color: var(--income);
+	border-color: var(--border-light);
+}
+
+.iconExpense {
+	background: var(--expense-muted);
+	color: var(--expense);
+	border-color: var(--border-light);
+}
+
+.iconNeutral {
+	background: var(--bg-elevated);
+	color: var(--text-main);
+	border-color: var(--border-light);
+}

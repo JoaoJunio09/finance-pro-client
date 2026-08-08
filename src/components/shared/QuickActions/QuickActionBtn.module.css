@@ -1,0 +1,4 @@
+.labelChip {
+	color: var(--text-main);
+	background: color-mix(in srgb, var(--bg-surface) 60%, transparent);
+}

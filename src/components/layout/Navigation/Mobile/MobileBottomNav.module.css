@@ -1,0 +1,37 @@
+.navSolid {
+	background: var(--bg-surface);
+	border-top: 1px solid var(--border-color);
+	box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.navTransparent {
+	background: transparent;
+	border-top: 1px solid transparent;
+}
+
+.tabDefault {
+	color: var(--text-muted);
+}
+
+.tabActive {
+	color: var(--accent);
+}
+
+.centerBtnClosed {
+	background: linear-gradient(to top right, var(--accent), #9333EA);
+	color: #FFFFFF;
+}
+.centerBtnClosed:hover {
+	transform: scale(1.05);
+}
+.centerBtnClosed:active {
+	transform: scale(0.95);
+}
+
+.centerBtnOpen {
+	z-index: 100;
+	background: var(--bg-elevated);
+	color: var(--text-main);
+	box-shadow: none;
+	border: 1px solid var(--border-light);
+}

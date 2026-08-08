@@ -1,0 +1,39 @@
+.card {
+	background: var(--bg-surface);
+	border-color: var(--border-color);
+}
+
+.cardTitle {
+	color: var(--text-main);
+}
+
+.cardSubtitle {
+	color: var(--text-muted);
+}
+
+.reportCard {
+	background: var(--bg-elevated);
+	border-color: var(--border-light);
+}
+
+.formatBadge {
+	color: var(--accent);
+	background: var(--accent-muted);
+}
+
+.reportTitle {
+	color: var(--text-main);
+}
+
+.reportDescription {
+	color: var(--text-muted);
+}
+
+.downloadBtn {
+	background: var(--bg-surface);
+	color: var(--text-main);
+	border-color: var(--border-light);
+}
+.downloadBtn:hover {
+	background: var(--border-color);
+}
