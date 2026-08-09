@@ -18,6 +18,7 @@ export function RecentTransactions({
   onViewAll,
   onTransactionClick,
 }: RecentTransactionsProps) {
+  console.log(transactions)
   return (
     <div className={`interactive-card rounded-[2rem] p-6 sm:p-8 flex flex-col gap-4 shadow-sm border lg:col-span-2 ${styles.card}`}>
       <div className="flex justify-between items-center mb-1">

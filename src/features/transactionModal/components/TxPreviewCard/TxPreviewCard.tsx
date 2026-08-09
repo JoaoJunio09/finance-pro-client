@@ -106,7 +106,7 @@ export function TransactionPreviewCard({
           type="button"
           disabled={!isFormValid || isSaving}
           onClick={onSubmit}
-          className={`flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
+          className={`flex flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
             ${styles.submitBtn}
             ${!isFormValid || isSaving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
           `}

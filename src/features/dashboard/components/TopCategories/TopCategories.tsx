@@ -14,6 +14,7 @@ interface TopCategoriesProps {
 }
 
 export function TopCategories({ categories, showBalance, onViewAll, onCategoryClick }: TopCategoriesProps) {
+  console.log(categories)
   return (
     <div className={`interactive-card rounded-[2rem] p-6 sm:p-8 flex flex-col gap-5 shadow-sm border ${styles.card}`}>
       <div className="flex justify-between items-center">
@@ -28,7 +29,16 @@ export function TopCategories({ categories, showBalance, onViewAll, onCategoryCl
           <div key={cat.category.id} className={`flex flex-col gap-2 group cursor-pointer ${styles.row}`} onClick={() => onCategoryClick(cat.category.id)}>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-colors ${styles.iconWrap}`}>                  
+                <div
+                  className={`
+                    w-9 h-9 rounded-xl flex items-center justify-center border transition-colors
+                    ${styles.iconWrap}
+                  `}
+                  style={{
+                    background: cat.category.color,
+                    color: "#000"
+                  }}
+                >                  
                   <DynamicIcon name={cat.category.icon as IconName} size={16} />
                 </div>
                 <span className={`text-sm font-medium transition-colors ${styles.categoryName}`}>{cat.category.name}</span>
@@ -38,7 +48,7 @@ export function TopCategories({ categories, showBalance, onViewAll, onCategoryCl
               </span>
             </div>
             <div className="pl-12">
-              <ProgressBar percentage={cat.percentage} colorVar="--accent" />
+              <ProgressBar percentage={cat.percentage} colorHex={cat.category.color} />
             </div>
           </div>
         ))}
