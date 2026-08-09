@@ -12,6 +12,11 @@
 	box-shadow: 0 0 0 1px var(--accent);
 }
 
+.triggerDefault,
+.triggerOpen {
+  min-height: 62px; /* mesma altura pra placeholder e conteúdo com ícone */
+}
+
 .placeholder {
 	color: var(--text-muted);
 }

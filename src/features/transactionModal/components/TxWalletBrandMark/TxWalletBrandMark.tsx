@@ -1,44 +1,86 @@
 import { Briefcase } from 'lucide-react';
-import type { TxWallet } from '../../types/TxWallet';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
 import styles from './TxWalletBrandMark.module.css';
 
 type BrandMarkSize = 'sm' | 'md';
 
 interface TxWalletBrandMarkProps {
-  wallet: TxWallet;
+  wallet: WalletResponse | undefined;
   size?: BrandMarkSize;
 }
 
-const sizeTextClass: Record<BrandMarkSize, { nubank: string; itau: string }> = {
-  sm: { nubank: 'text-[11px]', itau: 'text-[10px]' },
-  md: { nubank: 'text-base', itau: 'text-lg' },
+// Rótulo exibido para cada banco. Cobre os 18 bancos do sistema.
+// Onde a identidade visual difere do nome salvo (case, abreviação), ajusta aqui.
+const BRAND_LABEL: Record<string, string> = {
+  'Nubank': 'nubank',
+  'Bradesco': 'Bradesco',
+  'Banco do Brasil': 'BB',
+  'Caixa Economica Federal': 'CAIXA',
+  'Santander': 'Santander',
+  'Inter': 'inter',
+  'BTG Pactual': 'BTG',
+  'C6 Bank': 'C6',
+  'Banco Pan': 'pan',
+  'Banco Original': 'original',
+  'Mercado Pago': 'Mercado Pago',
+  'PicPay': 'picpay',
+  'PagBank': 'PagBank',
+  'Neon': 'neon',
+  'Sicoob': 'sicoob',
+  'Sicredi': 'sicredi',
+  'XP Investimentos': 'XP',
+  // 'Itau' fica de fora de propósito: tem tratamento especial abaixo (duas cores)
 };
 
-export function TxWalletBrandMark({ wallet, size = 'md' }: TxWalletBrandMarkProps) {
-  const textSizes = sizeTextClass[size];
+const sizeTextClass: Record<BrandMarkSize, string> = {
+  sm: 'text-[11px]',
+  md: 'text-base',
+};
 
-  if (wallet.icon === 'nubank') {
-    return (
-      <span className={`font-bold tracking-tight ${textSizes.nubank}`} style={{ color: wallet.color }}>
-        nubank
-      </span>
-    );
-  }
+const itauSizeTextClass: Record<BrandMarkSize, string> = {
+  sm: 'text-[10px]',
+  md: 'text-lg',
+};
 
-  if (wallet.icon === 'itau') {
-    return <span className={`font-bold tracking-tighter px-1 rounded-sm ${textSizes.itau} ${styles.itauBrand}`}>Itaú</span>;
-  }
-
+function ManualWalletMark({ wallet, size }: { wallet: WalletResponse | undefined; size: BrandMarkSize }) {
   if (size === 'sm') {
-    return <span className={styles.walletNameDefault}>{wallet.name}</span>;
+    return <span className={styles.walletNameDefault}>{wallet?.name}</span>;
   }
 
   return (
     <div className="flex items-center gap-2">
       <Briefcase size={18} className={styles.walletIconMuted} />
-      <span className={`font-medium text-sm ${styles.walletNameDefault}`}>{wallet.name}</span>
+      <span className={`font-medium text-sm ${styles.walletNameDefault}`}>{wallet?.name}</span>
     </div>
+  );
+}
+
+export function TxWalletBrandMark({ wallet, size = 'md' }: TxWalletBrandMarkProps) {
+  const bank = wallet?.bank;
+
+  // Carteira manual: sem banco vinculado, ou banco explicitamente "Manual"
+  if (!bank) {
+    return <ManualWalletMark wallet={wallet} size={size} />;
+  }
+
+  // Itaú: único caso com tratamento especial (pill laranja + texto azul),
+  // pois usa duas cores e não dá pra derivar isso de uma única bank.color
+  if (bank.name === 'Itau') {
+    return (
+      <span className={`font-bold tracking-tighter px-1 rounded-sm ${itauSizeTextClass[size]} ${styles.itauBrand}`}>
+        Itaú
+      </span>
+    );
+  }
+
+  // Qualquer outro banco vindo do backend: wordmark de uma cor só,
+  // usando a cor cadastrada no próprio banco
+  const label = BRAND_LABEL[bank.name] ?? bank.name;
+  return (
+    <span className={`font-bold tracking-tight ${sizeTextClass[size]}`} style={{ color: bank.color }}>
+      {label}
+    </span>
   );
 }
 

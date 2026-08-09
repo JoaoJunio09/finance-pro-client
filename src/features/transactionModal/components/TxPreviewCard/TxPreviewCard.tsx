@@ -1,39 +1,39 @@
 import { Activity, Calendar, CheckCircle2, Eye, Wallet } from 'lucide-react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import SpinnerLoading from '../../../../components/ui/SpinnerLoading/SpinnerLoading';
+import { formatCurrencyToAPI } from '../../../../utils/FormatCurrency';
+import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
-import type { TxCategory } from '../../types/TxCategory';
-import type { TxWallet } from '../../types/TxWallet';
 
 import styles from './TxPreviewCard.module.css';
 
 interface TransactionPreviewCardProps {
-  isIncome: boolean;
-  description: string;
-  category: TxCategory;
-  wallet: TxWallet;
-  amountFormatted: string;
-  numericAmount: number;
-  previewDateLabel: string;
-  time: string;
-  status: 'completed' | 'pending';
+  form: TxFormData | undefined;
   onClose: () => void;
   onSubmit: () => void;
+  isSaving: boolean;
 }
 
 export function TransactionPreviewCard({
-  isIncome,
-  description,
-  category,
-  wallet,
-  amountFormatted,
-  numericAmount,
-  previewDateLabel,
-  time,
-  status,
+  form,
   onClose,
   onSubmit,
+  isSaving
 }: TransactionPreviewCardProps) {
-  const Icon = category.icon;
+  
+  const isIncome = form?.type === 'CREDIT';
+  const numericAmount = form?.amount
+    ? Number(formatCurrencyToAPI(form.amount))
+    : 0;
+  const formattedAmount = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(numericAmount);
 
+  const previewDate = new Date(`${form?.date}T12:00:00`);
+  const previewDateLabel = previewDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  const isFormValid = numericAmount > 0 && form && form.description && form.date && form.time && form.category && form.wallet;
   return (
     <div className={`w-full lg:w-[380px] border-t lg:border-t-0 lg:border-l p-6 sm:p-8 flex flex-col ${styles.panel}`}>
       <h3 className={`text-sm font-bold mb-6 flex items-center gap-2 ${styles.panelTitle}`}>
@@ -46,13 +46,13 @@ export function TransactionPreviewCard({
         <div className="flex justify-between items-start pt-1">
           <div className="flex items-center gap-3">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${isIncome ? styles.iconWrapIncome : styles.iconWrapDefault}`}>
-              <Icon size={22} />
+              <DynamicIcon name={form?.category?.icon as IconName} size={22} />
             </div>
             <div className="flex flex-col">
-              <span className={`text-base font-bold leading-tight ${styles.txDescription}`}>{description || 'Nova transação'}</span>
+              <span className={`text-base font-bold leading-tight ${styles.txDescription}`}>{form?.description || 'Nova transação'}</span>
               <span className={`text-xs font-medium mt-0.5 flex items-center gap-1.5 ${styles.txCategory}`}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: category.color }}></span>
-                {category.name}
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: form?.category?.color }}></span>
+                {form?.category?.name}
               </span>
             </div>
           </div>
@@ -60,7 +60,7 @@ export function TransactionPreviewCard({
 
         <div className="flex flex-col items-start mt-2">
           <span className={`text-2xl font-black tracking-tight tabular-nums ${isIncome ? styles.amountIncome : styles.amountNeutral}`}>
-            {numericAmount > 0 ? `${isIncome ? '+' : '−'} ${amountFormatted}` : 'R$ 0,00'}
+            {numericAmount > 0 ? `${isIncome ? '+' : '−'} ${formattedAmount}` : 'R$ 0,00'}
           </span>
         </div>
 
@@ -70,7 +70,7 @@ export function TransactionPreviewCard({
               <Calendar size={14} /> Data
             </span>
             <span className={styles.detailValue}>
-              {previewDateLabel} • {time}
+              {previewDateLabel} • {form?.time}
             </span>
           </div>
 
@@ -78,14 +78,14 @@ export function TransactionPreviewCard({
             <span className={`flex items-center gap-1.5 ${styles.detailLabel}`}>
               <Wallet size={14} /> Carteira
             </span>
-            <TxWalletBrandMark wallet={wallet} size="sm" />
+            <TxWalletBrandMark wallet={form?.wallet} size="sm" />
           </div>
 
           <div className="flex justify-between items-center text-xs font-medium mt-1">
             <span className={`flex items-center gap-1.5 ${styles.detailLabel}`}>
               <Activity size={14} /> Status
             </span>
-            {status === 'completed' ? (
+            {form?.status === 'COMPLETED' ? (
               <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full border ${isIncome ? styles.statusCompletedIncome : styles.statusCompletedDefault}`}>
                 <CheckCircle2 size={12} /> {isIncome ? 'Recebido' : 'Pago'}
               </span>
@@ -102,9 +102,21 @@ export function TransactionPreviewCard({
         <button onClick={onClose} className={`flex-1 py-3.5 rounded-xl text-sm font-semibold border transition-all focus:outline-none ${styles.cancelBtn}`} type="button">
           Cancelar
         </button>
-        <button onClick={onSubmit} className={`flex-[2] py-3.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-[0.98] focus:outline-none ${styles.submitBtn}`} type="button">
-          Adicionar transação
-        </button>
+        <button
+          type="button"
+          disabled={!isFormValid || isSaving}
+          onClick={onSubmit}
+          className={`flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
+            ${styles.submitBtn}
+            ${!isFormValid || isSaving ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
+          `}
+        >
+          {isSaving ? (
+            <SpinnerLoading />
+          ) : (
+            'Adicionar transação'
+          )}
+      </button>
       </div>
     </div>
   );

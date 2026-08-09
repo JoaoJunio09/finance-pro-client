@@ -1,0 +1,142 @@
+.toast {
+  position: relative;
+  height: 5.5rem;
+  max-height: 6.5rem;
+  max-width: 350px;
+  background-color: #111111;
+  border: 1px solid #2A2A2A;
+  border-radius: 1rem;
+  overflow: hidden;
+  z-index: 1000;
+  transition: opacity 300ms ease-out, transform 300ms ease-out, filter 300ms ease-out;
+  will-change: transform;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(1rem);
+  filter: blur(4px);
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.content {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.iconWrap {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: var(--toast-bg-icon);
+}
+
+.icon {
+  color: var(--toast-color);
+}
+
+.textWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.message {
+  opacity: 0.5;
+  font-size: 0.75rem;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 1.25rem;
+  top: 1.25rem;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 0.25rem;
+  background-color: var(--toast-color);
+}
+
+.progressFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0.5px;
+  width: 100%;
+  background-color: var(--toast-color);
+  transform-origin: left;
+  animation: toastProgress var(--toast-duration, 4000ms) linear forwards;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+@keyframes toastProgress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Variantes por tipo: cada uma define as variáveis usadas pelos filhos acima */
+.success {
+  --toast-color: #4ADE80;
+  --toast-bg-icon: #4ADE8014;
+}
+
+.error {
+  --toast-color: #F87171;
+  --toast-bg-icon: #F8717114;
+}
+
+.warning {
+  --toast-color: #FCD34D;
+  --toast-bg-icon: #FCD34D14;
+}
+
+.info {
+  --toast-color: #60A5FA;
+  --toast-bg-icon: #60A5FA14;
+}
+
+.finance {
+  --toast-color: #6366F1;
+  --toast-bg-icon: rgba(99, 102, 241, 0.12);
+}

@@ -25,16 +25,19 @@ export function WalletCard({ wallet, showBalance }: WalletCardProps) {
 
   return (
     <div
-      className={`relative p-6 rounded-[1.25rem] aspect-[1.58/1] bg-gradient-to-br ${wallet.bank.gradient} shadow-md overflow-hidden flex flex-col justify-between interactive-card border ${
+      className={`relative p-6 rounded-[1.25rem] aspect-[1.58/1] shadow-md overflow-hidden flex flex-col justify-between interactive-card border ${
         isTextDark ? styles.cardSurfaceVariant : styles.cardBrandVariant
       }`}
+      style={{
+        background: wallet.bank.gradient
+      }}
     >
       {/* Brilho decorativo suave para imitar o material de um cartão */}
       <div className={`absolute inset-0 pointer-events-none ${styles.sheen}`}></div>
 
       <div className="flex justify-between items-start relative z-10">
         <div className="flex items-center gap-2">
-          <WalletBrandMark icon={'nubank'} />
+          <WalletBrandMark icon={wallet.bank ? wallet.bank.name : 'Manual'} />
         </div>
 
         {/* Imitação visual de um "Chip" bancário */}

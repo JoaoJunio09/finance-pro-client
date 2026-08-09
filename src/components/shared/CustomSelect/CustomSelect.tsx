@@ -9,8 +9,8 @@ interface SelectOption {
 
 interface CustomSelectProps<T extends SelectOption> {
   options: T[];
-  value: string;
-  onChange: (id: string) => void;
+  value: T | undefined;
+  onChange: (option: T) => void;
   placeholder: string;
   renderOption: (option: T) => ReactNode;
   renderSelected: (option: T) => ReactNode;
@@ -37,7 +37,9 @@ export function CustomSelect<T extends SelectOption>({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const selectedOption = options.find((opt) => opt.id === value);
+  // Compara por id, não por referência: value e options podem vir
+  // de fetches diferentes (objetos com o mesmo id, instâncias distintas)
+  const selectedOption = options.find((opt) => opt.id === value?.id);
 
   return (
     <div className="relative w-full" ref={ref}>
@@ -59,15 +61,15 @@ export function CustomSelect<T extends SelectOption>({
               key={opt.id}
               type="button"
               onClick={() => {
-                onChange(opt.id);
+                onChange(opt);
                 setIsOpen(false);
               }}
               className={`w-full flex items-center justify-between p-3.5 transition-colors text-left focus:outline-none ${styles.option} ${
-                value === opt.id ? styles.optionSelected : ''
+                value?.id === opt.id ? styles.optionSelected : ''
               }`}
             >
               {renderOption(opt)}
-              {value === opt.id && <Check size={16} className={styles.checkIcon} />}
+              {value?.id === opt.id && <Check size={16} className={styles.checkIcon} />}
             </button>
           ))}
         </div>
