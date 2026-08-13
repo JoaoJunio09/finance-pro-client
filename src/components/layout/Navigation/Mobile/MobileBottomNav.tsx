@@ -1,4 +1,4 @@
-import { BarChart3, Home, Menu, Wallet, X } from 'lucide-react';
+import { Activity, BarChart3, Home, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { MainViewMobile } from '../../../../types/mainView';
 
@@ -17,7 +17,7 @@ const TABS: NavTab[] = [
 ];
 
 const TABS_RIGHT: NavTab[] = [
-  { id: 'wallets', label: 'Carteiras', icon: Wallet, path: '/carteiras' },
+  { id: 'activities', label: 'Atividades', icon: Activity, path: '/atividades' },
   { id: 'more', label: 'Mais', icon: Menu, path: '/opcoes' },
 ];
 

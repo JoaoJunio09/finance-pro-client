@@ -97,3 +97,27 @@ export function getCurrentMonth() {
 
   return month.charAt(0).toUpperCase() + month.slice(1);
 };
+
+export const isSameDay = (d1: Date, d2: Date) => {
+  return (
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear()
+  );
+};
+
+export const isSameDayFromLocalDateTime = (
+  localDateTime: string,
+  date: Date
+) => {
+  const [year, month, day] = localDateTime
+    .split('T')[0]
+    .split('-')
+    .map(Number);
+
+  return (
+    year === date.getFullYear() &&
+    month - 1 === date.getMonth() &&
+    day === date.getDate()
+  );
+};

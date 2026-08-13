@@ -1,2 +1,2 @@
-export type MainViewDesktop = 'dashboard' | 'analytics' | 'wallets' | 'transactions' | 'recurrences' | 'profile';
-export type MainViewMobile = 'dashboard' | 'analytics' | 'wallets' | 'more';
+export type MainViewDesktop = 'dashboard' | 'analytics' | 'activities' | 'wallets' | 'transactions' | 'recurrences' | 'profile';
+export type MainViewMobile = 'dashboard' | 'analytics' | 'activities' | 'more';

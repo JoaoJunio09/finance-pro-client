@@ -1,0 +1,38 @@
+.viewCard {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-card);
+}
+
+.textMuted { color: var(--text-muted); }
+.textMain { color: var(--text-main); }
+.textWhite { color: #ffffff; }
+
+.bgIncome { background-color: var(--income); }
+.bgExpense { background-color: var(--expense); }
+.bgAccent { background-color: var(--accent); }
+
+.borderLight { border-color: var(--border-light); }
+
+.calendarDayCurrent {
+  background-color: var(--bg-base);
+  border-color: var(--border-light);
+}
+.calendarDayCurrent:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-elevated);
+}
+
+.calendarDayOther {
+  background-color: transparent;
+  border-color: transparent;
+  opacity: 0.4;
+}
+.calendarDayOther:hover {
+  opacity: 0.8;
+}
+
+.calendarDayToday {
+  /* Substitui as classes ring do Tailwind para usar as variáveis do tema */
+  box-shadow: 0 0 0 1px var(--accent), 0 0 0 2px var(--bg-surface);
+}

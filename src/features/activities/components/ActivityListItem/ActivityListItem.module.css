@@ -1,0 +1,48 @@
+.activityCard {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.activityCard:hover {
+  border-color: var(--border-hover);
+}
+
+.iconIncome {
+  background-color: var(--income-muted);
+  color: var(--income);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+.iconDefault {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  border-color: var(--border-light);
+}
+
+.bgAccent { background-color: var(--accent); }
+.borderDefault { border-color: var(--border-color); }
+.textWhite { color: #ffffff; }
+
+.activityTitle {
+  color: var(--text-main);
+  transition: color 0.2s ease;
+}
+.activityCard:hover .activityTitle {
+  color: var(--accent);
+}
+
+.textMuted { color: var(--text-muted); }
+.bgBorderHover { background-color: var(--border-hover); }
+
+.textIncome { color: var(--income); }
+.textMain { color: var(--text-main); }
+
+.statusPending {
+  background-color: var(--warning-muted);
+  color: var(--warning);
+  border-color: transparent;
+}
+.statusCompleted {
+  background-color: var(--bg-base);
+  color: var(--text-muted);
+  border-color: var(--border-light);
+}

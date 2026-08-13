@@ -1,4 +1,5 @@
 import {
+  Activity,
   BarChart3,
   CreditCard,
   Home,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { MainViewDesktop } from '../../../../types/mainView';
+
 import styles from './Sidebar.module.css';
 
 interface NavItem {
@@ -21,7 +23,8 @@ interface NavItem {
 
 const PRIMARY_ITEMS: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/analises' },
+  { id: 'analytics', label: 'Análises', icon: BarChart3, path: '/analises' },
+  { id: 'activities', label: 'Atividades', icon: Activity, path: '/atividades' },
   { id: 'wallets', label: 'Carteiras', icon: Wallet, path: '/carteiras' },
   { id: 'transactions', label: 'Transações', icon: CreditCard, path: '/transacoes' },
   { id: 'recurrences', label: 'Recorrências', icon: Repeat, path: '/recorrencias' },

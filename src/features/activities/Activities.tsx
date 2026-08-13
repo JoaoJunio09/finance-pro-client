@@ -1,106 +1,89 @@
 import { useState } from 'react';
-import TopProgressBar from '../../components/ui/TopProgressBar/TopProgressBar';
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
-import Apresentation from './components/Apresentation/Apresentation';
-import Calendar from './components/Calendar/Calendar';
-import MonthSelector from './components/MonthSelector/MonthSelector';
-import ActivitiesSkeleton from './components/Skeleton/ActivitiesSkeleton';
-import SummaryCards from './components/SummaryCards/SummaryCards';
-import TransactionDetails from './components/TransactionDetails/TransactionDetails';
-import TransactionsTimeline from './components/TransactionsTimeline/TransactionsTimeline';
+import ActivitiesPresentation from './components/ActivitiesPresentation/ActivitiesPresentation';
+import { CalendarView } from './components/CalendarView/CalendarView';
+import { ContextualActivitiesHeader, type ActivitySubpage } from './components/ContextualActivitiesHeader/ContexttualActivitiesHeader';
+import { DayDetailsDrawer } from './components/DayDetailsDrawer/DayDetailsDrawer';
+import { SimpleListView } from './components/SimpleListView/SimpleListView';
 import useActivities from './hooks/useActivities';
+import { getMonthName } from './utils/activityFormatters';
 
 import styles from './Activities.module.css';
 
-const BackgroundGlow = () => {
-  return (
-    <>
-      <div className={`${styles.glow} ${styles.glowBlobPrimary}`}></div>
-      <div className={`${styles.glow} ${styles.glowBlobSuccess}`}></div>
-    </>
-  )
-}
-
-const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
 function Activities() {
-  const [isOpenDrawerDetails, setIsOpenDrawerDetails] = useState(false);
-  const {
-    allTransaction,
-    isLoading,
-    isFetching,
-    recurrences,
-    calendarDays,
-    goToPreviousMonth,
-    goToNextMonth,
-    selectedDate,
-    setSelectedDate,
-    transactionDetails,
-    setTransactionDetails,
-    month,
-    year
-  } = useActivities();
+  const [currentSubpage, setCurrentSubpage] = useState<ActivitySubpage>('overview');
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  function handleSelectedTransaction(transaction: TransactionResponse) {
-    setTransactionDetails(transaction);
-    setIsOpenDrawerDetails(true);
-  }
+  const handleDayClick = (date: Date) => {
+    setSelectedDate(date);
+    setIsDrawerOpen(true);
+  };
+
+  const { activities, transactions, transactionsPending, recurrences } = useActivities();
 
   return (
-    <main className="flex-1 w-full relative z-10 flex flex-col items-center">
-      <div className="w-full relative z-10 flex flex-col max-w-[400px] bg-main min-h-screen shadow-2xl lg:max-w-[1440px] lg:border-none lg:shadow-none lg:min-h-0">
-        {(isLoading || isFetching) && <TopProgressBar />}
-        
-        <BackgroundGlow />
+    <section className="w-full">
+      <div className={`w-full ${styles.animateFadeInUp}`}>
+        <ContextualActivitiesHeader 
+          currentSubpage={currentSubpage} 
+          setSubpage={setCurrentSubpage}
+          currentMonth={currentMonth}
+          setCurrentMonth={setCurrentMonth}
+        />
 
-        {false ? (
-          <ActivitiesSkeleton />
-        ) : (
-          <div className="layout py-8 px-5 sm:px-8 lg:px-12">
-            <Apresentation />
-
-            <MonthSelector
-              goToNextMonth={goToNextMonth}
-              goToPreviousMonth={goToPreviousMonth}
-              activeMonth={month}
-              activeYear={year}
-              MONTHS={MONTHS}
+				<ActivitiesPresentation />
+				
+        <main className={`relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10 ${styles.animateFadeInUp}`}>
+          {currentSubpage === 'overview' && (
+            <CalendarView 
+              currentMonth={currentMonth}
+              activities={activities}
+              onDayClick={handleDayClick} 
             />
-
-            {allTransaction?.transactionBiggestIncome && allTransaction.transactionBiggestExpense && (
-              <SummaryCards
-                currentBalance={allTransaction?.currentBalance ?? 0}
-                income={allTransaction?.income ?? 0}
-                expenses={allTransaction?.expenses ?? 0}
-              />
-            )}  
-
-            <main className="main-content flex flex-col gap-12 w-full animate-fade-in delay-100">
-              <Calendar
-                calendarDays={calendarDays}
-                selectedDate={selectedDate}
-                onSelectedDateChange={setSelectedDate}
-              />
-
-              <TransactionsTimeline
-                allTransaction={allTransaction}
-                recurrences={recurrences ?? []}
-                onSelectTransaction={handleSelectedTransaction}
-                selectedDate={selectedDate}
-              />
-            </main>
-
-            <TransactionDetails
-              isOpen={isOpenDrawerDetails}
-              onClose={() => setIsOpenDrawerDetails(false)}
-              transactionSelected={transactionDetails ?? null}
-              onDelete={() => {}}
-              onEdit={() => {}}
+          )}
+          
+          {currentSubpage === 'all' && (
+            <SimpleListView 
+              title="Todas as Atividades" 
+              desc={`Listagem cronológica do mês de ${getMonthName(currentMonth)}.`} 
+              activities={activities}
             />
-          </div>
-        )}
+          )}
+
+          {currentSubpage === 'transactions' && (
+            <SimpleListView 
+              title="Histórico Realizado" 
+              desc="Transações efetivadas com sucesso." 
+              activities={transactions} 
+            />
+          )}
+
+          {currentSubpage === 'recurrences' && (
+            <SimpleListView 
+              title="Recorrências Fixas" 
+              desc="Assinaturas e contas com cobrança programada mensalmente." 
+              activities={recurrences} 
+            />
+          )}
+
+          {currentSubpage === 'pendings' && (
+            <SimpleListView 
+              title="Atividades Pendentes" 
+              desc="Movimentações agendadas que ainda não foram processadas." 
+              activities={transactionsPending} 
+            />
+          )}
+        </main>
       </div>
-    </main>
+
+      <DayDetailsDrawer
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+        selectedDate={selectedDate} 
+        activities={activities}
+      />
+    </section>
   );
 }
 

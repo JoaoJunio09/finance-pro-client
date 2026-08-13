@@ -240,15 +240,15 @@ function Analytics() {
   return (
       <main className="w-full">
         <div className="w-full animate-fade-in-up">
-          <MobileFlushHero
-            availableToSpend={summary.availableToSpend}
-            futureCommitments={summary.futureCommitments}
-          />
-
           <ContextualAnalyticsHeader
             currentSubpage={currentSubpage}
             onSelectSubpage={setCurrentSubpage}
             onGoToReports={() => setCurrentSubpage('reports')}
+          />
+
+          <MobileFlushHero
+            availableToSpend={summary.availableToSpend}
+            futureCommitments={summary.futureCommitments}
           />
           
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10">

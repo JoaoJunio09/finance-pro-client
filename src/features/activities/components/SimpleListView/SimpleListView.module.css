@@ -1,0 +1,8 @@
+.viewCard {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-card);
+}
+
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }

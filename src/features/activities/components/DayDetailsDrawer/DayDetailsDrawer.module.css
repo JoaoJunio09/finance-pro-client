@@ -1,0 +1,38 @@
+.overlay { background-color: rgba(0, 0, 0, 0.5); }
+
+.bgSurface { background-color: var(--bg-surface); }
+.bgElevated { background-color: var(--bg-elevated); }
+
+.borderDefault { border-color: var(--border-color); }
+.borderLight { border-color: var(--border-light); }
+.bgBorderHover { background-color: var(--border-hover); }
+.bgBorderColor { background-color: var(--border-color); }
+
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+.textAccent { color: var(--accent); }
+.textIncome { color: var(--income); }
+.textExpense { color: var(--expense); }
+
+.scrollbarHide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbarHide::-webkit-scrollbar {
+  display: none;
+}
+
+.interactiveButton {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.interactiveButton:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+}
+.interactiveButtonHoverBorder:hover {
+  border-color: var(--border-light);
+}
+
+.drawerDivider {
+  background-color: color-mix(in srgb, var(--bg-elevated) 50%, transparent);
+}

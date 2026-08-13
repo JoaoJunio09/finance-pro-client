@@ -1,26 +1,9 @@
-.glow {
-	position: fixed;
-	border-radius: 50%;
-	filter: blur(150px);
-	z-index: 0;
-	opacity: 0.12;
-	pointer-events: none;
-	transition: all 0.8s ease;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.glowBlobPrimary {
-	top: -5%;
-	left: 0%;
-	width: 700px;
-	height: 700px;
-	background: var(--color-primary);
-}
-
-.glowBlobSuccess {
-	bottom: -10%;
-	right: 0%;
-	width: 600px;
-	height: 600px;
-	background: var(--color-success);
-	opacity: 0.06;
+.animateFadeInUp {
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) forwards;
+  opacity: 0;
 }

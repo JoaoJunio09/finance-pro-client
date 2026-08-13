@@ -1,6 +1,8 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AccountResponse } from "../models/account/AccountResponse";
+import type { ActivitiesResponse } from "../models/account/ActivitiesResponse";
 import type { DashboardResponse } from "../models/account/DashboardResponse";
+import type { ParamsCategoryAPI } from "../models/account/ParamsCategoryAPI";
 import api from "./api";
 
 class AccountService {
@@ -47,6 +49,28 @@ class AccountService {
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao carregar o dashboard da conta');
+			}
+
+			throw err;
+		}
+	}
+
+	public async getActivities(accountId: string, params: ParamsCategoryAPI) {
+		const URL: string = `${this.BASE_URL}/activities/${accountId}`;
+		try {
+			const response = await api.get<ActivitiesResponse>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				},
+				params
+			});
+
+			return response.data;
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao carregar as atividades da conta');
 			}
 
 			throw err;
