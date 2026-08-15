@@ -123,6 +123,7 @@ export default function WalletsPage() {
         form={form}
         handleOnChange={handleOnChange}
         selectColor={selectColor}
+        banks={banks}
       />
       
       <DeleteConfirmModal

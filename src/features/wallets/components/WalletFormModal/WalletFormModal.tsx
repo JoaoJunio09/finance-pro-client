@@ -8,8 +8,8 @@ import type { WalletFormData } from '../../types/WalletFormData';
 import { WalletCard } from '../WalletCard/WalletCard';
 
 import styles from './WalletFormModal.module.css';
+import type { BankResponse } from '../../../../models/bank/BankResponse';
 
-// Catálogo de cores expandido
 export const AVAILABLE_COLORS = [
   { id: 'purple', value: '#7C3AED' },
   { id: 'indigo', value: '#4F46E5' },
@@ -34,7 +34,8 @@ interface WalletFormModalProps {
   onClose: () => void;
   onSave: () => void;
   form: WalletFormData,
-  selectColor: (color: string) => void
+  selectColor: (color: string) => void,
+  banks: BankResponse[];
 }
 
 function WalletFormModal({
@@ -43,7 +44,8 @@ function WalletFormModal({
   onClose,
   onSave,
   form,
-  selectColor
+  selectColor,
+  banks
 }: WalletFormModalProps) {
   if (!isOpen) return null;
 
@@ -99,7 +101,7 @@ function WalletFormModal({
                     id='bank' name="bank" value={form.bank?.name} onChange={handleOnChange}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                   >
-                    {AVAILABLE_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
+                    {banks.map(b => <option key={b.id} value={b.gradient}>{b.name}</option>)}
                   </select>
                 </div>
                 

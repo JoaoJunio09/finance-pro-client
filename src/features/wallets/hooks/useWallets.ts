@@ -49,10 +49,9 @@ function useWallets() {
 			[name]: value
 		}));
 
-		if (name === 'amount' && value) {
-			setForm((prev) => ({...prev, amount: formatCurrencyInput(value) }));
+		if (name === 'bank' && value) {
+			setForm((prev) => ({...prev, color: value}));
 		}
-		console.log(form)
 	}
 
 	function selectColor(color: string) {
