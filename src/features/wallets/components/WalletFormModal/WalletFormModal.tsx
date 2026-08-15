@@ -1,24 +1,16 @@
 import { Eye, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
+import type { WalletType } from '../../../../types/WalletType';
 import { AVAILABLE_BANKS } from '../../mocks/wallets';
-import type { Wallet } from '../../types/wallet';
+import type { WalletFormData } from '../../types/WalletFormData';
 import { WalletCard } from '../WalletCard/WalletCard';
 
 import styles from './WalletFormModal.module.css';
-import type { WalletFormData } from '../../types/WalletFormData';
-import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
-import type { WalletType } from '../../../../types/WalletType';
-
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (wallet: Wallet) => void;
-  initialData?: Wallet | null;
-}
 
 // Catálogo de cores expandido
-const AVAILABLE_COLORS = [
+export const AVAILABLE_COLORS = [
   { id: 'purple', value: '#7C3AED' },
   { id: 'indigo', value: '#4F46E5' },
   { id: 'blue', value: '#2563EB' },
@@ -37,14 +29,16 @@ const AVAILABLE_COLORS = [
 ];
 
 interface WalletFormModalProps {
+  handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   isOpen: boolean
   onClose: () => void;
   onSave: () => void;
   form: WalletFormData,
-  selectColor: (color: string) => void;
+  selectColor: (color: string) => void
 }
 
 function WalletFormModal({
+  handleOnChange,
   isOpen,
   onClose,
   onSave,
@@ -52,14 +46,6 @@ function WalletFormModal({
   selectColor
 }: WalletFormModalProps) {
   if (!isOpen) return null;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    // const { name, value } = e.target;
-    // setFormData(prev => ({ 
-    //   ...prev, 
-    //   [name]: name === 'balance' ? Number(value) || 0 : value 
-    // }));
-  };
 
   const previewWallet: WalletResponse = {
     id: 'preview',
@@ -97,17 +83,20 @@ function WalletFormModal({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Nome da Carteira</label>
                 <input 
-                  type="text" name="name" value={form.name} onChange={handleChange}
+                  type="text" id='name' name="name" value={form.name} onChange={handleOnChange}
                   placeholder="Ex: Reserva de Emergência"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="flex flex-col gap-2">
+                <div className={`
+                  flex flex-col gap-2
+                  ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}
+                `}>
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Instituição/Banco</label>
                   <select 
-                    name="bank" value={form.bank?.name} onChange={handleChange}
+                    id='bank' name="bank" value={form.bank?.name} onChange={handleOnChange}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                   >
                     {AVAILABLE_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
@@ -117,16 +106,16 @@ function WalletFormModal({
                 <div className="flex flex-col gap-2">
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Tipo</label>
                   <select 
-                    name="type" value={form.type} onChange={handleChange}
+                    id='type' name="type" value={form.type} onChange={handleOnChange}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                   >
-                    <option value="checking">Conta Corrente</option>
-                    <option value="savings">Conta Poupança</option>
-                    <option value="credit_card">Cartão de Crédito</option>
-                    <option value="reserve">Reserva de Emergência</option>
-                    <option value="investment">Investimentos</option>
-                    <option value="physical">Dinheiro Físico</option>
-                    <option value="other">Outra</option>
+                    <option value="CHECKING">Conta Corrente</option>
+                    <option value="SAVING">Conta Poupança</option>
+                    <option value="CREDIT_CARD">Cartão de Crédito</option>
+                    <option value="RESERVE">Reserva de Emergência</option>
+                    <option value="INVESTMENTS">Investimentos</option>
+                    <option value="PHYSICAL">Dinheiro Físico</option>
+                    <option value="OTHER">Outra</option>
                   </select>
                 </div>
               </div>
@@ -134,20 +123,26 @@ function WalletFormModal({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Saldo Inicial (R$)</label>
                 <input 
-                  type="number" name="balance" value={form.balance} onChange={handleChange}
+                  type="number" id='balance' name="balance" value={form.balance} onChange={handleOnChange}
                   step="0.01"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className={`
+                flex flex-col gap-2
+                 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? '' : 'pointer-events-none opacity-50'}
+              `}>
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Cor / Tema</label>
                 <div className="flex flex-wrap gap-2.5 mt-1">
                   {AVAILABLE_COLORS.map((color) => (
                     <button
                       key={color.id} type="button"
                       onClick={() => selectColor(color.value)}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${form.color === color.id ? 'border-[var(--text-main)] scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      className={`
+                        w-8 h-8 rounded-full border-2 transition-all
+                        ${form.color === color.value && (form.type === 'PHYSICAL' || form.type === 'OTHER') ? 'border-[var(--text-main)] scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}
+                      `}
                       style={{
                         background: color.value
                       }}
@@ -160,7 +155,7 @@ function WalletFormModal({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Descrição (Opcional)</label>
                 <input 
-                  type="text" name="description" value={form.description} onChange={handleChange}
+                  type="text" id='description' name="description" value={form.description} onChange={handleOnChange}
                   placeholder="Ex: Conta para gastos diários"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
@@ -191,10 +186,7 @@ function WalletFormModal({
               </button>
               
               <button 
-                onClick={() => {
-                  // onSave(previewWallet);
-                  onClose();
-                }}
+                onClick={onSave}
                 disabled={!form.name}
                 className={`flex flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
                   ${styles.submitBtn}

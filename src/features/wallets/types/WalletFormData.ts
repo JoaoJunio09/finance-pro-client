@@ -1,4 +1,5 @@
 import type { BankResponse } from "../../../models/bank/BankResponse";
+import type { WalletType } from "../../../types/WalletType";
 
 export interface WalletFormData {
 	id: string;
@@ -6,7 +7,7 @@ export interface WalletFormData {
 	description: string;
 	balance: string;
 	cardDigits: string;
-	type: string;
+	type: WalletType;
 	color?: string;
 	goalId?: string;
 	accountId: string;

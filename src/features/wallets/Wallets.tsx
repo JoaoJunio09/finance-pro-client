@@ -25,8 +25,11 @@ export default function WalletsPage() {
     wallets,
     banks,
     form,
+    handleOnChange,
     selectColor
   } = useWallets();
+
+  console.log(form)
 
   // Lógica de Filtro
   const filteredWallets = useMemo(() => {
@@ -113,12 +116,12 @@ export default function WalletsPage() {
         )}
       </main>
 
-      {/* Modais */}
       <WalletFormModal
         isOpen={isFormModalOpen} 
         onClose={() => setIsFormModalOpen(false)}
-        form={form}
         onSave={() => {}}
+        form={form}
+        handleOnChange={handleOnChange}
         selectColor={selectColor}
       />
       
