@@ -15,7 +15,7 @@ interface Props {
 
 export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, isPreview = false }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const colorStyle = wallet.color ?? wallet.bank.gradient;
+  const colorStyle = wallet.color ?? wallet.bank?.gradient;
 
   useEffect(() => {
     if (showMenu) {
@@ -43,7 +43,7 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, isPrevie
           </div>
           <div>
             <h3 className="font-bold text-sm sm:text-base leading-tight truncate max-w-[140px] sm:max-w-[180px]">{wallet.name}</h3>
-            <p className="text-xs opacity-80 font-medium truncate">{wallet.bank.name}</p>
+            <p className="text-xs opacity-80 font-medium truncate">{wallet.bank?.name}</p>
           </div>
         </div>
 

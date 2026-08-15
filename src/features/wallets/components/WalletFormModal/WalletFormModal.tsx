@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { X, Eye } from 'lucide-react';
-import { AVAILABLE_BANKS } from '../../mocks/wallets';
-import styles from './WalletFormModal.module.css';
-import type { Wallet, WalletType } from '../../types/wallet';
-import { WalletCard } from '../WalletCard/WalletCard';
+import { Eye, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { AVAILABLE_BANKS } from '../../mocks/wallets';
+import type { Wallet } from '../../types/wallet';
+import { WalletCard } from '../WalletCard/WalletCard';
+
+import styles from './WalletFormModal.module.css';
+import type { WalletFormData } from '../../types/WalletFormData';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
+import type { WalletType } from '../../../../types/WalletType';
 
 interface Props {
   isOpen: boolean;
@@ -15,65 +19,58 @@ interface Props {
 
 // Catálogo de cores expandido
 const AVAILABLE_COLORS = [
-  { id: 'purple', class: 'bg-[#7C3AED]' },
-  { id: 'indigo', class: 'bg-[#4F46E5]' },
-  { id: 'blue', class: 'bg-[#2563EB]' },
-  { id: 'cyan', class: 'bg-[#0891B2]' },
-  { id: 'teal', class: 'bg-[#0D9488]' },
-  { id: 'emerald', class: 'bg-[#10B981]' },
-  { id: 'green', class: 'bg-[#059669]' },
-  { id: 'lime', class: 'bg-[#65A30D]' },
-  { id: 'yellow', class: 'bg-[#FACC15]' },
-  { id: 'amber', class: 'bg-[#D97706]' },
-  { id: 'orange', class: 'bg-[#EA580C]' },
-  { id: 'red', class: 'bg-[#DC2626]' },
-  { id: 'rose', class: 'bg-[#E11D48]' },
-  { id: 'pink', class: 'bg-[#DB2777]' },
-  { id: 'neutral', class: 'bg-[#3F3F46]' },
+  { id: 'purple', value: '#7C3AED' },
+  { id: 'indigo', value: '#4F46E5' },
+  { id: 'blue', value: '#2563EB' },
+  { id: 'cyan', value: '#0891B2' },
+  { id: 'teal', value: '#0D9488' },
+  { id: 'emerald', value: '#10B981' },
+  { id: 'green', value: '#059669' },
+  { id: 'lime', value: '#65A30D' },
+  { id: 'yellow', value: '#FACC15' },
+  { id: 'amber', value: '#D97706' },
+  { id: 'orange', value: '#EA580C' },
+  { id: 'red', value: '#DC2626' },
+  { id: 'rose', value: '#E11D48' },
+  { id: 'pink', value: '#DB2777' },
+  { id: 'neutral', value: '#3F3F46' },
 ];
 
-export const WalletFormModal: React.FC<Props> = ({
+interface WalletFormModalProps {
+  isOpen: boolean
+  onClose: () => void;
+  onSave: () => void;
+  form: WalletFormData,
+  selectColor: (color: string) => void;
+}
+
+function WalletFormModal({
   isOpen,
   onClose,
   onSave,
-  initialData
-}) => {
-  const [formData, setFormData] = useState<Partial<Wallet>>({
-    name: '',
-    bank: 'Nubank',
-    type: 'checking',
-    balance: 0,
-    description: '',
-    colorScheme: 'purple'
-  });
-
-  useEffect(() => {
-    if (isOpen) {
-      if (initialData) setFormData(initialData);
-      else setFormData({ name: '', bank: 'Nubank', type: 'checking', balance: 0, description: '', colorScheme: 'purple' });
-    }
-  }, [isOpen, initialData]);
-
+  form,
+  selectColor
+}: WalletFormModalProps) {
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: name === 'balance' ? Number(value) || 0 : value 
-    }));
+    // const { name, value } = e.target;
+    // setFormData(prev => ({ 
+    //   ...prev, 
+    //   [name]: name === 'balance' ? Number(value) || 0 : value 
+    // }));
   };
 
-  const previewWallet: Wallet = {
+  const previewWallet: WalletResponse = {
     id: 'preview',
-    name: formData.name || 'Nova Carteira',
-    bank: formData.bank || 'Banco',
-    type: (formData.type as WalletType) || 'checking',
-    balance: formData.balance || 0,
-    colorScheme: formData.colorScheme as any || 'purple'
+    name: form.name || 'Nova Carteira',
+    description: form.description,
+    bank: form.bank || undefined,
+    type: (form.type as WalletType) || 'checking',
+    balance: Number(form.balance) || 0,
+    cardDigits: '',
+    color: form.color as any || 'purple'
   };
-
-  const isEditing = !!initialData;
 
   if (!isOpen) return null;
 
@@ -89,7 +86,7 @@ export const WalletFormModal: React.FC<Props> = ({
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">
             <div className={`flex items-center justify-between pb-4 border-b shrink-0 ${styles.header}`}>
               <h2 className={`text-xl font-bold tracking-tight ${styles.title}`}>
-                {isEditing ? 'Editar carteira' : 'Nova carteira'}
+                {false ? 'Editar carteira' : 'Nova carteira'}
               </h2>
               <button onClick={onClose} className={`p-2 rounded-full transition-colors focus:outline-none ${styles.closeBtn}`} type="button">
                 <X size={20} />
@@ -100,7 +97,7 @@ export const WalletFormModal: React.FC<Props> = ({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Nome da Carteira</label>
                 <input 
-                  type="text" name="name" value={formData.name} onChange={handleChange}
+                  type="text" name="name" value={form.name} onChange={handleChange}
                   placeholder="Ex: Reserva de Emergência"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
@@ -110,7 +107,7 @@ export const WalletFormModal: React.FC<Props> = ({
                 <div className="flex flex-col gap-2">
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Instituição/Banco</label>
                   <select 
-                    name="bank" value={formData.bank} onChange={handleChange}
+                    name="bank" value={form.bank?.name} onChange={handleChange}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                   >
                     {AVAILABLE_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
@@ -120,7 +117,7 @@ export const WalletFormModal: React.FC<Props> = ({
                 <div className="flex flex-col gap-2">
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Tipo</label>
                   <select 
-                    name="type" value={formData.type} onChange={handleChange}
+                    name="type" value={form.type} onChange={handleChange}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                   >
                     <option value="checking">Conta Corrente</option>
@@ -137,7 +134,7 @@ export const WalletFormModal: React.FC<Props> = ({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Saldo Inicial (R$)</label>
                 <input 
-                  type="number" name="balance" value={formData.balance} onChange={handleChange}
+                  type="number" name="balance" value={form.balance} onChange={handleChange}
                   step="0.01"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
@@ -149,8 +146,11 @@ export const WalletFormModal: React.FC<Props> = ({
                   {AVAILABLE_COLORS.map((color) => (
                     <button
                       key={color.id} type="button"
-                      onClick={() => setFormData(p => ({ ...p, colorScheme: color.id as any }))}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${color.class} ${formData.colorScheme === color.id ? 'border-[var(--text-main)] scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      onClick={() => selectColor(color.value)}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${form.color === color.id ? 'border-[var(--text-main)] scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      style={{
+                        background: color.value
+                      }}
                       title={color.id}
                     />
                   ))}
@@ -160,7 +160,7 @@ export const WalletFormModal: React.FC<Props> = ({
               <div className="flex flex-col gap-2">
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Descrição (Opcional)</label>
                 <input 
-                  type="text" name="description" value={formData.description} onChange={handleChange}
+                  type="text" name="description" value={form.description} onChange={handleChange}
                   placeholder="Ex: Conta para gastos diários"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
@@ -192,16 +192,16 @@ export const WalletFormModal: React.FC<Props> = ({
               
               <button 
                 onClick={() => {
-                  onSave(previewWallet);
+                  // onSave(previewWallet);
                   onClose();
                 }}
-                disabled={!formData.name}
+                disabled={!form.name}
                 className={`flex flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
                   ${styles.submitBtn}
-                  ${!formData.name ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
+                  ${!form.name ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
                 `}
               >
-                {isEditing ? 'Salvar carteira' : 'Adicionar carteira'}
+                {false ? 'Salvar carteira' : 'Adicionar carteira'}
               </button>
             </div>
           </div>
@@ -212,3 +212,5 @@ export const WalletFormModal: React.FC<Props> = ({
     document.body // Anexa o modal diretamente no body da página
   );
 };
+
+export default WalletFormModal;

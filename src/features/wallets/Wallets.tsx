@@ -3,13 +3,13 @@ import { useMemo, useState } from 'react';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfirmModal';
 import { FinancialSummary } from './components/FinancialSummay/FinancialSummary';
 import { WalletCard } from './components/WalletCard/WalletCard';
-import { WalletFormModal } from './components/WalletFormModal/WalletFormModal';
 import { WalletsHeader } from './components/WalletsHeader/WalletsHeader';
 import { MOCK_WALLETS } from './mocks/wallets';
 import type { Wallet, WalletFilter } from './types/wallet';
 
 import styles from './Wallets.module.css';
 import useWallets from './hooks/useWallets';
+import WalletFormModal from './components/WalletFormModal/WalletFormModal';
 
 export default function WalletsPage() {
   // Estado Principal
@@ -23,7 +23,9 @@ export default function WalletsPage() {
 
   const {
     wallets,
-    banks
+    banks,
+    form,
+    selectColor
   } = useWallets();
 
   // Lógica de Filtro
@@ -71,9 +73,6 @@ export default function WalletsPage() {
     setIsFormModalOpen(true);
   };
 
-  console.log(wallets);
-  console.log(banks);
-
   return (
     <div className={`min-h-screen relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)] ${styles.fadeInUp}`}>
       
@@ -118,8 +117,9 @@ export default function WalletsPage() {
       <WalletFormModal
         isOpen={isFormModalOpen} 
         onClose={() => setIsFormModalOpen(false)}
-        initialData={editingWallet}
-        onSave={handleSaveWallet}
+        form={form}
+        onSave={() => {}}
+        selectColor={selectColor}
       />
       
       <DeleteConfirmModal

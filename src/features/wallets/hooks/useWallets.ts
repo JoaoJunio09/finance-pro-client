@@ -11,10 +11,12 @@ function useWallets() {
 		name: '',
 		description: '',
 		balance: '',
+		type: '',
+		color: '',
 		cardDigits: '',
 		goalId: '',
-		bankId: '',
-		accountId : ''
+		accountId : '',
+		bank: undefined
 	});
 
 	const { account } = useAccountContext();
@@ -37,6 +39,10 @@ function useWallets() {
 		retry: 3
 	});
 
+	function selectColor(color: string) {
+		setForm((prev) => ({...prev, color: color }));
+	}
+
 	function saveOrUpdate() {
 
 	}
@@ -44,7 +50,8 @@ function useWallets() {
 	return {
 		wallets: queryWallets.data ?? [],
 		banks: queryBanks.data ?? [],
-		form
+		form,
+		selectColor
 	}
 }
 

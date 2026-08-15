@@ -9,5 +9,5 @@ export interface WalletResponse {
 	type: WalletType,
 	color: string,
 	balance: number,
-	bank: BankResponse
+	bank?: BankResponse
 }
