@@ -1,0 +1,8 @@
+.modalContent {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+.iconWrapper {
+  background-color: var(--expense-muted);
+  color: var(--expense);
+}

@@ -1,9 +1,8 @@
 import { Repeat } from 'lucide-react';
-import React from 'react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import type { FinancialActivity } from '../../types/FinancialActivity';
 
 import styles from './ActivityListItem.module.css';
-import type { FinancialActivity } from '../../types/FinancialActivity';
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 
 // Dica: Futuramente você pode mover esta função para um arquivo como utils/formatters.ts
 export const formatCurrency = (value: number) => {

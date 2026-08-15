@@ -1,0 +1,47 @@
+/* Backdrop e base */
+.modalBackdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Formulário (Lado Esquerdo) */
+.header { border-color: var(--border-light); }
+.title { color: var(--text-main); }
+.closeBtn { color: var(--text-muted); }
+.closeBtn:hover { background: var(--bg-elevated); }
+
+.fieldLabel { color: var(--text-muted); }
+
+.textInput { 
+  background: var(--bg-surface); 
+  border-color: var(--border-color); 
+  color: var(--text-main); 
+}
+.textInput::placeholder { color: var(--text-muted); }
+.textInput:hover { border-color: var(--border-hover); }
+.textInput:focus { 
+  border-color: var(--accent); 
+  box-shadow: 0 0 0 1px var(--accent); 
+}
+
+/* Painel de Pré-visualização (Lado Direito) */
+.panel { 
+  background: linear-gradient(to bottom right, var(--bg-elevated), var(--bg-surface)); 
+  border-color: var(--border-color); 
+}
+.panelTitle { color: var(--text-main); }
+.panelTitleIcon { color: var(--accent); }
+
+/* Botões de Ação */
+.cancelBtn { 
+  background: var(--bg-surface); 
+  color: var(--text-main); 
+  border-color: var(--border-color); 
+}
+.cancelBtn:hover { background: var(--bg-elevated); }
+
+.submitBtn { 
+  background: linear-gradient(to top right, var(--accent), #9333EA); 
+  color: #FFFFFF; 
+}
+.submitBtn:hover { opacity: 0.9; }

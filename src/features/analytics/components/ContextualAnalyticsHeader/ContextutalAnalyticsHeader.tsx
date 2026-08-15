@@ -31,7 +31,7 @@ export function ContextualAnalyticsHeader({
                   type="button"
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-                  Voltar para Analytics
+                  Voltar para Análises
                 </button>
               ) : (
                 <div className="flex items-center gap-2 h-full">
@@ -46,7 +46,7 @@ export function ContextualAnalyticsHeader({
             </div>
 
             <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight ${styles.title}`}>
-              {isOverview ? 'Analytics' : currentOption?.label}
+              {isOverview ? 'Visão Geral' : currentOption?.label}
             </h1>
 
             <p className={`text-sm hidden sm:block ${styles.subtitle}`}>{currentOption?.description}</p>

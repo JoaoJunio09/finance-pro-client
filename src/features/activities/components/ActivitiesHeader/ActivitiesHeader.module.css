@@ -1,0 +1,24 @@
+.bgBase { 
+  background-color: var(--bg-base); 
+}
+
+.borderBottomBase { 
+  border-bottom-color: var(--bg-base); 
+}
+
+.textMain { 
+  color: var(--text-main); 
+}
+
+.textAccent { 
+  color: var(--accent); 
+}
+
+.scrollbarHide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbarHide::-webkit-scrollbar {
+  display: none;
+}

@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import ActivitiesPresentation from './components/ActivitiesPresentation/ActivitiesPresentation';
+import { ActivitiesHeader, type ActivitySubpage } from './components/ActivitiesHeader/ActivitiesHeader';
 import { CalendarView } from './components/CalendarView/CalendarView';
-import { ContextualActivitiesHeader, type ActivitySubpage } from './components/ContextualActivitiesHeader/ContexttualActivitiesHeader';
 import { DayDetailsDrawer } from './components/DayDetailsDrawer/DayDetailsDrawer';
 import { SimpleListView } from './components/SimpleListView/SimpleListView';
 import useActivities from './hooks/useActivities';
@@ -22,18 +21,26 @@ function Activities() {
 
   const { activities, transactions, transactionsPending, recurrences } = useActivities();
 
+  const handleNewActivity = () => {
+    // Lógica para abrir modal ou nova rota
+    console.log('Nova atividade clicada!');
+  };
+
   return (
     <section className="w-full">
       <div className={`w-full ${styles.animateFadeInUp}`}>
-        <ContextualActivitiesHeader 
-          currentSubpage={currentSubpage} 
-          setSubpage={setCurrentSubpage}
-          currentMonth={currentMonth}
-          setCurrentMonth={setCurrentMonth}
-        />
+        <div className="w-full bg-gradient-to-br from-[#4C1D95] to-[#312E81] relative shadow-md overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+          
+          <ActivitiesHeader 
+            currentSubpage={currentSubpage} 
+            setSubpage={setCurrentSubpage}
+            currentMonth={currentMonth}
+            setCurrentMonth={setCurrentMonth}
+            onNewActivity={handleNewActivity}
+          />
+        </div>
 
-				<ActivitiesPresentation />
-				
         <main className={`relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10 ${styles.animateFadeInUp}`}>
           {currentSubpage === 'overview' && (
             <CalendarView 

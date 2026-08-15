@@ -1,0 +1,13 @@
+.headerContainer {
+  background: linear-gradient(to bottom right, #4C1D95, #312E81);
+}
+
+.patternOverlay {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+  mix-blend-mode: overlay;
+}
+
+.activeTabIndicator {
+  background-color: var(--bg-base);
+  border-bottom-color: var(--bg-base);
+}

@@ -1,0 +1,15 @@
+.summaryCard {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+.summaryCard:hover {
+  border-color: var(--border-hover);
+}
+.iconWrapper {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+}
+.iconWrapperPrimary {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
