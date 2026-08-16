@@ -1,14 +1,15 @@
 import { Eye, X } from 'lucide-react';
 import React from 'react';
 import { createPortal } from 'react-dom';
+import CustomSelect from '../../../../components/shared/CustomSelect/CustomSelect';
+import type { BankResponse } from '../../../../models/bank/BankResponse';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { WalletType } from '../../../../types/WalletType';
-import { AVAILABLE_BANKS } from '../../mocks/wallets';
 import type { WalletFormData } from '../../types/WalletFormData';
 import { WalletCard } from '../WalletCard/WalletCard';
 
 import styles from './WalletFormModal.module.css';
-import type { BankResponse } from '../../../../models/bank/BankResponse';
+import BankkBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 
 export const AVAILABLE_COLORS = [
   { id: 'purple', value: '#7C3AED' },
@@ -36,6 +37,7 @@ interface WalletFormModalProps {
   form: WalletFormData,
   selectColor: (color: string) => void,
   banks: BankResponse[];
+  onBankChange: (bank: BankResponse) => void;
 }
 
 function WalletFormModal({
@@ -45,7 +47,8 @@ function WalletFormModal({
   onSave,
   form,
   selectColor,
-  banks
+  banks,
+  onBankChange
 }: WalletFormModalProps) {
   if (!isOpen) return null;
 
@@ -61,6 +64,8 @@ function WalletFormModal({
   };
 
   if (!isOpen) return null;
+
+  const renderBank = (bank: BankResponse) => <BankkBrandMark bank={bank} size="md" />;
 
   return createPortal(
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
@@ -91,49 +96,57 @@ function WalletFormModal({
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className={`
-                  flex flex-col gap-2
-                  ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}
-                `}>
-                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Instituição/Banco</label>
-                  <select 
-                    id='bank' name="bank" value={form.bank?.name} onChange={handleOnChange}
-                    className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
-                  >
-                    {banks.map(b => <option key={b.id} value={b.gradient}>{b.name}</option>)}
-                  </select>
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Tipo</label>
-                  <select 
-                    id='type' name="type" value={form.type} onChange={handleOnChange}
-                    className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
-                  >
-                    <option value="CHECKING">Conta Corrente</option>
-                    <option value="SAVING">Conta Poupança</option>
-                    <option value="CREDIT_CARD">Cartão de Crédito</option>
-                    <option value="RESERVE">Reserva de Emergência</option>
-                    <option value="INVESTMENTS">Investimentos</option>
-                    <option value="PHYSICAL">Dinheiro Físico</option>
-                    <option value="OTHER">Outra</option>
-                  </select>
-                </div>
+              <div className="flex flex-col gap-2">
+                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Banco/Instituição</label>
+                <CustomSelect
+                  options={banks}
+                  value={form.bank}
+                  onChange={onBankChange}
+                  placeholder="Selecione..."
+                  renderOption={renderBank}
+                  renderSelected={renderBank}
+                />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Saldo Inicial (R$)</label>
-                <input 
-                  type="number" id='balance' name="balance" value={form.balance} onChange={handleOnChange}
-                  step="0.01"
-                  className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
-                />
+                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Tipo</label>
+                <select 
+                  id='type' name="type" value={form.type} onChange={handleOnChange}
+                  className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
+                >
+                  <option value="CHECKING">Conta Corrente</option>
+                  <option value="SAVING">Conta Poupança</option>
+                  <option value="CREDIT_CARD">Cartão de Crédito</option>
+                  <option value="RESERVE">Reserva de Emergência</option>
+                  <option value="INVESTMENTS">Investimentos</option>
+                  <option value="PHYSICAL">Dinheiro Físico</option>
+                  <option value="OTHER">Outra</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="flex flex-col gap-2">
+                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Saldo Inicial (R$)</label>
+                  <input 
+                    type="number" id='balance' name="balance" value={form.balance} onChange={handleOnChange}
+                    step="0.01"
+                    className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                  />
+                </div>
+                <div className={`flex flex-col gap-2 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}`}>
+                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
+                    Dígitos do Cartão
+                  </label>
+                  <input 
+                    type="text" id='cardDigits' name="cardDigits" value={form.cardDigits} onChange={handleOnChange} placeholder='1234'
+                    className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                  />
+                </div>
               </div>
 
               <div className={`
                 flex flex-col gap-2
-                 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? '' : 'pointer-events-none opacity-50'}
+                ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? '' : 'pointer-events-none opacity-50'}
               `}>
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Cor / Tema</label>
                 <div className="flex flex-wrap gap-2.5 mt-1">

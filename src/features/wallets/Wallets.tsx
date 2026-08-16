@@ -1,19 +1,19 @@
 import { Wallet as WalletIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import type { WalletResponse } from '../../models/wallet/WalletResponse';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfirmModal';
 import { FinancialSummary } from './components/FinancialSummay/FinancialSummary';
 import { WalletCard } from './components/WalletCard/WalletCard';
+import WalletFormModal from './components/WalletFormModal/WalletFormModal';
 import { WalletsHeader } from './components/WalletsHeader/WalletsHeader';
-import { MOCK_WALLETS } from './mocks/wallets';
+import useWallets from './hooks/useWallets';
 import type { Wallet, WalletFilter } from './types/wallet';
 
 import styles from './Wallets.module.css';
-import useWallets from './hooks/useWallets';
-import WalletFormModal from './components/WalletFormModal/WalletFormModal';
 
 export default function WalletsPage() {
   // Estado Principal
-  const [wallets2, setWallets] = useState<Wallet[]>(MOCK_WALLETS);
+  const [wallet, setWallet] = useState<WalletResponse | null>(null);
   const [currentFilter, setCurrentFilter] = useState<WalletFilter>('all');
   
   // Estados dos Modais
@@ -26,12 +26,11 @@ export default function WalletsPage() {
     banks,
     form,
     handleOnChange,
-    selectColor
-  } = useWallets();
+    onBankChange,
+    selectColor,
+    saveOrUpdate
+  } = useWallets(wallet);
 
-  console.log(form)
-
-  // Lógica de Filtro
   const filteredWallets = useMemo(() => {
     switch(currentFilter) {
       case 'accounts': return wallets.filter(w => w.type === 'CHECKING' || w.type === 'SAVING');
@@ -41,18 +40,7 @@ export default function WalletsPage() {
       case 'physical': return wallets.filter(w => w.type === 'PHYSICAL');
       default: return wallets;
     }
-  }, [wallets2, currentFilter]);
-
-  // Handlers (Prontos para integrar com API/Backend)
-  const handleSaveWallet = (savedWallet: Wallet) => {
-    if (editingWallet) {
-      // Atualiza carteira existente (PUT no backend futuro)
-      setWallets(prev => prev.map(w => w.id === savedWallet.id ? savedWallet : w));
-    } else {
-      // Adiciona nova carteira (POST no backend futuro)
-      setWallets(prev => [...prev, { ...savedWallet, id: `w_${Date.now()}` }]);
-    }
-  };
+  }, [wallets, currentFilter]);
 
   const handleDeleteWallet = () => {
     if (deleteWalletCandidate) {
@@ -119,11 +107,12 @@ export default function WalletsPage() {
       <WalletFormModal
         isOpen={isFormModalOpen} 
         onClose={() => setIsFormModalOpen(false)}
-        onSave={() => {}}
+        onSave={saveOrUpdate}
         form={form}
         handleOnChange={handleOnChange}
         selectColor={selectColor}
         banks={banks}
+        onBankChange={onBankChange}
       />
       
       <DeleteConfirmModal

@@ -1,13 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useBankService from "../../../hooks/useBankService";
 import useWalletService from "../../../hooks/useWalletService";
-import { formatCurrencyInput } from "../../../utils/FormatCurrency";
-import type { WalletFormData } from "../types/WalletFormData";
+import type { WalletRequest } from "../../../models/wallet/WalletRequest";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
+import { formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 import { AVAILABLE_COLORS } from "../components/WalletFormModal/WalletFormModal";
+import type { WalletFormData } from "../types/WalletFormData";
+import type { BankResponse } from "../../../models/bank/BankResponse";
 
-function useWallets() {
+function useWallets(
+	wallet: WalletResponse | null
+) {
 	const [form, setForm] = useState<WalletFormData>({
 		id: '',
 		name: '',
@@ -15,13 +20,14 @@ function useWallets() {
 		balance: '',
 		type: 'CHECKING',
 		color: AVAILABLE_COLORS[0].value,
-		cardDigits: '',
+		cardDigits: '1234',
 		goalId: '',
 		accountId : '',
-		bank: undefined
 	});
 
 	const { account } = useAccountContext();
+
+	const queryClient = useQueryClient();
 
 	const walletService = useWalletService();
 	const bankService = useBankService();
@@ -41,6 +47,20 @@ function useWallets() {
 		retry: 3
 	});
 
+	const walletMutationSave = useMutation({
+		mutationFn: (data: WalletRequest) => walletService.create(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+		}
+	});
+
+	const walletMutationUpdate = useMutation({
+		mutationFn: (data: WalletRequest) => walletService.update(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+		}
+	});
+
 	function handleOnChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
 		const { name, value } = e.target;
 
@@ -54,12 +74,35 @@ function useWallets() {
 		}
 	}
 
+	function onBankChange(bank: BankResponse) {
+		setForm((prev) => ({...prev, bank: bank }));
+	}
+
 	function selectColor(color: string) {
 		setForm((prev) => ({...prev, color: color }));
 	}
 
 	function saveOrUpdate() {
+		let isUpdate = wallet?.id;
 
+		const request:WalletRequest = {
+			id: form.id,
+			balance: formatCurrencyToAPI(form.balance),
+			name: form.name,
+			description: form.description,
+			cardDigits: form.cardDigits,
+			type: form.type,
+			color: form.color,
+			accountId: account?.id ?? '',
+			bankId: form.bank?.id
+		}
+
+		if (isUpdate) {
+			walletMutationUpdate.mutate(request);
+		}
+		else {
+			walletMutationSave.mutate(request);
+		}
 	}
 
 	return {
@@ -67,7 +110,9 @@ function useWallets() {
 		banks: queryBanks.data ?? [],
 		form,
 		handleOnChange,
-		selectColor
+		onBankChange,
+		selectColor,
+		saveOrUpdate
 	}
 }
 

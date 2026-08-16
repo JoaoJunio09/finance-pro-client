@@ -2,11 +2,13 @@ import { Briefcase } from 'lucide-react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
 import styles from './TxWalletBrandMark.module.css';
+import type { BankResponse } from '../../../../models/bank/BankResponse';
 
 type BrandMarkSize = 'sm' | 'md';
 
 interface TxWalletBrandMarkProps {
-  wallet: WalletResponse | undefined;
+  bank?: BankResponse;
+  wallet?: WalletResponse;
   size?: BrandMarkSize;
 }
 
@@ -45,20 +47,18 @@ const itauSizeTextClass: Record<BrandMarkSize, string> = {
 
 function ManualWalletMark({ wallet, size }: { wallet: WalletResponse | undefined; size: BrandMarkSize }) {
   if (size === 'sm') {
-    return <span className={styles.walletNameDefault}>{wallet?.name}</span>;
+    return <span className={styles.bankNameDefault}>{wallet?.name}</span>;
   }
 
   return (
     <div className="flex items-center gap-2">
-      <Briefcase size={18} className={styles.walletIconMuted} />
-      <span className={`font-medium text-sm ${styles.walletNameDefault}`}>{wallet?.name}</span>
+      <Briefcase size={18} className={styles.bankIconMuted} />
+      <span className={`font-medium text-sm ${styles.bankNameDefault}`}>{wallet?.name}</span>
     </div>
   );
 }
 
-export function TxWalletBrandMark({ wallet, size = 'md' }: TxWalletBrandMarkProps) {
-  const bank = wallet?.bank;
-
+function BankkBrandMark({ bank, wallet, size = 'md' }: TxWalletBrandMarkProps) {
   // Carteira manual: sem banco vinculado, ou banco explicitamente "Manual"
   if (!bank) {
     return <ManualWalletMark wallet={wallet} size={size} />;
@@ -84,4 +84,4 @@ export function TxWalletBrandMark({ wallet, size = 'md' }: TxWalletBrandMarkProp
   );
 }
 
-export default TxWalletBrandMark;
+export default BankkBrandMark;

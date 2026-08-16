@@ -54,7 +54,7 @@ export function TransactionForm({
     </div>
   );
 
-  const renderWallet = (wallet: WalletResponse) => <TxWalletBrandMark wallet={wallet} size="md" />;
+  const renderWallet = (wallet: WalletResponse) => <TxWalletBrandMark bank={wallet.bank} size="md" />;
 
   return (
     <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">
