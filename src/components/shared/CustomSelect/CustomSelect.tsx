@@ -5,6 +5,7 @@ import styles from './CustomSelect.module.css';
 
 interface SelectOption {
   id: string;
+  name: string;
 }
 
 interface CustomSelectProps<T extends SelectOption> {
@@ -37,8 +38,6 @@ export function CustomSelect<T extends SelectOption>({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Compara por id, não por referência: value e options podem vir
-  // de fetches diferentes (objetos com o mesmo id, instâncias distintas)
   const selectedOption = options.find((opt) => opt.id === value?.id);
 
   return (
@@ -68,7 +67,10 @@ export function CustomSelect<T extends SelectOption>({
                 value?.id === opt.id ? styles.optionSelected : ''
               }`}
             >
-              {renderOption(opt)}
+              <div className='flex items-center justify-between gap-2 truncate'>
+                <p className='truncate'>{opt.name}</p>
+                {renderOption(opt)}
+              </div>
               {value?.id === opt.id && <Check size={16} className={styles.checkIcon} />}
             </button>
           ))}

@@ -1,8 +1,8 @@
 import { Briefcase } from 'lucide-react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
-import styles from './TxWalletBrandMark.module.css';
 import type { BankResponse } from '../../../../models/bank/BankResponse';
+import styles from './TxWalletBrandMark.module.css';
 
 type BrandMarkSize = 'sm' | 'md';
 
