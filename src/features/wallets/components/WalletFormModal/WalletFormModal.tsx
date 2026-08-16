@@ -224,7 +224,7 @@ function WalletFormModal({
         </div>
       </div>
     </div>,
-    document.body // Anexa o modal diretamente no body da página
+    document.body
   );
 };
 

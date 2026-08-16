@@ -104,7 +104,7 @@ function useWallets(
 		if (name === 'type') {
 			if (value === 'PHYSICAL' || value === 'OTHER') {
 				setForm((prev) => ({...prev, bank: undefined }));
-				setForm((prev) => ({...prev, cardDigits: '' }));
+				setForm((prev) => ({...prev, cardDigits: undefined }));
 			} else {
 				setForm((prev) => ({...prev, color: '' }));
 			}
@@ -128,12 +128,14 @@ function useWallets(
 			balance: formatCurrencyToAPI(form.balance),
 			name: form.name,
 			description: form.description,
-			cardDigits: form.cardDigits,
+			cardDigits: form.cardDigits ?? null,
 			type: form.type,
 			color: form.color ?? form.bank?.gradient,
 			accountId: account?.id ?? '',
-			bankId: form.bank?.id
+			bankId: form.bank?.id ?? null
 		}
+
+		console.log(request)
 
 		if (isUpdate) {
 			walletMutationUpdate.mutate(request);

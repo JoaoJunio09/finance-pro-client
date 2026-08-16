@@ -3,6 +3,7 @@ import React from 'react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
 import styles from './DeleteConfirmModal.module.css';
+import { createPortal } from 'react-dom';
 
 interface Props {
   isOpen: boolean;
@@ -14,7 +15,7 @@ interface Props {
 export const DeleteConfirmModal: React.FC<Props> = ({ isOpen, wallet, onClose, onConfirm }) => {
   if (!isOpen || !wallet) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[65] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       
@@ -37,6 +38,7 @@ export const DeleteConfirmModal: React.FC<Props> = ({ isOpen, wallet, onClose, o
           </button>
         </div>
       </div>
-    </div>
-  );
+    </div>,
+    document.body
+  )
 };

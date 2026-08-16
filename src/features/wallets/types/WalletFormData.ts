@@ -6,7 +6,7 @@ export interface WalletFormData {
 	name: string;
 	description: string;
 	balance: string;
-	cardDigits: string;
+	cardDigits?: string;
 	type: WalletType;
 	color?: string;
 	goalId?: string;
