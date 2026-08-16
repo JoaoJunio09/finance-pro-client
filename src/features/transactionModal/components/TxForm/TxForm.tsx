@@ -138,6 +138,7 @@ export function TransactionForm({
               placeholder="Selecione..."
               renderOption={renderWallet}
               renderSelected={renderWallet}
+              isViewName={true}
             />
           </div>
         </div>

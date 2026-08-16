@@ -108,6 +108,7 @@ function WalletFormModal({
                   placeholder="Selecione..."
                   renderOption={renderBank}
                   renderSelected={renderBank}
+                  isViewName={true}
                 />
               </div>
 

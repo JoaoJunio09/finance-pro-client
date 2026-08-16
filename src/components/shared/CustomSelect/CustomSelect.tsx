@@ -15,6 +15,7 @@ interface CustomSelectProps<T extends SelectOption> {
   placeholder: string;
   renderOption: (option: T) => ReactNode;
   renderSelected: (option: T) => ReactNode;
+  isViewName?: boolean;
 }
 
 export function CustomSelect<T extends SelectOption>({
@@ -24,6 +25,7 @@ export function CustomSelect<T extends SelectOption>({
   placeholder,
   renderOption,
   renderSelected,
+  isViewName = false
 }: CustomSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ export function CustomSelect<T extends SelectOption>({
               }`}
             >
               <div className='flex items-center justify-between gap-2 truncate'>
-                <p className='truncate'>{opt.name}</p>
+                {isViewName && <p className='truncate'>{opt.name}</p>}
                 {renderOption(opt)}
               </div>
               {value?.id === opt.id && <Check size={16} className={styles.checkIcon} />}
