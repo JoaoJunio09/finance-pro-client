@@ -29,7 +29,7 @@ export function WalletCard({ wallet, showBalance }: WalletCardProps) {
         isTextDark ? styles.cardSurfaceVariant : styles.cardBrandVariant
       }`}
       style={{
-        background: wallet.bank.gradient
+        background: wallet.color ?? wallet.bank?.gradient
       }}
     >
       {/* Brilho decorativo suave para imitar o material de um cartão */}

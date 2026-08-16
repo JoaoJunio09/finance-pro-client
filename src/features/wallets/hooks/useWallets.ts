@@ -1,18 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useBankService from "../../../hooks/useBankService";
 import useWalletService from "../../../hooks/useWalletService";
+import type { BankResponse } from "../../../models/bank/BankResponse";
 import type { WalletRequest } from "../../../models/wallet/WalletRequest";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import { formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 import { AVAILABLE_COLORS } from "../components/WalletFormModal/WalletFormModal";
 import type { WalletFormData } from "../types/WalletFormData";
-import type { BankResponse } from "../../../models/bank/BankResponse";
+import showToast from "../../../components/ui/Toast/Toast";
+import type { WalletType } from "../../../types/WalletType";
 
 function useWallets(
-	wallet: WalletResponse | null
+	wallet: WalletResponse | null,
+	onClose: () => void
 ) {
+	const { account } = useAccountContext();
+
 	const [form, setForm] = useState<WalletFormData>({
 		id: '',
 		name: '',
@@ -22,10 +27,9 @@ function useWallets(
 		color: AVAILABLE_COLORS[0].value,
 		cardDigits: '1234',
 		goalId: '',
-		accountId : '',
+		accountId: account?.id ?? '',
+		bank: undefined
 	});
-
-	const { account } = useAccountContext();
 
 	const queryClient = useQueryClient();
 
@@ -51,6 +55,13 @@ function useWallets(
 		mutationFn: (data: WalletRequest) => walletService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+			showToast({
+				title: 'Adiconado!',
+				message: 'Carteira/Cartão adicionado com sucesso',
+				type: 'success'
+			});
+			clearForm();
+			onClose();
 		}
 	});
 
@@ -58,6 +69,27 @@ function useWallets(
 		mutationFn: (data: WalletRequest) => walletService.update(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+			showToast({
+				title: 'Atualizado!',
+				message: 'Carteira/Cartão atualizado com sucesso',
+				type: 'success'
+			});
+			clearForm();
+			onClose();
+		}
+	});
+
+	const walletMutationDelete = useMutation({
+		mutationFn: (id: string) => walletService.delete(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+			showToast({
+				title: 'Excluído!',
+				message: 'Carteira/Cartão excluído com sucesso',
+				type: 'success'
+			});
+			clearForm();
+			onClose();
 		}
 	});
 
@@ -69,13 +101,19 @@ function useWallets(
 			[name]: value
 		}));
 
-		if (name === 'bank' && value) {
-			setForm((prev) => ({...prev, color: value}));
+		if (name === 'type') {
+			if (value === 'PHYSICAL' || value === 'OTHER') {
+				setForm((prev) => ({...prev, bank: undefined }));
+				setForm((prev) => ({...prev, cardDigits: '' }));
+			} else {
+				setForm((prev) => ({...prev, color: '' }));
+			}
 		}
 	}
 
 	function onBankChange(bank: BankResponse) {
 		setForm((prev) => ({...prev, bank: bank }));
+		setForm((prev) => ({...prev, color: bank.gradient }));
 	}
 
 	function selectColor(color: string) {
@@ -92,7 +130,7 @@ function useWallets(
 			description: form.description,
 			cardDigits: form.cardDigits,
 			type: form.type,
-			color: form.color,
+			color: form.color ?? form.bank?.gradient,
 			accountId: account?.id ?? '',
 			bankId: form.bank?.id
 		}
@@ -105,6 +143,44 @@ function useWallets(
 		}
 	}
 
+	function deleteWallet(wallet: WalletResponse) {
+		walletMutationDelete.mutate(wallet.id);
+	}
+
+	function clearForm() {
+		setForm({
+			id: '',
+			name: '',
+			description: '',
+			balance: '',
+			type: 'CHECKING',
+			color: '',
+			cardDigits: '1234',
+			goalId: '',
+			accountId: account?.id ?? '',
+			bank: undefined
+		});
+	}
+
+	useEffect(() => {
+		if (!wallet) {
+			clearForm();
+			return;
+		}
+
+		setForm({
+			id: wallet.id,
+			name: wallet.name,
+			description: wallet.description,
+			balance: wallet.balance.toString(),
+			cardDigits: wallet.cardDigits,
+			type: wallet.type,
+			color: wallet.color,
+			bank: wallet.bank,
+			accountId: account?.id ?? ''
+		});
+	}, [wallet]);
+
 	return {
 		wallets: queryWallets.data ?? [],
 		banks: queryBanks.data ?? [],
@@ -112,7 +188,8 @@ function useWallets(
 		handleOnChange,
 		onBankChange,
 		selectColor,
-		saveOrUpdate
+		saveOrUpdate,
+		deleteWallet
 	}
 }
 

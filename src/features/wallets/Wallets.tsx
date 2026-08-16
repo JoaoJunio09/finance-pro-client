@@ -7,20 +7,43 @@ import { WalletCard } from './components/WalletCard/WalletCard';
 import WalletFormModal from './components/WalletFormModal/WalletFormModal';
 import { WalletsHeader } from './components/WalletsHeader/WalletsHeader';
 import useWallets from './hooks/useWallets';
-import type { Wallet, WalletFilter } from './types/wallet';
+import type { WalletFilter } from './types/wallet';
 
 import styles from './Wallets.module.css';
 
 export default function WalletsPage() {
-  // Estado Principal
   const [wallet, setWallet] = useState<WalletResponse | null>(null);
+  const [walletDeleted, setWalletDeleted] = useState<WalletResponse | null>(null);
   const [currentFilter, setCurrentFilter] = useState<WalletFilter>('all');
   
-  // Estados dos Modais
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [editingWallet, setEditingWallet] = useState<Wallet | null>(null);
-  const [deleteWalletCandidate, setDeleteWalletCandidate] = useState<Wallet | null>(null);
 
+  const onClose = () => {
+    setWallet(null);
+    setWalletDeleted(null);
+    setIsFormModalOpen(false);
+  }
+
+  const handleDeleteWallet = () => {
+    if (!walletDeleted) return;
+    deleteWallet(walletDeleted);
+  }
+
+  const openEdit = (wallet: WalletResponse) => {
+    setWallet(wallet);
+    setIsFormModalOpen(true);
+  };
+
+  const openDelete = (wallet: WalletResponse) => {
+    setWalletDeleted(wallet);
+  };
+
+  const openAdd = () => {
+    setWallet(null);
+    setWalletDeleted(null);
+    setIsFormModalOpen(true);
+  };
+  
   const {
     wallets,
     banks,
@@ -28,8 +51,9 @@ export default function WalletsPage() {
     handleOnChange,
     onBankChange,
     selectColor,
-    saveOrUpdate
-  } = useWallets(wallet);
+    saveOrUpdate,
+    deleteWallet
+  } = useWallets(wallet, onClose);
 
   const filteredWallets = useMemo(() => {
     switch(currentFilter) {
@@ -42,44 +66,17 @@ export default function WalletsPage() {
     }
   }, [wallets, currentFilter]);
 
-  const handleDeleteWallet = () => {
-    if (deleteWalletCandidate) {
-      // Deleta carteira (DELETE no backend futuro)
-      setWallets(prev => prev.filter(w => w.id !== deleteWalletCandidate.id));
-    }
-  };
-
-  // Funções de abertura de modais
-  const openEdit = (wallet: Wallet) => {
-    setEditingWallet(wallet);
-    setIsFormModalOpen(true);
-  };
-
-  const openDelete = (wallet: Wallet) => {
-    setDeleteWalletCandidate(wallet);
-  };
-
-  const openAdd = () => {
-    setEditingWallet(null);
-    setIsFormModalOpen(true);
-  };
-
   return (
     <div className={`min-h-screen relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)] ${styles.fadeInUp}`}>
-      
-      {/* Header com Filtros e Botão Adicionar */}
       <WalletsHeader 
         currentFilter={currentFilter} 
         setFilter={setCurrentFilter}
         onAddWallet={openAdd}
       />
 
-      {/* Conteúdo Principal */}
-      <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12">
-        
+      <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12">        
         <FinancialSummary wallets={wallets} />
 
-        {/* Grid de Carteiras ou Estado Vazio */}
         {filteredWallets.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredWallets.map(wallet => (
@@ -88,6 +85,7 @@ export default function WalletsPage() {
                 wallet={wallet} 
                 onEdit={openEdit}
                 onDelete={openDelete}
+                isPreview={isFormModalOpen}
               />
             ))}
           </div>
@@ -106,8 +104,10 @@ export default function WalletsPage() {
 
       <WalletFormModal
         isOpen={isFormModalOpen} 
-        onClose={() => setIsFormModalOpen(false)}
+        onClose={onClose}
         onSave={saveOrUpdate}
+        onEdit={openEdit}
+        onDelete={openDelete}
         form={form}
         handleOnChange={handleOnChange}
         selectColor={selectColor}
@@ -116,9 +116,9 @@ export default function WalletsPage() {
       />
       
       <DeleteConfirmModal
-        isOpen={!!deleteWalletCandidate}
-        wallet={deleteWalletCandidate}
-        onClose={() => setDeleteWalletCandidate(null)}
+        isOpen={!!walletDeleted}
+        wallet={walletDeleted}
+        onClose={() => setWalletDeleted(null)}
         onConfirm={handleDeleteWallet}
       />
     </div>

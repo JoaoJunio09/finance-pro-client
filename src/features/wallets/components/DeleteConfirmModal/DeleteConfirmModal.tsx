@@ -1,12 +1,12 @@
-import React from 'react';
 import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
 import styles from './DeleteConfirmModal.module.css';
-import type { Wallet } from '../../types/wallet';
 
 interface Props {
   isOpen: boolean;
-  wallet: Wallet | null;
+  wallet: WalletResponse | null;
   onClose: () => void;
   onConfirm: () => void;
 }

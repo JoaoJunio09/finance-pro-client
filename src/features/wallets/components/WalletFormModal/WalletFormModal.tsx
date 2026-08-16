@@ -5,11 +5,11 @@ import CustomSelect from '../../../../components/shared/CustomSelect/CustomSelec
 import type { BankResponse } from '../../../../models/bank/BankResponse';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { WalletType } from '../../../../types/WalletType';
+import BankkBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 import type { WalletFormData } from '../../types/WalletFormData';
 import { WalletCard } from '../WalletCard/WalletCard';
 
 import styles from './WalletFormModal.module.css';
-import BankkBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 
 export const AVAILABLE_COLORS = [
   { id: 'purple', value: '#7C3AED' },
@@ -34,6 +34,8 @@ interface WalletFormModalProps {
   isOpen: boolean
   onClose: () => void;
   onSave: () => void;
+  onEdit: (wallet: WalletResponse) => void;
+  onDelete: (wallet: WalletResponse) => void;
   form: WalletFormData,
   selectColor: (color: string) => void,
   banks: BankResponse[];
@@ -45,6 +47,8 @@ function WalletFormModal({
   isOpen,
   onClose,
   onSave,
+  onEdit,
+  onDelete,
   form,
   selectColor,
   banks,
@@ -72,7 +76,6 @@ function WalletFormModal({
       <div className={`absolute inset-0 ${styles.modalBackdrop}`} onClick={onClose} />
       
       <div className="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-[1.5rem] shadow-2xl w-full max-w-[880px] max-h-[90dvh] lg:h-[600px] overflow-hidden flex flex-col lg:flex-row relative z-10 animate-scale-in">
-        {/* Contêiner restrito a max-h-[90vh] e com bordas arredondadas para manter o aspecto de modal no mobile */}
         <div className="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-[1.5rem] shadow-2xl w-full max-w-[880px] max-h-[95vh] lg:h-[600px] overflow-hidden flex flex-col lg:flex-row relative z-10 animate-scale-in">
           
           {/* Lado Esquerdo: Formulário (Ocupa o espaço restante e rola) */}
@@ -96,7 +99,7 @@ function WalletFormModal({
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className={`flex flex-col gap-2 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}`}>
                 <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Banco/Instituição</label>
                 <CustomSelect
                   options={banks}
@@ -187,7 +190,12 @@ function WalletFormModal({
 
             <div className="mt-auto mb-auto lg:mt-0 lg:mb-0 w-full flex justify-center">
               <div className="w-full">
-                <WalletCard wallet={previewWallet} isPreview={true} />
+                <WalletCard
+                  wallet={previewWallet}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  isPreview={true}
+                />
               </div>
             </div>
 
