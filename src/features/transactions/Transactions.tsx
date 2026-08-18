@@ -14,6 +14,7 @@ import type { ActiveTab, SortOption, Transaction } from './types/transaction';
 import { CATEGORIES, WALLETS } from './utils/transactionUtils';
 
 import styles from './Transactions.module.css';
+import useTransactions from './hooks/useTransactions';
 
 export default function TransactionsPage() {
   // Estado de Tema Global (Pode ser removido se você usar um Context Provider global)
@@ -107,6 +108,14 @@ export default function TransactionsPage() {
     if (selectedTx?.id === deletingTx.id) setSelectedTx(null);
   };
 
+  const {
+    transactions: aa,
+    summaryCard
+  } = useTransactions();
+
+  console.log(aa);
+  console.log(summaryCard);
+
   return (
     <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`} data-theme={theme}>
       
@@ -135,7 +144,7 @@ export default function TransactionsPage() {
       {/* Conteúdo Principal */}
       <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up">
         
-        <SummaryCards transactions={transactions} />
+        <SummaryCards summary={summaryCard} />
 
         <TransactionsToolbar
           searchQuery={searchQuery}

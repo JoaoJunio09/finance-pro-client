@@ -4,36 +4,13 @@ import type { Transaction } from '../../types/transaction';
 import { formatCurrency } from '../../utils/transactionUtils';
 
 import styles from './SummaryCards.module.css';
+import type { SummaryCard } from '../../types/SummaryCard';
 
 interface SummaryCardsProps {
-  transactions: Transaction[];
+  summary: SummaryCard;
 }
 
-export const SummaryCards = ({ transactions }: SummaryCardsProps) => {
-  const summary = useMemo(() => {
-    let totalIncome = 0;
-    let totalExpense = 0;
-    let pendingCount = 0;
-    let pendingTotal = 0;
-
-    transactions.forEach((tx) => {
-      if (tx.type === 'income') {
-        totalIncome += tx.amount;
-      } else {
-        totalExpense += tx.amount;
-      }
-
-      if (tx.status === 'pending') {
-        pendingCount += 1;
-        pendingTotal += tx.amount;
-      }
-    });
-
-    const netBalance = totalIncome - totalExpense;
-
-    return { totalIncome, totalExpense, netBalance, pendingCount, pendingTotal };
-  }, [transactions]);
-
+export const SummaryCards = ({ summary }: SummaryCardsProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       
@@ -46,7 +23,7 @@ export const SummaryCards = ({ transactions }: SummaryCardsProps) => {
           </div>
         </div>
         <div className={`text-2xl font-bold ${styles.textIncome}`}>
-          {formatCurrency(summary.totalIncome)}
+          {formatCurrency(summary.income)}
         </div>
         <p className={`text-xs mt-1 flex items-center gap-1 ${styles.textMuted}`}>
           <TrendingUp size={12} className={styles.textIncome} /> Entradas confirmadas no mês
@@ -62,7 +39,7 @@ export const SummaryCards = ({ transactions }: SummaryCardsProps) => {
           </div>
         </div>
         <div className={`text-2xl font-bold ${styles.textExpense}`}>
-          {formatCurrency(summary.totalExpense)}
+          {formatCurrency(summary.expense)}
         </div>
         <p className={`text-xs mt-1 flex items-center gap-1 ${styles.textMuted}`}>
           <TrendingDown size={12} className={styles.textExpense} /> Saídas acumuladas no mês
@@ -77,8 +54,8 @@ export const SummaryCards = ({ transactions }: SummaryCardsProps) => {
             <Wallet size={18} />
           </div>
         </div>
-        <div className={`text-2xl font-bold ${summary.netBalance >= 0 ? styles.textMain : styles.textExpense}`}>
-          {formatCurrency(summary.netBalance)}
+        <div className={`text-2xl font-bold ${summary.netIncome >= 0 ? styles.textMain : styles.textExpense}`}>
+          {formatCurrency(summary.netIncome)}
         </div>
         <p className={`text-xs mt-1 ${styles.textMuted}`}>
           Balanço mensal atual
