@@ -1,10 +1,8 @@
 import { ArrowDownRight, ArrowUpRight, Clock, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
-import { useMemo } from 'react';
-import type { Transaction } from '../../types/transaction';
 import { formatCurrency } from '../../utils/transactionUtils';
 
-import styles from './SummaryCards.module.css';
 import type { SummaryCard } from '../../types/SummaryCard';
+import styles from './SummaryCards.module.css';
 
 interface SummaryCardsProps {
   summary: SummaryCard;

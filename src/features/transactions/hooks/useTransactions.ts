@@ -31,30 +31,20 @@ function useTransactions() {
 	const transactions = useMemo(() => queryTransactions.data ?? [], [queryTransactions.data]);
 
 	const summaryCard = useMemo<SummaryCard>(() => {
-    let totalIncome = 0;
-    let totalExpense = 0;
     let pendingCount = 0;
     let pendingTotal = 0;
 
     transactions.forEach((tx) => {
-      if (tx.type === 'CREDIT') {
-        totalIncome += tx.amount;
-      } else {
-        totalExpense += tx.amount;
-      }
-
       if (tx.status === 'PENDING') {
         pendingCount += 1;
         pendingTotal += tx.amount;
       }
     });
 
-    const netBalance = totalIncome - totalExpense;
-
     return {
-			income: totalIncome,
-			expense: totalExpense,
-			netIncome: netBalance,
+			income: account?.income ?? 0,
+			expense: account?.expenses ?? 0,
+			netIncome: account?.netIncome ?? 0,
 			pendingCount: pendingCount,
 			pendingTotal: pendingTotal
 		}

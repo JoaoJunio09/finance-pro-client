@@ -66,7 +66,7 @@ function useTransactionModal(
 	const txMutationSave = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.create(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+			queryClient.invalidateQueries({ queryKey: ['dashboard', 'transactions'] });
 			showToast({
 				title: 'Adicionado',
 				message: 'Transação adicionada com sucesso ✅',
@@ -79,7 +79,7 @@ function useTransactionModal(
 	const txMutationUpdate = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.update(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+			queryClient.invalidateQueries({ queryKey: ['dashboard', 'transactions'] });
 			showToast({
 				title: 'Atualizado',
 				message: 'Transação atualizada com sucesso ✅',

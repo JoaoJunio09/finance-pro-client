@@ -94,7 +94,7 @@ export default function TransactionsPage() {
   // };
 
   return (
-    <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`}>
+    <div className={`h-full w-full transition-colors duration-300 ${styles.pageContainer}`}>
       <div className={`w-full relative shadow-md overflow-hidden ${styles.headerBackground}`}>
         <div className={`absolute inset-0 opacity-20 pointer-events-none ${styles.patternOverlay}`}></div>
         <TransactionsHeader

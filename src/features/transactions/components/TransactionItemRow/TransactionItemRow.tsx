@@ -150,7 +150,7 @@ export const TransactionItemRow = ({
         <div className="flex flex-col gap-2 mt-1">
           <div className={`flex items-center justify-between text-xs ${styles.textMuted}`}>
             <span className="flex items-center gap-1.5 truncate pr-2">
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: transaction.wallet.bank?.gradient }} />
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: transaction.wallet.bank ? transaction.wallet.bank?.gradient : styles.textMuted }} />
               <span className="truncate">{transaction.wallet.name}</span>
             </span>
             <span className="shrink-0 flex items-center gap-1.5">
