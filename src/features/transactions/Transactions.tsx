@@ -19,7 +19,6 @@ export default function TransactionsPage() {
   // Estados de Dados e Filtros
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 5, 1));
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [walletFilter, setWalletFilter] = useState('all');
@@ -35,19 +34,19 @@ export default function TransactionsPage() {
 
   const {
     transactions,
-    summaryCard
+    summaryCard,
+    search,
+    setSearch
   } = useTransactions();
 
   // Lógica de Filtro e Ordenação
   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
-      // if (searchQuery.trim() !== '') {
-      //   const query = searchQuery.toLowerCase();
-      //   const matchesDesc = tx.description.toLowerCase().includes(query);
-      //   const matchesCategory = CATEGORIES[tx.categoryId]?.name.toLowerCase().includes(query);
-      //   const matchesWallet = WALLETS[tx.walletId]?.name.toLowerCase().includes(query);
-      //   if (!matchesDesc && !matchesCategory && !matchesWallet) return false;
-      // }
+      if (search.trim() !== '') {
+        const query = search.toLowerCase();
+        const matchesDesc = tx.description.toLowerCase().includes(query);
+        if (!matchesDesc) return false;
+      }
 
       if (activeTab === 'income' && tx.type !== 'CREDIT') return false;
       if (activeTab === 'expense' && tx.type !== 'DEBIT') return false;
@@ -55,8 +54,6 @@ export default function TransactionsPage() {
 
       if (typeFilter !== 'all' && tx.type !== typeFilter) return false;
       if (statusFilter !== 'all' && tx.status !== statusFilter) return false;
-      // if (walletFilter !== 'all' && tx.wallet.id !== walletFilter) return false;
-      // if (categoryFilter !== 'all' && tx.category.id !== categoryFilter) return false;
 
       return true;
     }).sort((a, b) => {
@@ -66,18 +63,18 @@ export default function TransactionsPage() {
       if (sortBy === 'lowest') return a.amount - b.amount;
       return 0;
     });
-  }, [transactions, activeTab, typeFilter, statusFilter]);
+  }, [transactions, activeTab, typeFilter, statusFilter, search]);
 
   // Handlers
-  const handleResetFilters = () => {
-    setSearchQuery('');
-    setTypeFilter('all');
-    setStatusFilter('all');
-    setWalletFilter('all');
-    setCategoryFilter('all');
-    setSortBy('recent');
-    setActiveTab('all');
-  };
+  // const handleResetFilters = () => {
+  //   setSearchQuery('');
+  //   setTypeFilter('all');
+  //   setStatusFilter('all');
+  //   setWalletFilter('all');
+  //   setCategoryFilter('all');
+  //   setSortBy('recent');
+  //   setActiveTab('all');
+  // };
 
   // const handleSaveTransaction = (data: Omit<Transaction, 'id'>) => {
   //   if (editingTx) {
@@ -110,8 +107,8 @@ export default function TransactionsPage() {
         <SummaryCards summary={summaryCard} />
 
         <TransactionsToolbar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          searchQuery={search}
+          setSearchQuery={setSearch}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
           statusFilter={statusFilter}
@@ -122,7 +119,7 @@ export default function TransactionsPage() {
           setCategoryFilter={setCategoryFilter}
           sortBy={sortBy}
           setSortBy={setSortBy}
-          onResetFilters={handleResetFilters}
+          onResetFilters={() => {}}
           onOpenFilters={() => setIsFilterDrawerOpen(true)}
         />
 
@@ -195,7 +192,7 @@ export default function TransactionsPage() {
           setCategoryFilter(filters.category);
           setSortBy(filters.sort);
         }}
-        onClearFilters={handleResetFilters}
+        onClearFilters={() => {}}
       />
 
       <TransactionDetailsDrawer

@@ -10,6 +10,8 @@ function useTransactions() {
 	const [month, setMonth] = useState(date.getMonth()+1);
 	const [year, setYear] = useState(date.getFullYear());
 
+	const [search, setSearch] = useState('');
+
 	const { account } = useAccountContext();
 
 	const transactionService = useTransactionService(); 
@@ -52,7 +54,9 @@ function useTransactions() {
 
 	return {
 		transactions,
-		summaryCard
+		summaryCard,
+		search,
+		setSearch
 	}
 }
 
