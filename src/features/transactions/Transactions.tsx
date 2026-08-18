@@ -118,16 +118,6 @@ export default function TransactionsPage() {
 
   return (
     <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`} data-theme={theme}>
-      
-      {/* Switch de Tema (Opcional, caso não esteja no Header global da sua aplicação) */}
-      <div className="fixed top-4 right-4 z-[100]">
-        <button
-          onClick={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
-          className={`p-2.5 backdrop-blur-md rounded-full shadow-lg transition-transform hover:scale-105 ${styles.themeToggle}`}
-        >
-          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
-      </div>
 
       {/* Header Area */}
       <div className={`w-full relative shadow-md overflow-hidden ${styles.headerBackground}`}>
@@ -180,11 +170,12 @@ export default function TransactionsPage() {
             <EmptyState onAdd={() => { setEditingTx(null); setIsModalOpen(true); }} />
           ) : (
             <div className="flex flex-col gap-3">
-              {paginatedTransactions.map((tx) => (
+              {aa.map((tx) => (
                 <TransactionItemRow
                   key={tx.id}
                   transaction={tx}
-                  onSelect={(transaction) => setSelectedTx(transaction)}
+                  onSelect={() => {}}
+                  onConfirm={() => {}}
                 />
               ))}
             </div>
