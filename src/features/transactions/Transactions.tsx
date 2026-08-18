@@ -22,7 +22,6 @@ export default function TransactionsPage() {
   
   // Estados de Dados e Filtros
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 5, 1));
-  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -42,35 +41,40 @@ export default function TransactionsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  const {
+    transactions,
+    summaryCard
+  } = useTransactions();
+
   // Lógica de Filtro e Ordenação
   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        const matchesDesc = tx.description.toLowerCase().includes(query);
-        const matchesCategory = CATEGORIES[tx.categoryId]?.name.toLowerCase().includes(query);
-        const matchesWallet = WALLETS[tx.walletId]?.name.toLowerCase().includes(query);
-        if (!matchesDesc && !matchesCategory && !matchesWallet) return false;
-      }
+      // if (searchQuery.trim() !== '') {
+      //   const query = searchQuery.toLowerCase();
+      //   const matchesDesc = tx.description.toLowerCase().includes(query);
+      //   const matchesCategory = CATEGORIES[tx.categoryId]?.name.toLowerCase().includes(query);
+      //   const matchesWallet = WALLETS[tx.walletId]?.name.toLowerCase().includes(query);
+      //   if (!matchesDesc && !matchesCategory && !matchesWallet) return false;
+      // }
 
-      if (activeTab === 'income' && tx.type !== 'income') return false;
-      if (activeTab === 'expense' && tx.type !== 'expense') return false;
-      if (activeTab === 'pending' && tx.status !== 'pending') return false;
+      if (activeTab === 'income' && tx.type !== 'CREDIT') return false;
+      if (activeTab === 'expense' && tx.type !== 'DEBIT') return false;
+      if (activeTab === 'pending' && tx.status !== 'PENDING') return false;
 
       if (typeFilter !== 'all' && tx.type !== typeFilter) return false;
       if (statusFilter !== 'all' && tx.status !== statusFilter) return false;
-      if (walletFilter !== 'all' && tx.walletId !== walletFilter) return false;
-      if (categoryFilter !== 'all' && tx.categoryId !== categoryFilter) return false;
+      // if (walletFilter !== 'all' && tx.wallet.id !== walletFilter) return false;
+      // if (categoryFilter !== 'all' && tx.category.id !== categoryFilter) return false;
 
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'recent') return new Date(b.date).getTime() - new Date(a.date).getTime();
-      if (sortBy === 'oldest') return new Date(a.date).getTime() - new Date(b.date).getTime();
+      if (sortBy === 'recent') return new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime();
+      if (sortBy === 'oldest') return new Date(a.registeredAt).getTime() - new Date(b.registeredAt).getTime();
       if (sortBy === 'highest') return b.amount - a.amount;
       if (sortBy === 'lowest') return a.amount - b.amount;
       return 0;
     });
-  }, [transactions, searchQuery, activeTab, typeFilter, statusFilter, walletFilter, categoryFilter, sortBy]);
+  }, [transactions, activeTab, typeFilter, statusFilter]);
 
   // Paginação Lógica
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage) || 1;
@@ -94,27 +98,19 @@ export default function TransactionsPage() {
     setActiveTab('all');
   };
 
-  const handleSaveTransaction = (data: Omit<Transaction, 'id'>) => {
-    if (editingTx) {
-      setTransactions(prev => prev.map(t => t.id === editingTx.id ? { ...data, id: editingTx.id } : t));
-    } else {
-      setTransactions(prev => [{ ...data, id: `tx-${Date.now()}` }, ...prev]);
-    }
-  };
+  // const handleSaveTransaction = (data: Omit<Transaction, 'id'>) => {
+  //   if (editingTx) {
+  //     setTransactions(prev => prev.map(t => t.id === editingTx.id ? { ...data, id: editingTx.id } : t));
+  //   } else {
+  //     setTransactions(prev => [{ ...data, id: `tx-${Date.now()}` }, ...prev]);
+  //   }
+  // };
 
-  const handleDeleteConfirm = () => {
-    if (!deletingTx) return;
-    setTransactions(prev => prev.filter(t => t.id !== deletingTx.id));
-    if (selectedTx?.id === deletingTx.id) setSelectedTx(null);
-  };
-
-  const {
-    transactions: aa,
-    summaryCard
-  } = useTransactions();
-
-  console.log(aa);
-  console.log(summaryCard);
+  // const handleDeleteConfirm = () => {
+  //   if (!deletingTx) return;
+  //   setTransactions(prev => prev.filter(t => t.id !== deletingTx.id));
+  //   if (selectedTx?.id === deletingTx.id) setSelectedTx(null);
+  // };
 
   return (
     <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`} data-theme={theme}>
@@ -170,7 +166,7 @@ export default function TransactionsPage() {
             <EmptyState onAdd={() => { setEditingTx(null); setIsModalOpen(true); }} />
           ) : (
             <div className="flex flex-col gap-3">
-              {aa.map((tx) => (
+              {filteredTransactions.map((tx) => (
                 <TransactionItemRow
                   key={tx.id}
                   transaction={tx}
@@ -239,14 +235,14 @@ export default function TransactionsPage() {
       <TransactionModal
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setEditingTx(null); }}
-        onSave={handleSaveTransaction}
+        onSave={() => {}}
         initialData={editingTx}
       />
 
       <DeleteConfirmModal
         isOpen={!!deletingTx}
         onClose={() => setDeletingTx(null)}
-        onConfirm={handleDeleteConfirm}
+        onConfirm={() => {}}
         transaction={deletingTx}
       />
 
