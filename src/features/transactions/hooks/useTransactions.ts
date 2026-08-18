@@ -3,13 +3,16 @@ import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useTransactionService from "../../../hooks/useTransactionService";
 import type { SummaryCard } from "../types/SummaryCard";
+import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
 
 function useTransactions() {
-	const date = new Date();
+	const now = new Date();
+	const month = now.getMonth();
+	const year = now.getFullYear();
+	
+	const [currentMonth, setCurrentMonth] = useState(new Date(year, month, 1));
 
-	const [month, setMonth] = useState(date.getMonth()+1);
-	const [year, setYear] = useState(date.getFullYear());
-
+	const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
 	const [search, setSearch] = useState('');
 
 	const { account } = useAccountContext();
@@ -20,11 +23,12 @@ function useTransactions() {
 		queryKey: [
 			'transactions',
 			account?.id,
-			month,
-			year
+			currentMonth
 		],
 		queryFn: () => transactionService.getAll({
-			accountId: account?.id
+			accountId: account?.id,
+			month: currentMonth.getMonth()+1,
+			year: currentMonth.getFullYear()
 		}),
 		retry: 3,
 		placeholderData: keepPreviousData
@@ -55,6 +59,10 @@ function useTransactions() {
 	return {
 		transactions,
 		summaryCard,
+		currentMonth,
+		setCurrentMonth,
+		selectedTx,
+		setSelectedTx,
 		search,
 		setSearch
 	}

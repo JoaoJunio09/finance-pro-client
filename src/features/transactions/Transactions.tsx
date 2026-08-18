@@ -13,11 +13,10 @@ import type { ActiveTab, SortOption, Transaction } from './types/transaction';
 
 import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 
 export default function TransactionsPage() {  
   // Estados de Dados e Filtros
-  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 5, 1));
+  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -26,7 +25,7 @@ export default function TransactionsPage() {
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
   // Estados de UI (Modais e Drawers)
-  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
@@ -35,11 +34,14 @@ export default function TransactionsPage() {
   const {
     transactions,
     summaryCard,
+    currentMonth,
+    setCurrentMonth,
+    selectedTx,
+    setSelectedTx,
     search,
     setSearch
   } = useTransactions();
 
-  // Lógica de Filtro e Ordenação
   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
       if (search.trim() !== '') {
