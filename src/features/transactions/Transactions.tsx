@@ -1,5 +1,5 @@
-import { ChevronLeft, ChevronRight, FileText, Moon, Sun } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { FileText } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfirmModal';
 import { EmptyState } from './components/EmptyState/EmptyState';
 import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
@@ -9,17 +9,13 @@ import { TransactionItemRow } from './components/TransactionItemRow/TransactionI
 import { TransactionModal } from './components/TransactionModal/TransactionModal';
 import { TransactionsHeader } from './components/TransactionsHeader/TransactionsHeader';
 import { TransactionsToolbar } from './components/TransactionsToolbar/TransactionsToolbar';
-import { INITIAL_TRANSACTIONS } from './mocks/transactions';
 import type { ActiveTab, SortOption, Transaction } from './types/transaction';
-import { CATEGORIES, WALLETS } from './utils/transactionUtils';
 
 import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 
-export default function TransactionsPage() {
-  // Estado de Tema Global (Pode ser removido se você usar um Context Provider global)
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  
+export default function TransactionsPage() {  
   // Estados de Dados e Filtros
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 5, 1));
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
@@ -31,15 +27,11 @@ export default function TransactionsPage() {
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
   // Estados de UI (Modais e Drawers)
-  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [deletingTx, setDeletingTx] = useState<Transaction | null>(null);
-
-  // Paginação
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
 
   const {
     transactions,
@@ -76,17 +68,6 @@ export default function TransactionsPage() {
     });
   }, [transactions, activeTab, typeFilter, statusFilter]);
 
-  // Paginação Lógica
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage) || 1;
-  const paginatedTransactions = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredTransactions.slice(start, start + itemsPerPage);
-  }, [filteredTransactions, currentPage]);
-
-  useEffect(() => {
-    setCurrentPage(1); // Reseta a página sempre que os filtros mudam
-  }, [searchQuery, activeTab, typeFilter, statusFilter, walletFilter, categoryFilter, sortBy]);
-
   // Handlers
   const handleResetFilters = () => {
     setSearchQuery('');
@@ -113,9 +94,7 @@ export default function TransactionsPage() {
   // };
 
   return (
-    <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`} data-theme={theme}>
-
-      {/* Header Area */}
+    <div className={`min-h-screen relative transition-colors duration-300 ${styles.pageContainer}`}>
       <div className={`w-full relative shadow-md overflow-hidden ${styles.headerBackground}`}>
         <div className={`absolute inset-0 opacity-20 pointer-events-none ${styles.patternOverlay}`}></div>
         <TransactionsHeader
@@ -127,9 +106,7 @@ export default function TransactionsPage() {
         />
       </div>
 
-      {/* Conteúdo Principal */}
       <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up">
-        
         <SummaryCards summary={summaryCard} />
 
         <TransactionsToolbar
@@ -149,9 +126,7 @@ export default function TransactionsPage() {
           onOpenFilters={() => setIsFilterDrawerOpen(true)}
         />
 
-        {/* Listagem de Transações */}
-        <div className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}>
-          
+        <div className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}>          
           <div className={`flex items-center justify-between mb-4 pb-3 ${styles.listHeader}`}>
             <h2 className={`text-base font-bold flex items-center gap-2 ${styles.listTitle}`}>
               <FileText size={18} className={styles.accentIcon} />
@@ -162,7 +137,7 @@ export default function TransactionsPage() {
             </span>
           </div>
 
-          {paginatedTransactions.length === 0 ? (
+          {filteredTransactions.length === 0 ? (
             <EmptyState onAdd={() => { setEditingTx(null); setIsModalOpen(true); }} />
           ) : (
             <div className="flex flex-col gap-3">
@@ -170,14 +145,14 @@ export default function TransactionsPage() {
                 <TransactionItemRow
                   key={tx.id}
                   transaction={tx}
-                  onSelect={() => {}}
+                  onSelect={(tx) => setSelectedTx(tx)}
                   onConfirm={() => {}}
                 />
               ))}
             </div>
           )}
 
-          {/* Controles de Paginação */}
+          {/* Controles de Paginação
           {filteredTransactions.length > itemsPerPage && (
             <div className={`flex items-center justify-between mt-6 pt-4 ${styles.paginationContainer}`}>
               <span className={`text-xs ${styles.pageInfo}`}>
@@ -201,12 +176,10 @@ export default function TransactionsPage() {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
         </div>
-
       </main>
 
-      {/* Renderização dos Modais e Drawers (Orquestrados aqui, renderizados via React Portal ou flutuantes) */}
       <FiltersDrawer
         isOpen={isFilterDrawerOpen}
         onClose={() => setIsFilterDrawerOpen(false)}
@@ -228,8 +201,8 @@ export default function TransactionsPage() {
       <TransactionDetailsDrawer
         transaction={selectedTx}
         onClose={() => setSelectedTx(null)}
-        onEdit={(tx) => { setEditingTx(tx); setIsModalOpen(true); }}
-        onDelete={(tx) => setDeletingTx(tx)}
+        onEdit={(tx) => { {}; setIsModalOpen(true); }}
+        onDelete={(tx) => {}}
       />
 
       <TransactionModal
@@ -245,7 +218,6 @@ export default function TransactionsPage() {
         onConfirm={() => {}}
         transaction={deletingTx}
       />
-
     </div>
   );
 }

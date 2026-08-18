@@ -1,14 +1,16 @@
 import { ArrowUpDown, Building2, Calendar, CheckCircle2, Edit2, FileText, Repeat, Trash2, Wallet, X } from 'lucide-react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { useEffect, useState } from 'react';
-import type { Transaction } from '../../types/transaction';
-import { CATEGORIES, WALLETS, formatCurrency, formatDate } from '../../utils/transactionUtils';
+import type { TransactionResponse } from '../../../../models/transaction/TransactionResponse';
+import { formatRelativeDateTime } from '../../../../utils/FormatDate';
+import { formatCurrency } from '../../utils/transactionUtils';
 import styles from './TransactionDetailsDrawer.module.css';
 
 interface TransactionDetailsDrawerProps {
-  transaction: Transaction | null;
+  transaction: TransactionResponse | null;
   onClose: () => void;
-  onEdit: (tx: Transaction) => void;
-  onDelete: (tx: Transaction) => void;
+  onEdit: (tx: TransactionResponse) => void;
+  onDelete: (tx: TransactionResponse) => void;
 }
 
 export const TransactionDetailsDrawer = ({
@@ -17,7 +19,7 @@ export const TransactionDetailsDrawer = ({
   onEdit,
   onDelete
 }: TransactionDetailsDrawerProps) => {
-  const [visibleTx, setVisibleTx] = useState<Transaction | null>(transaction);
+  const [visibleTx, setVisibleTx] = useState<TransactionResponse | null>(transaction);
   const [isVisible, setIsVisible] = useState(false);
 
   // Gerencia o atraso para permitir a animação de saída antes de desmontar os dados
@@ -33,11 +35,7 @@ export const TransactionDetailsDrawer = ({
   }, [transaction]);
 
   if (!visibleTx) return null;
-
-  const category = CATEGORIES[visibleTx.categoryId] || CATEGORIES.outros;
-  const wallet = WALLETS[visibleTx.walletId] || WALLETS.w1;
-  const IconComponent = category.icon;
-  const isIncome = visibleTx.type === 'income';
+  const isIncome = visibleTx.type === 'CREDIT';
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -72,9 +70,9 @@ export const TransactionDetailsDrawer = ({
           <div className="flex flex-col items-center text-center">
             <div 
               className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mb-4 shadow-sm"
-              style={{ backgroundColor: category.bgColor, color: category.color }}
+              style={{ backgroundColor: transaction?.category.color, color: '#fff' }}
             >
-              <IconComponent size={30} strokeWidth={2.2} />
+              <DynamicIcon name={transaction?.category.icon as IconName} size={30} strokeWidth={2.2} />
             </div>
             
             <h3 className={`text-2xl md:text-3xl font-extrabold leading-tight mb-1.5 px-4 ${styles.textMain}`}>
@@ -82,7 +80,7 @@ export const TransactionDetailsDrawer = ({
             </h3>
             
             <span className={`text-[13px] font-semibold uppercase tracking-wide mb-5 ${styles.textMuted}`}>
-              {category.name}
+              {transaction?.category.name}
             </span>
             
             <div className={`text-4xl md:text-5xl font-black tracking-tight ${isIncome ? styles.textIncome : styles.textMain}`}>
@@ -99,7 +97,7 @@ export const TransactionDetailsDrawer = ({
                 <Calendar size={18} /> Data da Transação
               </span>
               <span className={`font-semibold ${styles.textMain}`}>
-                {formatDate(visibleTx.date)}
+                {formatRelativeDateTime(visibleTx.registeredAt)}
               </span>
             </div>
 
@@ -118,8 +116,8 @@ export const TransactionDetailsDrawer = ({
               <span className={`flex items-center gap-2.5 font-medium ${styles.textMuted}`}>
                 <CheckCircle2 size={18} /> Status
               </span>
-              <span className={`font-bold px-2 py-0.5 rounded-md text-[11px] uppercase tracking-wider ${visibleTx.status === 'paid' ? styles.badgeIncome : styles.badgeWarning}`}>
-                {visibleTx.status === 'paid' ? 'Paga / Efetivada' : 'Pendente'}
+              <span className={`font-bold px-2 py-0.5 rounded-md text-[11px] uppercase tracking-wider ${visibleTx.status === 'COMPLETED' ? styles.badgeIncome : styles.badgeWarning}`}>
+                {visibleTx.status === 'COMPLETED' ? 'Paga / Efetivada' : 'Pendente'}
               </span>
             </div>
 
@@ -129,20 +127,22 @@ export const TransactionDetailsDrawer = ({
                 <Wallet size={18} /> Carteira
               </span>
               <span className={`font-semibold ${styles.textMain}`}>
-                {wallet.name}
+                {transaction?.wallet.name}
               </span>
             </div>
 
             {/* Instituição */}
-            <div className={`flex items-center justify-between pb-4 border-b ${styles.borderLight}`}>
-              <span className={`flex items-center gap-2.5 font-medium ${styles.textMuted}`}>
-                <Building2 size={18} /> Instituição / Banco
-              </span>
-              <span className={`font-semibold flex items-center gap-2 ${styles.textMain}`}>
-                <span className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: wallet.bankLogoColor }} />
-                {wallet.bankName}
-              </span>
-            </div>
+            {transaction?.recurrenceId && (
+              <div className={`flex items-center justify-between pb-4 border-b ${styles.borderLight}`}>
+                <span className={`flex items-center gap-2.5 font-medium ${styles.textMuted}`}>
+                  <Building2 size={18} /> Instituição / Banco
+                </span>
+                <span className={`font-semibold flex items-center gap-2 ${styles.textMain}`}>
+                  <span className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: transaction?.wallet.bank?.gradient }} />
+                  {transaction?.wallet.bank?.name}
+                </span>
+              </div>
+            )}
 
             {/* Recorrência */}
             <div className="flex items-center justify-between">
@@ -150,20 +150,20 @@ export const TransactionDetailsDrawer = ({
                 <Repeat size={18} /> Recorrência
               </span>
               <span className={`font-semibold ${styles.textMain}`}>
-                {visibleTx.isRecurrent ? 'Sim (Recorrente)' : 'Não (Pagamento Único)'}
+                {visibleTx.recurrenceId ? 'Sim (Recorrente)' : 'Não (Pagamento Único)'}
               </span>
             </div>
 
           </div>
 
           {/* Observações */}
-          {visibleTx.notes && (
+          {visibleTx.observation && (
             <div className={`border rounded-2xl p-5 ${styles.bgElevated} ${styles.borderLight}`}>
               <span className={`text-xs font-bold flex items-center gap-2 mb-2 uppercase tracking-wide ${styles.textMuted}`}>
                 <FileText size={14} /> Observações
               </span>
               <p className={`text-sm leading-relaxed ${styles.textMain}`}>
-                {visibleTx.notes}
+                {visibleTx.observation}
               </p>
             </div>
           )}
