@@ -1,0 +1,19 @@
+.card {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+.textMuted { color: var(--text-muted); }
+.textMain { color: var(--text-main); }
+.textIncome { color: var(--income); }
+.textExpense { color: var(--expense); }
+.textAccent { color: var(--accent); }
+.textWarning { color: var(--warning); }
+
+.bgIncomeMuted { background-color: var(--income-muted); }
+.bgExpenseMuted { background-color: var(--expense-muted); }
+.bgAccentMuted { background-color: var(--accent-muted); }
+.bgWarningMuted { background-color: var(--warning-muted); }

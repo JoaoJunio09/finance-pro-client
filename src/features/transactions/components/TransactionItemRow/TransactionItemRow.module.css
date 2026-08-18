@@ -1,0 +1,62 @@
+.rowContainer {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+.rowContainer:hover {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-hover);
+}
+
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+
+.badgeRecurrent {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
+.textAccent { color: var(--accent); }
+
+.textIncome { color: var(--income); }
+.badgeIncome {
+  background-color: var(--income-muted);
+  color: var(--income);
+}
+
+.badgeWarning {
+  background-color: var(--warning-muted);
+  color: var(--warning);
+}
+
+.borderLight { border-color: var(--border-light); }
+
+.iconButton {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.rowContainer:hover .iconButton {
+  color: var(--text-main);
+}
+.iconButton:hover {
+  background-color: var(--border-light);
+}
+
+.confirmBtn {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.confirmBtn:hover {
+  background-color: var(--income-muted);
+  color: var(--income);
+}
+
+.confirmBtnMobile {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.confirmBtnMobile:hover {
+  background-color: var(--income-muted);
+  border-color: var(--income);
+  color: var(--income);
+}

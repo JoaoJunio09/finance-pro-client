@@ -1,0 +1,42 @@
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.modalContainer {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.iconWrapper {
+  background-color: var(--expense-muted);
+  color: var(--expense);
+}
+
+.title {
+  color: var(--text-main);
+}
+
+.description {
+  color: var(--text-muted);
+}
+
+.highlight {
+  color: var(--text-main);
+}
+
+.cancelButton {
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+.cancelButton:hover {
+  background-color: var(--bg-elevated);
+}
+
+.deleteButton {
+  background-color: var(--expense);
+  color: #FFFFFF;
+}
+.deleteButton:hover {
+  opacity: 0.9;
+}

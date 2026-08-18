@@ -1,0 +1,75 @@
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modalPanel {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+
+.closeBtn {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.closeBtn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-elevated);
+}
+
+.typeBtn {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.typeBtnActiveIncome {
+  background-color: var(--income-muted);
+  border-color: var(--income);
+  color: var(--income);
+}
+.typeBtnActiveExpense {
+  background-color: var(--expense-muted);
+  border-color: var(--expense);
+  color: var(--expense);
+}
+
+.inputField {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-main);
+  transition: border-color 0.2s ease;
+}
+.inputField::placeholder {
+  color: var(--text-muted);
+}
+.inputField:focus {
+  border-color: var(--accent);
+}
+
+.footer {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.btnSecondary {
+  border-color: var(--border-color);
+  color: var(--text-main);
+  transition: background-color 0.2s ease;
+}
+.btnSecondary:hover {
+  background-color: var(--bg-elevated);
+}
+
+.btnPrimary {
+  background-color: var(--accent);
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+.btnPrimary:hover {
+  background-color: var(--accent-hover);
+}

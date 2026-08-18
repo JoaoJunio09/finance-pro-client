@@ -1,0 +1,26 @@
+.container {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.iconWrapper {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.title {
+  color: var(--text-main);
+}
+
+.description {
+  color: var(--text-muted);
+}
+
+.addButton {
+  background-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.addButton:hover {
+  filter: brightness(1.1);
+}

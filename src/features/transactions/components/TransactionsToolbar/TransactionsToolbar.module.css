@@ -1,0 +1,43 @@
+.container {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.iconMuted {
+  color: var(--text-muted);
+}
+
+.inputField {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-main);
+}
+.inputField::placeholder {
+  color: var(--text-muted);
+}
+.inputField:focus {
+  border-color: var(--accent);
+}
+
+.clearButton {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+.clearButton:hover {
+  color: var(--text-main);
+}
+
+.filterButton {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-main);
+}
+.filterButton:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filterBadge {
+  background-color: var(--accent);
+  border-color: var(--bg-elevated);
+}

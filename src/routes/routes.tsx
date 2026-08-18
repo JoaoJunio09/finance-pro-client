@@ -3,13 +3,14 @@ import { AccountProvider } from "../context/AccountContext";
 import { AuthProvider } from "../context/AuthContext";
 import { ThemeProvider } from "../context/ThemeContext";
 import ActivitiesPage from "../pages/ActivitiesPage";
+import AnalyticsPage from "../pages/AnalyticsPage";
 import Settings from "../pages/ConfigurationPage";
 import DashboardPage from "../pages/DashboardPage";
 import RecurrencesPage from "../pages/RecurrencesPage";
 import SignInPage from "../pages/SignInPage";
+import TransactionsPage from "../pages/TransactionsPage";
 import WalletsPage from "../pages/WalletsPage";
 import ScrollToTop from "./ScrollToTop";
-import AnalyticsPage from "../pages/AnalyticsPage";
 
 function RoutesApp() {
 	return (
@@ -24,6 +25,7 @@ function RoutesApp() {
 							<Route path="/atividades" element={<ActivitiesPage />} />
 							<Route path="/analises" element={<AnalyticsPage />} />
 							<Route path="/carteiras" element={<WalletsPage />} />
+							<Route path="/transacoes" element={<TransactionsPage />} />
 							<Route path="/recorrencias" element={<RecurrencesPage />} />
 							<Route path="/configuracoes" element={<Settings />} />
 						</Routes>
