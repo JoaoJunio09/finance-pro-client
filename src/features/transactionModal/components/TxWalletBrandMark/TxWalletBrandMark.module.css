@@ -6,7 +6,3 @@
 .bankNameDefault {
 	color: var(--text-main);
 }
-
-.bankIconMuted {
-	color: var(--text-muted);
-}

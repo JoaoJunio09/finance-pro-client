@@ -3,6 +3,7 @@ import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { useEffect, useState } from 'react';
 import type { TransactionResponse } from '../../../../models/transaction/TransactionResponse';
 import { formatRelativeDateTime } from '../../../../utils/FormatDate';
+import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 import { formatCurrency } from '../../utils/transactionUtils';
 import styles from './TransactionDetailsDrawer.module.css';
 
@@ -46,7 +47,7 @@ export const TransactionDetailsDrawer = ({
       />
 
       {/* Drawer Panel */}
-      <div className={`relative w-full h-full sm:max-w-[450px] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:border-l ${styles.drawerPanel} ${
+      <div className={`relative w-full lg:h-full h-[92vh] overflow-auto sm:max-w-[450px] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:border-l ${styles.drawerPanel} ${
         isVisible 
           ? 'translate-y-0 translate-x-0' 
           : 'translate-y-full translate-x-0 sm:translate-y-0 sm:translate-x-full'
@@ -122,12 +123,16 @@ export const TransactionDetailsDrawer = ({
             </div>
 
             {/* Carteira */}
-            <div className={`flex items-center justify-between pb-4 border-b ${styles.borderLight}`}>
+            <div className={`flex items-center justify-between gap-4 pb-4 border-b ${styles.borderLight}`}>
               <span className={`flex items-center gap-2.5 font-medium ${styles.textMuted}`}>
                 <Wallet size={18} /> Carteira
               </span>
-              <span className={`font-semibold ${styles.textMain}`}>
-                {transaction?.wallet.name}
+              <span className={`font-semibold truncate ${styles.textMain}`}>
+                {transaction?.wallet.bank ? (
+                  <BankBrandMark bank={transaction?.wallet.bank} />
+                ) : (
+                  <BankBrandMark wallet={transaction?.wallet} />
+                )}
               </span>
             </div>
 

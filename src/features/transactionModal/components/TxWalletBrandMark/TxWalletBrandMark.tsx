@@ -1,4 +1,4 @@
-import { Briefcase } from 'lucide-react';
+import { CircleDollarSign } from 'lucide-react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 
 import type { BankResponse } from '../../../../models/bank/BankResponse';
@@ -51,14 +51,14 @@ function ManualWalletMark({ wallet, size }: { wallet: WalletResponse | undefined
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Briefcase size={18} className={styles.bankIconMuted} />
+    <div className="flex items-center gap-1">
+      <CircleDollarSign size={18} color='green' />
       <span className={`font-medium text-sm ${styles.bankNameDefault}`}>{wallet?.name}</span>
     </div>
   );
 }
 
-function BankkBrandMark({ bank, wallet, size = 'md' }: TxWalletBrandMarkProps) {
+function BankBrandMark({ bank, wallet, size = 'md' }: TxWalletBrandMarkProps) {
   // Carteira manual: sem banco vinculado, ou banco explicitamente "Manual"
   if (!bank) {
     return <ManualWalletMark wallet={wallet} size={size} />;
@@ -84,4 +84,4 @@ function BankkBrandMark({ bank, wallet, size = 'md' }: TxWalletBrandMarkProps) {
   );
 }
 
-export default BankkBrandMark;
+export default BankBrandMark;
