@@ -1,24 +1,29 @@
 import { ArrowUpDown, Check, CheckCircle2, Filter, SlidersHorizontal, Tag, Wallet, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { SortOption } from '../../types/transaction';
-import { CATEGORIES, WALLETS } from '../../utils/transactionUtils';
+import type { CategoryResponse } from '../../../../models/category/CategoryResponse';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
+import type { SortOption, TransactionStatusFilter, TransactionTypeFilter } from '../../utils/Filter';
 import styles from './FiltersDrawer.module.css';
 
 interface FiltersDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  typeFilter: string;
-  statusFilter: string;
+  wallets: WalletResponse[];
+  categories: CategoryResponse[];
+  typeFilter: TransactionTypeFilter;
+  statusFilter: TransactionStatusFilter;
   walletFilter: string;
   categoryFilter: string;
   sortBy: SortOption;
-  onApplyFilters: (filters: { type: string; status: string; wallet: string; category: string; sort: SortOption }) => void;
+  onApplyFilters: (filters: { type: TransactionTypeFilter; status: TransactionStatusFilter; wallet: string; category: string; sort: SortOption }) => void;
   onClearFilters: () => void;
 }
 
 export const FiltersDrawer = ({
   isOpen,
   onClose,
+  wallets,
+  categories,
   typeFilter, 
   statusFilter, 
   walletFilter, 
@@ -27,7 +32,7 @@ export const FiltersDrawer = ({
   onApplyFilters, 
   onClearFilters
 }: FiltersDrawerProps) => {
-  const [localType, setLocalType] = useState(typeFilter);
+  const [localType, setLocalType] = useState<TransactionTypeFilter>(typeFilter);
   const [localStatus, setLocalStatus] = useState(statusFilter);
   const [localWallet, setLocalWallet] = useState(walletFilter);
   const [localCategory, setLocalCategory] = useState(categoryFilter);
@@ -111,7 +116,7 @@ export const FiltersDrawer = ({
             </label>
             <select
               value={localType}
-              onChange={(e) => setLocalType(e.target.value)}
+              onChange={(e) => setLocalType(e.target.value as TransactionTypeFilter)}
               className={`w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.selectField}`}
             >
               <option value="all">Todos os Tipos</option>
@@ -127,7 +132,7 @@ export const FiltersDrawer = ({
             </label>
             <select
               value={localStatus}
-              onChange={(e) => setLocalStatus(e.target.value)}
+              onChange={(e) => setLocalStatus(e.target.value as TransactionStatusFilter)}
               className={`w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.selectField}`}
             >
               <option value="all">Todos os Status</option>
@@ -147,8 +152,8 @@ export const FiltersDrawer = ({
               className={`w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.selectField}`}
             >
               <option value="all">Todas as Carteiras</option>
-              {Object.values(WALLETS).map(w => (
-                <option key={w.id} value={w.id}>{w.name} ({w.bankName})</option>
+              {wallets.map(w => (
+                <option key={w.id} value={w.id}>{w.name} ({w.bank?.name})</option>
               ))}
             </select>
           </div>
@@ -164,7 +169,7 @@ export const FiltersDrawer = ({
               className={`w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.selectField}`}
             >
               <option value="all">Todas as Categorias</option>
-              {Object.values(CATEGORIES).map(c => (
+              {categories.map(c => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>

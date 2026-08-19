@@ -15,16 +15,7 @@ import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
 
 export default function TransactionsPage() {  
-  // Estados de Dados e Filtros
-  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [walletFilter, setWalletFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [sortBy, setSortBy] = useState<SortOption>('recent');
-
-  // Estados de UI (Modais e Drawers)
  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -33,13 +24,25 @@ export default function TransactionsPage() {
 
   const {
     transactions,
+    wallets,
+    categories,
     summaryCard,
     currentMonth,
     setCurrentMonth,
     selectedTx,
     setSelectedTx,
     search,
-    setSearch
+    setSearch,
+    txStatusFilter,
+		setTxStatusFilter,
+		txTypeFilter,
+		setTxTypeFilter,
+		walletFilter,
+		setWalletFilter,
+		categoryFilter,
+		setCategoryFilter,
+    sort,
+    setSort
   } = useTransactions();
 
   const filteredTransactions = useMemo(() => {
@@ -54,29 +57,53 @@ export default function TransactionsPage() {
       if (activeTab === 'expense' && tx.type !== 'DEBIT') return false;
       if (activeTab === 'pending' && tx.status !== 'PENDING') return false;
 
-      if (typeFilter !== 'all' && tx.type !== typeFilter) return false;
-      if (statusFilter !== 'all' && tx.status !== statusFilter) return false;
+      // Filtro de tipo
+      if (txTypeFilter === 'income' && tx.type !== 'CREDIT') {
+        return false;
+      }
+
+      if (txTypeFilter === 'expense' && tx.type !== 'DEBIT') {
+        return false;
+      }
+
+      // Filtro de status
+      if (txStatusFilter === 'paid' && tx.status !== 'COMPLETED') {
+        return false;
+      }
+
+      if (txStatusFilter === 'pending' && tx.status !== 'PENDING') {
+        return false;
+      }
+
+      // Filtro de carteira
+      if (walletFilter !== 'all' && tx.wallet.id !== walletFilter) {
+        return false;
+      }
+
+      // Filtro de categoria
+      if (categoryFilter !== 'all' && tx.category.id !== categoryFilter) {
+        return false;
+      }
 
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'recent') return new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime();
-      if (sortBy === 'oldest') return new Date(a.registeredAt).getTime() - new Date(b.registeredAt).getTime();
-      if (sortBy === 'highest') return b.amount - a.amount;
-      if (sortBy === 'lowest') return a.amount - b.amount;
+      if (sort === 'recent') return new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime();
+      if (sort === 'oldest') return new Date(a.registeredAt).getTime() - new Date(b.registeredAt).getTime();
+      if (sort === 'highest') return b.amount - a.amount;
+      if (sort === 'lowest') return a.amount - b.amount;
       return 0;
     });
-  }, [transactions, activeTab, typeFilter, statusFilter, search]);
+  }, [transactions, activeTab, txStatusFilter, txTypeFilter, walletFilter, categoryFilter, sort, search]);
 
-  // Handlers
-  // const handleResetFilters = () => {
-  //   setSearchQuery('');
-  //   setTypeFilter('all');
-  //   setStatusFilter('all');
-  //   setWalletFilter('all');
-  //   setCategoryFilter('all');
-  //   setSortBy('recent');
-  //   setActiveTab('all');
-  // };
+  const handleResetFilters = () => {
+    setSearch('');
+    setTxStatusFilter('all');
+    setTxStatusFilter('all');
+    setWalletFilter('all');
+    setCategoryFilter('all');
+    setSort('recent');
+    setActiveTab('all');
+  };
 
   // const handleSaveTransaction = (data: Omit<Transaction, 'id'>) => {
   //   if (editingTx) {
@@ -111,16 +138,16 @@ export default function TransactionsPage() {
         <TransactionsToolbar
           searchQuery={search}
           setSearchQuery={setSearch}
-          typeFilter={typeFilter}
-          setTypeFilter={setTypeFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
+          typeFilter={txTypeFilter}
+          setTypeFilter={setTxTypeFilter}
+          statusFilter={txStatusFilter}
+          setStatusFilter={setTxStatusFilter}
           walletFilter={walletFilter}
           setWalletFilter={setWalletFilter}
           categoryFilter={categoryFilter}
           setCategoryFilter={setCategoryFilter}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
+          sortBy={sort}
+          setSortBy={setSort}
           onResetFilters={() => {}}
           onOpenFilters={() => setIsFilterDrawerOpen(true)}
         />
@@ -182,19 +209,21 @@ export default function TransactionsPage() {
       <FiltersDrawer
         isOpen={isFilterDrawerOpen}
         onClose={() => setIsFilterDrawerOpen(false)}
-        typeFilter={typeFilter}
-        statusFilter={statusFilter}
+        wallets={wallets}
+        categories={categories}
+        typeFilter={txTypeFilter}
+        statusFilter={txStatusFilter}
         walletFilter={walletFilter}
         categoryFilter={categoryFilter}
-        sortBy={sortBy}
+        sortBy={sort}
         onApplyFilters={(filters) => {
-          setTypeFilter(filters.type);
-          setStatusFilter(filters.status);
+          setTxTypeFilter(filters.type);
+          setTxStatusFilter(filters.status);
           setWalletFilter(filters.wallet);
           setCategoryFilter(filters.category);
-          setSortBy(filters.sort);
+          setSort(filters.sort);
         }}
-        onClearFilters={() => {}}
+        onClearFilters={handleResetFilters}
       />
 
       <TransactionDetailsDrawer

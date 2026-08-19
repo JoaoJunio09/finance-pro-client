@@ -1,9 +1,14 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
+import useCategoryService from "../../../hooks/useCategoryService";
 import useTransactionService from "../../../hooks/useTransactionService";
-import type { SummaryCard } from "../types/SummaryCard";
+import useWalletService from "../../../hooks/useWalletService";
 import type { TransactionResponse } from "../../../models/transaction/TransactionResponse";
+import type { CategoryType } from "../../../types/CategoryType";
+import type { SummaryCard } from "../types/SummaryCard";
+import type { SortOption } from "../types/transaction";
+import type { CategoryFilter, TransactionStatusFilter, TransactionTypeFilter, WalletFilter } from "../utils/Filter";
 
 function useTransactions() {
 	const now = new Date();
@@ -15,9 +20,19 @@ function useTransactions() {
 	const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
 	const [search, setSearch] = useState('');
 
+	const [txStatusFilter, setTxStatusFilter] = useState<TransactionStatusFilter>('all');
+	const [txTypeFilter, setTxTypeFilter] = useState<TransactionTypeFilter>('all');
+	const [walletFilter, setWalletFilter] = useState<WalletFilter>('all');
+	const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+	const [sort, setSort] = useState<SortOption>('recent');
+
+	const [categoryType, setCategoryType] = useState<CategoryType>('CREDIT');
+
 	const { account } = useAccountContext();
 
-	const transactionService = useTransactionService(); 
+	const transactionService = useTransactionService();
+	const walletService = useWalletService();
+	const categoryService = useCategoryService();
 
 	const queryTransactions = useQuery({
 		queryKey: [
@@ -34,7 +49,27 @@ function useTransactions() {
 		placeholderData: keepPreviousData
 	});
 
+	const queryWallets = useQuery({
+		queryKey: [
+			'wallets',
+			account?.id
+		],
+		queryFn: () => walletService.getAll({ accountId: account?.id }),
+		retry: 3
+	});
+
+	const queryCategories = useQuery({
+		queryKey: [
+			'categories',
+			account?.id
+		],
+		queryFn: () => categoryService.getAll({ type: categoryType }),
+		retry: 3
+	});
+
 	const transactions = useMemo(() => queryTransactions.data ?? [], [queryTransactions.data]);
+	const wallets = useMemo(() => queryWallets.data ?? [], [queryWallets.data]);
+	const categories = useMemo(() => queryCategories.data ?? [], [queryCategories.data]);
 
 	const summaryCard = useMemo<SummaryCard>(() => {
     let pendingCount = 0;
@@ -58,13 +93,25 @@ function useTransactions() {
 
 	return {
 		transactions,
+		wallets,
+		categories,
 		summaryCard,
 		currentMonth,
 		setCurrentMonth,
 		selectedTx,
 		setSelectedTx,
 		search,
-		setSearch
+		setSearch,
+		txStatusFilter,
+		setTxStatusFilter,
+		txTypeFilter,
+		setTxTypeFilter,
+		walletFilter,
+		setWalletFilter,
+		categoryFilter,
+		setCategoryFilter,
+		sort,
+		setSort
 	}
 }
 

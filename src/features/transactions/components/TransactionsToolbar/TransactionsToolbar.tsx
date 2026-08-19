@@ -1,14 +1,15 @@
 import { Filter, Search, X } from 'lucide-react';
 import type { SortOption } from '../../types/transaction';
+import type { TransactionStatusFilter, TransactionTypeFilter } from '../../utils/Filter';
 import styles from './TransactionsToolbar.module.css';
 
 interface TransactionsToolbarProps {
   searchQuery: string;
   setSearchQuery: (s: string) => void;
   typeFilter: string;
-  setTypeFilter: (t: string) => void;
+  setTypeFilter: (t: TransactionTypeFilter) => void;
   statusFilter: string;
-  setStatusFilter: (s: string) => void;
+  setStatusFilter: (s: TransactionStatusFilter) => void;
   walletFilter: string;
   setWalletFilter: (w: string) => void;
   categoryFilter: string;
