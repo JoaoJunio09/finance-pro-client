@@ -51,10 +51,11 @@
 
 .btnPrimary {
   background-color: var(--accent);
-  color: #ffffff;
+  color: #FFF;
   transition: background-color 0.2s ease;
 }
 .btnPrimary:hover {
   background-color: var(--accent-hover);
   border: 1px solid var(--accent);
+  color: var(--text-hover);
 }
