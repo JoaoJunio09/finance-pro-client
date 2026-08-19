@@ -86,7 +86,7 @@ export const FiltersDrawer = ({
       />
 
       {/* Drawer Panel */}
-      <div className={`relative w-full h-full sm:max-w-[450px] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:border-l ${styles.drawerPanel} ${
+      <div className={`relative w-full lg:h-full h-[92vh] sm:max-w-[450px] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:border-l ${styles.drawerPanel} ${
         isVisible 
           ? 'translate-y-0 translate-x-0' 
           : 'translate-y-full translate-x-0 sm:translate-y-0 sm:translate-x-full'
@@ -153,7 +153,7 @@ export const FiltersDrawer = ({
             >
               <option value="all">Todas as Carteiras</option>
               {wallets.map(w => (
-                <option key={w.id} value={w.id}>{w.name} ({w.bank?.name})</option>
+                <option key={w.id} value={w.id}>{w.name} {w.bank && `(${w.bank?.name})`}</option>
               ))}
             </select>
           </div>
@@ -198,13 +198,13 @@ export const FiltersDrawer = ({
         <div className={`p-6 border-t flex flex-col sm:flex-row items-center gap-3 shrink-0 ${styles.footer}`}>
           <button 
             onClick={handleClear}
-            className={`w-full sm:w-auto flex-1 py-3 px-4 rounded-xl border text-sm font-bold ${styles.btnSecondary}`}
+            className={`cursor-pointer w-full sm:w-auto flex-1 py-3 px-4 rounded-xl border text-sm font-bold ${styles.btnSecondary}`}
           >
             Limpar
           </button>
           <button 
             onClick={handleApply}
-            className={`w-full sm:w-auto flex-1 py-3 px-4 rounded-xl text-sm font-bold shadow-sm flex items-center justify-center gap-2 ${styles.btnPrimary}`}
+            className={`cursor-pointer w-full sm:w-auto flex-1 py-3 px-4 rounded-xl text-sm font-bold shadow-sm flex items-center justify-center gap-2 ${styles.btnPrimary}`}
           >
             <Check size={18} />
             Aplicar filtros

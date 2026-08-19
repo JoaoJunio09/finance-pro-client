@@ -56,4 +56,5 @@
 }
 .btnPrimary:hover {
   background-color: var(--accent-hover);
+  border: 1px solid var(--accent);
 }
