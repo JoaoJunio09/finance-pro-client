@@ -6,16 +6,19 @@ import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
 import { SummaryCards } from './components/SummaryCard/SummaryCard';
 import { TransactionDetailsDrawer } from './components/TransactionDetailsDrawer/TransactionDetailsDrawer';
 import { TransactionItemRow } from './components/TransactionItemRow/TransactionItemRow';
-import { TransactionModal } from './components/TransactionModal/TransactionModal';
 import { TransactionsHeader } from './components/TransactionsHeader/TransactionsHeader';
 import { TransactionsToolbar } from './components/TransactionsToolbar/TransactionsToolbar';
-import type { ActiveTab, SortOption, Transaction } from './types/transaction';
+import type { ActiveTab, Transaction } from './types/transaction';
 
+import type { TransactionType } from '../../types/TransactionType';
 import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
+import TransactionModal from '../transactionModal/TransactionModal';
 
 export default function TransactionsPage() {  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
+
+  const [txType, setTxType] = useState<TransactionType>('CREDIT');
  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -233,18 +236,17 @@ export default function TransactionsPage() {
         onDelete={(tx) => {}}
       />
 
-      <TransactionModal
-        isOpen={isModalOpen}
-        onClose={() => { setIsModalOpen(false); setEditingTx(null); }}
-        onSave={() => {}}
-        initialData={editingTx}
-      />
-
       <DeleteConfirmModal
         isOpen={!!deletingTx}
         onClose={() => setDeletingTx(null)}
         onConfirm={() => {}}
         transaction={deletingTx}
+      />
+
+      <TransactionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialType={txType}
       />
     </div>
   );
