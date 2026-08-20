@@ -230,10 +230,7 @@ export default function TransactionsPage() {
       <TransactionDetailsDrawer
         transaction={selectedTx}
         onClose={() => setSelectedTx(null)}
-        onEdit={(tx) => {
-          handleEditTransaction(tx);
-          console.log(tx)
-        }}
+        onEdit={handleEditTransaction}
         onDelete={(tx) => {}}
       />
 
@@ -246,7 +243,10 @@ export default function TransactionsPage() {
 
       <TransactionModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(!isModalOpen);
+          console.log('fecha modal')
+        }}
         initialType={txType}
         transaction={selectedTx}
       />

@@ -5,7 +5,7 @@ import type { CategoryResponse } from '../../../../models/category/CategoryRespo
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { TransactionStatus } from '../../../../types/TransactionStatus';
 import type { TransactionType } from '../../../../types/TransactionType';
-import { formatCurrencyInput } from '../../../../utils/FormatCurrency';
+import { formatCurrencyDisplay, formatCurrencyInput } from '../../../../utils/FormatCurrency';
 import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
@@ -44,9 +44,8 @@ export function TransactionForm({
   wallets,
   onClose,
 }: TransactionFormProps) {
-  console.log(category)
   const isIncome = type === 'CREDIT';
-  const numericAmount = amountStr ? Number(amountStr) / 100 : 0;
+  const numericAmount = amountStr ? Number(amountStr) : 0;
   
   const renderCategory = (cat: CategoryResponse) => (
     <div className="flex items-center gap-3">
@@ -98,7 +97,7 @@ export function TransactionForm({
           name='amount'
           type="text"
           inputMode="numeric"
-          value={formatCurrencyInput(form?.amount ?? '')}
+          value={formatCurrencyDisplay(form?.amount ?? '')}
           onChange={handleOnChange}
           className={`w-full text-center text-4xl sm:text-5xl font-black tracking-tighter bg-transparent focus:outline-none transition-colors ${styles.amountInput} ${
             numericAmount > 0 ? (isIncome ? styles.amountIncome : styles.amountNeutral) : styles.amountPlaceholder

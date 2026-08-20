@@ -1,7 +1,6 @@
 import { Activity, Calendar, CheckCircle2, Eye, Wallet } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import SpinnerLoading from '../../../../components/ui/SpinnerLoading/SpinnerLoading';
-import { formatCurrencyToAPI } from '../../../../utils/FormatCurrency';
 import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
@@ -26,7 +25,7 @@ export function TransactionPreviewCard({
   const isIncome = form?.type === 'CREDIT';
   
   const numericAmount = form?.amount
-    ? Number(form.amount) / 100
+    ? Number(form.amount)
     : 0;
 
   const formattedAmount = new Intl.NumberFormat('pt-BR', {

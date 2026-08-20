@@ -94,14 +94,19 @@ function useTransactionModal(
 	function handleOnChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
 		const { name, value } = e.target;
 
+		if (name === 'amount') {
+			setForm((prev) => ({
+				...prev,
+				amount: formatCurrencyInput(value),
+			}));
+
+			return;
+		}
+
 		setForm((prev) => ({
 			...prev,
-			[name]: value
+			[name]: value,
 		}));
-
-		if (name === 'amount' && value) {
-			setForm((prev) => ({...prev, amount: formatCurrencyInput(value) }));
-		}
 	}
 
 	function changeType(type: TransactionType) {
@@ -158,7 +163,7 @@ function useTransactionModal(
 
 		setForm({
 			id: transaction.id,
-			amount: Math.round(transaction.amount * 100).toString(),
+			amount: transaction.amount.toFixed(2),
 			description: transaction.description,
 			date: transaction.registeredAt.split('T')[0],
 			time: transaction.registeredAt.split('T')[1].substring(0, 5),
