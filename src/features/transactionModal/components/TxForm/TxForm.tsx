@@ -5,13 +5,14 @@ import type { CategoryResponse } from '../../../../models/category/CategoryRespo
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { TransactionStatus } from '../../../../types/TransactionStatus';
 import type { TransactionType } from '../../../../types/TransactionType';
+import { formatCurrencyInput } from '../../../../utils/FormatCurrency';
 import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
-import { formatCurrencyInput } from '../../../../utils/FormatCurrency';
 import styles from './TxForm.module.css';
 
 interface TransactionFormProps {
+  isEditing: boolean;
   handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onTypeChange: (type: TransactionType) => void;
   onStatusChange: (status: TransactionStatus) => void;
@@ -28,6 +29,7 @@ interface TransactionFormProps {
 }
 
 export function TransactionForm({
+  isEditing,
   handleOnChange,
   onTypeChange,
   onStatusChange,
@@ -42,6 +44,7 @@ export function TransactionForm({
   wallets,
   onClose,
 }: TransactionFormProps) {
+  console.log(category)
   const isIncome = type === 'CREDIT';
   const numericAmount = amountStr ? Number(amountStr) / 100 : 0;
   
@@ -59,7 +62,9 @@ export function TransactionForm({
   return (
     <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">
       <div className={`flex items-center justify-between pb-4 border-b ${styles.header}`}>
-        <h2 className={`text-xl font-bold tracking-tight ${styles.title}`}>Nova transação</h2>
+        <h2 className={`text-xl font-bold tracking-tight ${styles.title}`}>
+          {isEditing ? 'Editar Transação' : 'Nova transação'}
+        </h2>
         <button onClick={onClose} className={`p-2 rounded-full transition-colors focus:outline-none ${styles.closeBtn}`} type="button">
           <X size={20} />
         </button>

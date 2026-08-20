@@ -14,6 +14,7 @@ import type { TransactionType } from '../../types/TransactionType';
 import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
 import TransactionModal from '../transactionModal/TransactionModal';
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 
 export default function TransactionsPage() {  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
@@ -108,13 +109,10 @@ export default function TransactionsPage() {
     setActiveTab('all');
   };
 
-  // const handleSaveTransaction = (data: Omit<Transaction, 'id'>) => {
-  //   if (editingTx) {
-  //     setTransactions(prev => prev.map(t => t.id === editingTx.id ? { ...data, id: editingTx.id } : t));
-  //   } else {
-  //     setTransactions(prev => [{ ...data, id: `tx-${Date.now()}` }, ...prev]);
-  //   }
-  // };
+  const handleEditTransaction = (transaction: TransactionResponse) => {
+    setSelectedTx(transaction);
+    setIsModalOpen(true);
+  };
 
   // const handleDeleteConfirm = () => {
   //   if (!deletingTx) return;
@@ -232,7 +230,10 @@ export default function TransactionsPage() {
       <TransactionDetailsDrawer
         transaction={selectedTx}
         onClose={() => setSelectedTx(null)}
-        onEdit={(tx) => { {}; setIsModalOpen(true); }}
+        onEdit={(tx) => {
+          handleEditTransaction(tx);
+          console.log(tx)
+        }}
         onDelete={(tx) => {}}
       />
 
@@ -247,6 +248,7 @@ export default function TransactionsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialType={txType}
+        transaction={selectedTx}
       />
     </div>
   );

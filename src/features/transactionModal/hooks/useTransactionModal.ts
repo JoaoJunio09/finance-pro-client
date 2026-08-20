@@ -66,7 +66,8 @@ function useTransactionModal(
 	const txMutationSave = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.create(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['dashboard', 'transactions'] });
+			queryClient.invalidateQueries({ queryKey: ['dashboard' ] });
+			queryClient.invalidateQueries({ queryKey: ['transactions', account?.id ] });
 			showToast({
 				title: 'Adicionado',
 				message: 'Transação adicionada com sucesso ✅',
@@ -79,7 +80,8 @@ function useTransactionModal(
 	const txMutationUpdate = useMutation({
 		mutationFn: (data: TransactionRequest) => transactionService.update(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['dashboard', 'transactions'] });
+			queryClient.invalidateQueries({ queryKey: ['dashboard' ] });
+			queryClient.invalidateQueries({ queryKey: ['transactions', account?.id ] });
 			showToast({
 				title: 'Atualizado',
 				message: 'Transação atualizada com sucesso ✅',
@@ -147,25 +149,34 @@ function useTransactionModal(
 	const categories = useMemo(() => queryCategories.data ?? [], [queryCategories.data]);
 	const wallets = useMemo(() => queryWallets.data ?? [], [queryWallets.data]);
 
-	useEffect(() => {
-		if (transaction) {
-			setForm({
-				id: transaction.id,
-				amount: transaction.amount.toString(),
-				description: transaction.description,
-				date: transaction.registeredAt.split('T')[0],
-				time: transaction.registeredAt.split('T')[1].substring(0, 5),
-				type: transaction.type,
-				status: transaction.status,
-				category: transaction.category,
-				wallet: transaction.wallet,
-			});
-			return;
-		}
+	useEffect(() => {	
+		if (!transaction) return;
+		
+		setCategoryType(
+			transaction.type === 'CREDIT' ? 'CREDIT' : 'DEBIT'
+		);
 
-		const category = categories[0];
-		changeCustomSelectCategory(category);
-	}, [transaction, categories, categoryType]);
+		setForm({
+			id: transaction.id,
+			amount: Math.round(transaction.amount * 100).toString(),
+			description: transaction.description,
+			date: transaction.registeredAt.split('T')[0],
+			time: transaction.registeredAt.split('T')[1].substring(0, 5),
+			type: transaction.type,
+			status: transaction.status,
+			category: transaction.category,
+			wallet: transaction.wallet,
+		});		
+	}, [transaction]);
+
+	useEffect(() => {
+		if (transaction || categories.length === 0) return;
+
+		setForm((prev) => ({
+			...prev,
+			category: categories[0],
+		}));
+	}, [transaction, categories]);
 
 	useEffect(() => {
 		if (transaction || !initialType) return;

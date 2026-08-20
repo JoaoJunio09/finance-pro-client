@@ -1,3 +1,4 @@
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 import type { TransactionType } from '../../types/TransactionType';
 import TransactionForm from './components/TxForm/TxForm';
 import TransactionPreviewCard from './components/TxPreviewCard/TxPreviewCard';
@@ -9,9 +10,10 @@ interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialType: TransactionType;
+  transaction: TransactionResponse | null;
 }
 
-export function TransactionModal({ isOpen, onClose, initialType }: TransactionModalProps) {
+export function TransactionModal({ isOpen, onClose, initialType, transaction }: TransactionModalProps) {
   const {
     categories,
     wallets,
@@ -23,7 +25,7 @@ export function TransactionModal({ isOpen, onClose, initialType }: TransactionMo
     changeCustomSelectWallet,
     saveOrUpdate,
     isSaving
-  } = useTransactionModal(null, initialType, onClose);
+  } = useTransactionModal(transaction, initialType, onClose);
 
   if (!isOpen) return null;  
 
@@ -31,12 +33,15 @@ export function TransactionModal({ isOpen, onClose, initialType }: TransactionMo
     saveOrUpdate();
   };
 
+  const isEditing = !!transaction;
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
       <div className={`absolute inset-0 backdrop-blur-sm transition-opacity ${styles.overlay}`} onClick={onClose} />
 
       <div className={`relative w-full max-w-4xl rounded-[2rem] shadow-2xl animate-scale-in max-h-[95vh] flex flex-col lg:flex-row overflow-hidden border ${styles.modal}`}>
         <TransactionForm
+          isEditing={isEditing}
           handleOnChange={handleOnChange}
           onTypeChange={changeType}
           onStatusChange={changeStatus}
@@ -53,6 +58,7 @@ export function TransactionModal({ isOpen, onClose, initialType }: TransactionMo
         />
 
         <TransactionPreviewCard
+          isEditing={isEditing}
           form={form}
           onClose={onClose}
           onSubmit={handleSubmit}

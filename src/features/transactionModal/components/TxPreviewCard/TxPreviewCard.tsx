@@ -8,6 +8,7 @@ import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 import styles from './TxPreviewCard.module.css';
 
 interface TransactionPreviewCardProps {
+  isEditing: boolean;
   form: TxFormData | undefined;
   onClose: () => void;
   onSubmit: () => void;
@@ -15,6 +16,7 @@ interface TransactionPreviewCardProps {
 }
 
 export function TransactionPreviewCard({
+  isEditing,
   form,
   onClose,
   onSubmit,
@@ -22,9 +24,11 @@ export function TransactionPreviewCard({
 }: TransactionPreviewCardProps) {
   
   const isIncome = form?.type === 'CREDIT';
+  
   const numericAmount = form?.amount
-    ? Number(formatCurrencyToAPI(form.amount))
+    ? Number(form.amount) / 100
     : 0;
+
   const formattedAmount = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -114,7 +118,7 @@ export function TransactionPreviewCard({
           {isSaving ? (
             <SpinnerLoading />
           ) : (
-            'Adicionar transação'
+            <span>{isEditing ? 'Confirmar alterações' : 'Adicionar transação'}</span>
           )}
       </button>
       </div>
