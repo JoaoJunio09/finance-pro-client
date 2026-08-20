@@ -1,13 +1,13 @@
 import { Trash2 } from 'lucide-react';
 import React from 'react';
-import type { Transaction } from '../../types/transaction';
+import type { TransactionResponse } from '../../../../models/transaction/TransactionResponse';
 import styles from './DeleteConfirmModal.module.css';
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  transaction: Transaction | null;
+  onConfirm: (tx: TransactionResponse) => void;
+  transaction: TransactionResponse | null;
 }
 
 // Helper local para formatar o valor (pode ser movido para utils/formatters.ts no futuro)
@@ -58,7 +58,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
           </button>
           
           <button
-            onClick={onConfirm}
+            onClick={() => onConfirm(transaction)}
             className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-opacity shadow-sm ${styles.deleteButton}`}
           >
             Excluir

@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useAccountContext } from "../../../context/AccountContext";
 import useCategoryService from "../../../hooks/useCategoryService";
@@ -9,15 +9,17 @@ import type { CategoryType } from "../../../types/CategoryType";
 import type { SummaryCard } from "../types/SummaryCard";
 import type { SortOption } from "../types/transaction";
 import type { CategoryFilter, TransactionStatusFilter, TransactionTypeFilter, WalletFilter } from "../utils/Filter";
+import showToast from "../../../components/ui/Toast/Toast";
 
-function useTransactions() {
+function useTransactions(
+	onClose: () => void
+) {
 	const now = new Date();
 	const month = now.getMonth();
 	const year = now.getFullYear();
 	
 	const [currentMonth, setCurrentMonth] = useState(new Date(year, month, 1));
 
-	const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
 	const [search, setSearch] = useState('');
 
 	const [txStatusFilter, setTxStatusFilter] = useState<TransactionStatusFilter>('all');
@@ -33,6 +35,8 @@ function useTransactions() {
 	const transactionService = useTransactionService();
 	const walletService = useWalletService();
 	const categoryService = useCategoryService();
+
+	const queryClient = useQueryClient();
 
 	const queryTransactions = useQuery({
 		queryKey: [
@@ -67,6 +71,24 @@ function useTransactions() {
 		retry: 3
 	});
 
+	const txMutationDelete = useMutation({
+		mutationFn: (id: string) => transactionService.delete(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['dashboard' ] });
+			queryClient.invalidateQueries({ queryKey: ['transactions', account?.id ] });
+			showToast({
+				title: 'Excluído!',
+				message: 'Transação excluída com sucesso',
+				type: 'success'
+			});
+			onClose();
+		}
+	});
+
+	function deleteTransaction(transaction: TransactionResponse) {
+		txMutationDelete.mutate(transaction.id);
+	}
+
 	const transactions = useMemo(() => queryTransactions.data ?? [], [queryTransactions.data]);
 	const wallets = useMemo(() => queryWallets.data ?? [], [queryWallets.data]);
 	const categories = useMemo(() => queryCategories.data ?? [], [queryCategories.data]);
@@ -98,8 +120,6 @@ function useTransactions() {
 		summaryCard,
 		currentMonth,
 		setCurrentMonth,
-		selectedTx,
-		setSelectedTx,
 		search,
 		setSearch,
 		txStatusFilter,
@@ -111,7 +131,8 @@ function useTransactions() {
 		categoryFilter,
 		setCategoryFilter,
 		sort,
-		setSort
+		setSort,
+		deleteTransaction
 	}
 }
 

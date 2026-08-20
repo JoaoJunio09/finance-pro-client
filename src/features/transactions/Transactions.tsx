@@ -8,23 +8,51 @@ import { TransactionDetailsDrawer } from './components/TransactionDetailsDrawer/
 import { TransactionItemRow } from './components/TransactionItemRow/TransactionItemRow';
 import { TransactionsHeader } from './components/TransactionsHeader/TransactionsHeader';
 import { TransactionsToolbar } from './components/TransactionsToolbar/TransactionsToolbar';
-import type { ActiveTab, Transaction } from './types/transaction';
+import type { ActiveTab } from './types/transaction';
 
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 import type { TransactionType } from '../../types/TransactionType';
+import TransactionModal from '../transactionModal/TransactionModal';
 import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
-import TransactionModal from '../transactionModal/TransactionModal';
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
 
 export default function TransactionsPage() {  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');
-
-  const [txType, setTxType] = useState<TransactionType>('CREDIT');
- 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
-  const [deletingTx, setDeletingTx] = useState<Transaction | null>(null);
+  const [txType, setTxType] = useState<TransactionType>('CREDIT');
+ 
+  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
+  const [deletingTx, setDeletingTx] = useState<TransactionResponse | null>(null);
+
+  const onClose = () => {
+    setDeletingTx(null);
+    setSelectedTx(null);
+    setIsModalOpen(false);
+  }
+
+  const handleResetFilters = () => {
+    setSearch('');
+    setTxStatusFilter('all');
+    setTxStatusFilter('all');
+    setWalletFilter('all');
+    setCategoryFilter('all');
+    setSort('recent');
+    setActiveTab('all');
+  };
+
+  const handleEditTransaction = (transaction: TransactionResponse) => {
+    setSelectedTx(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteTransaction = (transaction: TransactionResponse) => {
+    deleteTransaction(transaction);
+  };
+
+  const openDeleteConfirm = (transaction: TransactionResponse) => {
+    setDeletingTx(transaction);
+  };
 
   const {
     transactions,
@@ -33,8 +61,6 @@ export default function TransactionsPage() {
     summaryCard,
     currentMonth,
     setCurrentMonth,
-    selectedTx,
-    setSelectedTx,
     search,
     setSearch,
     txStatusFilter,
@@ -46,10 +72,11 @@ export default function TransactionsPage() {
 		categoryFilter,
 		setCategoryFilter,
     sort,
-    setSort
-  } = useTransactions();
+    setSort,
+    deleteTransaction
+  } = useTransactions(onClose);
 
-  const filteredTransactions = useMemo(() => {
+   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
       if (search.trim() !== '') {
         const query = search.toLowerCase();
@@ -99,27 +126,6 @@ export default function TransactionsPage() {
     });
   }, [transactions, activeTab, txStatusFilter, txTypeFilter, walletFilter, categoryFilter, sort, search]);
 
-  const handleResetFilters = () => {
-    setSearch('');
-    setTxStatusFilter('all');
-    setTxStatusFilter('all');
-    setWalletFilter('all');
-    setCategoryFilter('all');
-    setSort('recent');
-    setActiveTab('all');
-  };
-
-  const handleEditTransaction = (transaction: TransactionResponse) => {
-    setSelectedTx(transaction);
-    setIsModalOpen(true);
-  };
-
-  // const handleDeleteConfirm = () => {
-  //   if (!deletingTx) return;
-  //   setTransactions(prev => prev.filter(t => t.id !== deletingTx.id));
-  //   if (selectedTx?.id === deletingTx.id) setSelectedTx(null);
-  // };
-
   return (
     <div className={`h-full w-full transition-colors duration-300 ${styles.pageContainer}`}>
       <div className={`w-full relative shadow-md overflow-hidden ${styles.headerBackground}`}>
@@ -127,7 +133,7 @@ export default function TransactionsPage() {
         <TransactionsHeader
           currentMonth={currentMonth}
           setCurrentMonth={setCurrentMonth}
-          onOpenAddModal={() => { setEditingTx(null); setIsModalOpen(true); }}
+          onOpenAddModal={() => {}}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
@@ -165,7 +171,7 @@ export default function TransactionsPage() {
           </div>
 
           {filteredTransactions.length === 0 ? (
-            <EmptyState onAdd={() => { setEditingTx(null); setIsModalOpen(true); }} />
+            <EmptyState onAdd={() => {}} />
           ) : (
             <div className="flex flex-col gap-3">
               {filteredTransactions.map((tx) => (
@@ -231,22 +237,19 @@ export default function TransactionsPage() {
         transaction={selectedTx}
         onClose={() => setSelectedTx(null)}
         onEdit={handleEditTransaction}
-        onDelete={(tx) => {}}
+        onDelete={openDeleteConfirm}
       />
 
       <DeleteConfirmModal
         isOpen={!!deletingTx}
         onClose={() => setDeletingTx(null)}
-        onConfirm={() => {}}
+        onConfirm={handleDeleteTransaction}
         transaction={deletingTx}
       />
 
       <TransactionModal
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(!isModalOpen);
-          console.log('fecha modal')
-        }}
+        onClose={onClose}
         initialType={txType}
         transaction={selectedTx}
       />
