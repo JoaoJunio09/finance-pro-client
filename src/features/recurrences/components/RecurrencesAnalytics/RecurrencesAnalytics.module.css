@@ -1,0 +1,21 @@
+.card {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+.textExpense { color: var(--expense); }
+.textIncome { color: var(--income); }
+.textAccent { color: var(--accent); }
+
+.progressTrack {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+}
+
+.bgExpense { background-color: var(--expense); }
+.bgWarning { background-color: var(--warning); }
+.bgAccent { background-color: var(--accent); }
+
+.emptyIcon { color: var(--border-hover); }

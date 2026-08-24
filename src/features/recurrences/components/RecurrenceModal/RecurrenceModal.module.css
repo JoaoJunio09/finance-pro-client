@@ -1,0 +1,120 @@
+/* Overlay animado */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Container do Modal com animação de entrada */
+.modal {
+  background-color: var(--bg-base);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Cabeçalho */
+.header {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  color: var(--text-main);
+}
+
+.closeButton {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+}
+
+/* Formulário */
+.label {
+  color: var(--text-main);
+}
+
+.inputWrapper {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+.input {
+  color: var(--text-main);
+  background-color: transparent;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input option {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+}
+
+/* Botões de Seleção (Receita / Despesa) */
+.typeButton {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.typeButtonIncomeActive {
+  background-color: var(--income-muted);
+  border-color: var(--income);
+  color: var(--income);
+}
+
+.typeButtonExpenseActive {
+  background-color: var(--expense-muted);
+  border-color: var(--expense);
+  color: var(--expense);
+}
+
+/* Rodapé */
+.footer {
+  border-top: 1px solid var(--border-light);
+  background-color: var(--bg-elevated);
+}
+
+.btnCancel {
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.btnCancel:hover {
+  background-color: var(--bg-surface);
+}
+
+.btnSave {
+  background-color: var(--accent);
+  color: #FFFFFF;
+  transition: opacity 0.2s ease;
+}
+
+.btnSave:hover {
+  opacity: 0.9;
+}

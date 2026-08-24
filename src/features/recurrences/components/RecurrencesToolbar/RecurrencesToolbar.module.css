@@ -1,0 +1,21 @@
+.searchInput {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+.searchInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(76, 29, 149, 0.1); /* Ajuste para a cor accent com opacidade */
+}
+.searchIcon { color: var(--text-muted); }
+.searchPlaceholder::placeholder { color: var(--text-muted); }
+
+.sortSelect {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+.sortSelect:focus {
+  border-color: var(--accent);
+}
+.sortIcon { color: var(--text-muted); }

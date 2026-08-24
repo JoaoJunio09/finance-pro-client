@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Recurrences from "../features/recurrences/Recurrences";
 
 function RecurrencesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -9,11 +10,7 @@ function RecurrencesPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[100vw] h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.08)_0%,_rgba(9,9,11,0)_60%)]"></div>
       </div>
 
-			{/* <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} active="recurrences" />
-
 			<Recurrences />
-
-			<MobileNav setIsOpen={setIsSidebarOpen} active="" /> */}
 		</div>
 	)
 }

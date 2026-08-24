@@ -1,5 +1,9 @@
 import { FileText } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
+import type { TransactionType } from '../../types/TransactionType';
+import TransactionModal from '../transactionModal/TransactionModal';
+import styles from './Transactions.module.css';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfirmModal';
 import { EmptyState } from './components/EmptyState/EmptyState';
 import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
@@ -8,13 +12,8 @@ import { TransactionDetailsDrawer } from './components/TransactionDetailsDrawer/
 import { TransactionItemRow } from './components/TransactionItemRow/TransactionItemRow';
 import { TransactionsHeader } from './components/TransactionsHeader/TransactionsHeader';
 import { TransactionsToolbar } from './components/TransactionsToolbar/TransactionsToolbar';
-import type { ActiveTab } from './types/transaction';
-
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
-import type { TransactionType } from '../../types/TransactionType';
-import TransactionModal from '../transactionModal/TransactionModal';
-import styles from './Transactions.module.css';
 import useTransactions from './hooks/useTransactions';
+import type { ActiveTab } from './types/transaction';
 
 export default function TransactionsPage() {  
   const [activeTab, setActiveTab] = useState<ActiveTab>('all');

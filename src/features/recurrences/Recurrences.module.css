@@ -1,0 +1,16 @@
+.pageContainer {
+  background-color: var(--bg-base);
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+.listContainer {
+  background-color: var(--bg-base); /* Fundo onde os cards vão ficar */
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  box-shadow: 0 -10px 40px -10px rgba(0,0,0,0.1);
+}
+
+.emptyText {
+  color: var(--text-muted);
+}

@@ -1,0 +1,17 @@
+.activeTabIndicator {
+  background-color: var(--bg-base);
+  border-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: var(--bg-base);
+}
+
+.tabTextActive {
+  color: var(--text-main);
+}
+
+.tabIconActive {
+  color: var(--accent);
+}
+
+.newRecurrenceBtn {
+  color: #4C1D95; /* Accent primário do header */
+}
