@@ -1,36 +1,44 @@
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import {
-  X,
-  Hash,
-  Zap,
-  UserCheck,
   Calendar,
-  Clock,
-  Wallet,
   CheckCircle2,
-  Trash2,
+  Clock,
+  Edit2,
+  Hash,
   Pause,
   Play,
-  Edit2,
+  Trash2,
+  UserCheck,
+  Wallet,
+  X,
+  Zap,
 } from 'lucide-react';
-import type { Recurrence } from '../../types/recurrence';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { formatCurrency, formatDate, translateStatus } from '../../utils/recurrenceUtils';
 import styles from './DetailsDrawer.module.css';
 
 interface DetailsDrawerProps {
-  item: Recurrence | null;
+  item: RecurrenceResponse | null;
   isOpen: boolean;
   onClose: () => void;
   onDelete: (id: string) => void;
   onToggleStatus: (id: string) => void;
-  onEdit: (item: Recurrence) => void;
+  onEdit: (item: RecurrenceResponse) => void;
 }
 
-export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus, onEdit }: DetailsDrawerProps) => {
+export const DetailsDrawer = ({
+  item,
+  isOpen,
+  onClose,
+  onDelete,
+  onToggleStatus,
+  onEdit
+}: DetailsDrawerProps) => {
   const [shouldRender, setShouldRender] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
-  const [visibleItem, setVisibleItem] = useState<Recurrence | null>(item);
+  const [visibleItem, setVisibleItem] = useState<RecurrenceResponse | null>(item);
 
   useEffect(() => {
     if (isOpen && item) {
@@ -50,7 +58,7 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
   if (!shouldRender || !visibleItem) return null;
 
   const Icon = visibleItem.category.icon;
-  const isIncome = visibleItem.type === 'INCOME';
+  const isIncome = visibleItem.type === 'CREDIT';
 
   const content = (
     <div className={`fixed inset-0 z-50 flex sm:justify-end flex-col sm:flex-row ${animateIn ? 'pointer-events-auto' : 'pointer-events-none'}`}>
@@ -66,15 +74,15 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
         <div className="flex items-center justify-between p-5 pb-0 shrink-0">
           <div className="flex items-center gap-2">
             <span className={`font-body px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${
-              visibleItem.status === 'ACTIVE' ? `${styles.badgeIncome} border-transparent` :
-              visibleItem.status === 'PAUSED' ? `${styles.badgeWarning} border-transparent` :
+              visibleItem.active ? `${styles.badgeIncome} border-transparent` :
+              !visibleItem.active ? `${styles.badgeWarning} border-transparent` :
               `${styles.elevated} ${styles.textMuted} ${styles.borderLight}`
             }`}>
-              {translateStatus(visibleItem.status)}
+              {translateStatus(visibleItem.active)}
             </span>
             <span className={`font-mono text-xs font-normal ${styles.textMuted} bg-elevated px-2 py-0.5 rounded border ${styles.borderLight} flex items-center gap-1`}>
               <Hash size={10} />
-              {visibleItem.code}
+              {visibleItem.id.substring(0, 4)}
             </span>
           </div>
           <button onClick={onClose} className={`p-2 rounded-xl ${styles.textMuted} hover:bg-elevated hover:text-main transition-colors cursor-pointer`}>
@@ -85,7 +93,7 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
         <div className="p-6 pt-3 flex-1 flex flex-col gap-6 overflow-y-auto">
           <div className="flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mb-4 shadow-sm text-white" style={{ backgroundColor: visibleItem.category.color }}>
-              <Icon size={32} strokeWidth={2} />
+              <DynamicIcon name={visibleItem.category.icon as IconName} size={32} strokeWidth={2} />
             </div>
 
             <h3 className={`font-display font-bold text-2xl ${styles.textMain} mb-1.5 px-4`}>{visibleItem.description}</h3>
@@ -114,14 +122,14 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
                 <span className={`font-body flex items-center gap-2.5 font-normal ${styles.textMuted}`}>
                   <Calendar size={18} className={styles.textAccent} /> Próxima Cobrança
                 </span>
-                <span className={`font-body font-semibold ${styles.textMain}`}>{formatDate(visibleItem.nextDate)}</span>
+                <span className={`font-body font-semibold ${styles.textMain}`}>{formatDate(visibleItem.nextExecutionDate)}</span>
               </div>
 
               <div className={`flex items-center justify-between p-4 border-b ${styles.borderLight}`}>
                 <span className={`font-body flex items-center gap-2.5 font-normal ${styles.textMuted}`}>
                   <Clock size={18} /> Última Cobrança
                 </span>
-                <span className={`font-body font-medium ${styles.textMain}`}>{formatDate(visibleItem.lastDate)}</span>
+                <span className={`font-body font-medium ${styles.textMain}`}>{formatDate(visibleItem.lastExecutionDate)}</span>
               </div>
 
               <div className={`flex items-center justify-between p-4 border-b ${styles.borderLight}`}>
@@ -138,7 +146,7 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
                 <span className={`font-body flex items-center gap-2.5 font-normal ${styles.textMuted}`}>
                   <CheckCircle2 size={18} /> Ocorrências
                 </span>
-                <span className={`font-metric font-medium ${styles.textMain}`}>{visibleItem.occurrences} processadas</span>
+                <span className={`font-metric font-medium ${styles.textMain}`}>12 processadas</span>
               </div>
             </div>
           </div>
@@ -148,7 +156,7 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
               <span className={`font-body text-xs font-medium ${styles.textMuted} uppercase tracking-wide`}>Total Histórico</span>
               <span className={`font-body text-[11px] font-normal ${styles.textMuted} mt-0.5`}>Montante acumulado</span>
             </div>
-            <span className={`font-metric text-lg font-bold ${styles.textMain}`}>{formatCurrency(visibleItem.totalAmountProcessed)}</span>
+            <span className={`font-metric text-lg font-bold ${styles.textMain}`}>{formatCurrency(2000)}</span>
           </div>
         </div>
 
@@ -164,10 +172,10 @@ export const DetailsDrawer = ({ item, isOpen, onClose, onDelete, onToggleStatus,
           <button
             onClick={() => onToggleStatus(visibleItem.id)}
             className={`font-body w-full sm:w-auto flex-1 py-3.5 px-4 rounded-xl border border-transparent font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-80 transition-opacity cursor-pointer ${
-              visibleItem.status === 'ACTIVE' ? styles.badgeWarning : styles.badgeIncome
+              visibleItem.active ? styles.badgeWarning : styles.badgeIncome
             }`}
           >
-            {visibleItem.status === 'ACTIVE' ? <><Pause size={18} /> Pausar</> : <><Play size={18} /> Ativar</>}
+            {visibleItem.active ? <><Pause size={18} /> Pausar</> : <><Play size={18} /> Ativar</>}
           </button>
 
           <button

@@ -1,5 +1,5 @@
 import type { FrequencyType } from '../../../types/FrequencyType';
-import type { RecurrenceStatus } from '../types/recurrence';
+import type { RecurrenceFrequency, RecurrenceStatus } from '../types/recurrence';
 
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -33,11 +33,15 @@ export const translateFrequency = (freq: FrequencyType): string => {
   return map[freq];
 };
 
-export const translateStatus = (status: RecurrenceStatus): string => {
-  const map: Record<RecurrenceStatus, string> = {
-    ACTIVE: 'Ativa',
-    PAUSED: 'Pausada',
-    ENDED: 'Encerrada',
-  };
-  return map[status];
+export const translateStatus = (active: boolean): string => {
+  return active ? 'Ativa' : 'Pausada';
 };
+
+// export const translateStatus = (status: RecurrenceStatus): string => {
+//   const map: Record<RecurrenceStatus, string> = {
+//     ACTIVE: 'Ativa',
+//     PAUSED: 'Pausada',
+//     ENDED: 'Encerrada',
+//   };
+//   return map[status];
+// };
