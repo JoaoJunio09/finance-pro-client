@@ -5,7 +5,7 @@ import type { CategoryResponse } from '../../../../models/category/CategoryRespo
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { TransactionStatus } from '../../../../types/TransactionStatus';
 import type { TransactionType } from '../../../../types/TransactionType';
-import { formatCurrencyDisplay, formatCurrencyInput } from '../../../../utils/FormatCurrency';
+import { formatCurrencyDisplay } from '../../../../utils/FormatCurrency';
 import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
