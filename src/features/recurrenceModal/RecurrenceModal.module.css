@@ -1,0 +1,2 @@
+.backdrop { background-color: rgba(0, 0, 0, 0.6); }
+.modalContainer { background-color: var(--bg-surface); border: 1px solid var(--border-color); }

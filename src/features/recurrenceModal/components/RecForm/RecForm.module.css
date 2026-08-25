@@ -1,0 +1,82 @@
+/* Textos */
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+.textIncome { color: var(--income); }
+
+/* Header e Botão de Fechar */
+.header { border-color: var(--border-light); }
+.btnClose { color: var(--text-muted); }
+.btnClose:hover { background-color: var(--bg-elevated); }
+
+/* Containers de Toggle (Receita/Despesa e Auto/Manual) */
+.toggleContainer {
+  border-color: var(--border-light);
+  background-color: var(--bg-elevated);
+}
+
+.toggleBtn {
+  border-color: transparent;
+  color: var(--text-muted);
+}
+.toggleBtn:hover {
+  color: var(--text-main);
+}
+
+/* Estados Ativos dos Toggles */
+.activeIncome {
+  background-color: var(--bg-surface);
+  color: var(--income);
+  box-shadow: var(--shadow-card);
+  border-color: var(--border-color);
+}
+
+.activeExpense {
+  background-color: var(--bg-surface);
+  color: var(--expense);
+  box-shadow: var(--shadow-card);
+  border-color: var(--border-color);
+}
+
+.activeAuto {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  box-shadow: var(--shadow-card);
+  border-color: var(--border-color);
+}
+
+.activeManual {
+  background-color: var(--bg-surface);
+  color: var(--warning);
+  box-shadow: var(--shadow-card);
+  border-color: var(--border-color);
+}
+
+/* Inputs e Selects Base */
+.inputBase {
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+}
+.inputBase::placeholder { color: var(--text-muted); }
+.inputBase:hover { border-color: var(--border-hover); }
+.inputBase:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  outline: none;
+}
+
+/* Input de Valor Gigante (Amount) */
+.amountInputEmpty { color: var(--text-muted); }
+.amountInputIncome { color: var(--income); }
+.amountInputExpense { color: var(--text-main); }
+
+/* Checkboxes (Já pago) */
+.checkboxContainer {
+  border-color: var(--border-light);
+  background-color: var(--bg-elevated);
+}
+
+.checkboxInput {
+  border-color: var(--border-color);
+  accent-color: var(--accent);
+}

@@ -1,0 +1,63 @@
+/* Layout & Backgrounds */
+.sidebar {
+  border-color: var(--border-color);
+  background: linear-gradient(to bottom right, var(--bg-elevated), var(--bg-surface));
+}
+
+.previewCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  /* A transição de hover original do global.css adaptada para o módulo */
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.previewCard:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
+}
+
+/* Indicadores de Cor (Receita/Despesa) */
+.bgIncome { background-color: var(--income); }
+.bgExpense { background-color: var(--expense); }
+
+/* Textos e Ícones */
+.textMain { color: var(--text-main); }
+.textMuted { color: var(--text-muted); }
+.textIncome { color: var(--income); }
+.accentIcon { color: var(--accent); }
+
+/* Elementos Internos */
+.divider {
+  border-color: var(--border-light);
+}
+
+.badgeAuto {
+  border-color: var(--border-light);
+  background-color: var(--bg-elevated);
+}
+
+.badgeManual {
+  border-color: color-mix(in srgb, var(--warning) 20%, transparent);
+  background-color: var(--warning-muted);
+  color: var(--warning);
+}
+
+.warningDot {
+  background-color: var(--warning);
+}
+
+/* Botões */
+.btnCancel {
+  border-color: var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+}
+
+.btnCancel:hover {
+  background-color: var(--bg-elevated);
+}
+
+.btnSubmit {
+  color: #FFFFFF;
+  background: linear-gradient(to top right, var(--accent), #9333EA);
+}
