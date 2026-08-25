@@ -21,7 +21,7 @@ function useActivities() {
 			month,
 			year
 		],
-		queryFn: () => accountService.getActivities(account?.id ?? '', { month: 8, year: 2026 }),
+		queryFn: () => accountService.getActivities(account?.id ?? '', {}),
 		retry: 3
 	});
 

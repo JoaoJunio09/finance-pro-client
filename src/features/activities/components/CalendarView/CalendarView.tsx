@@ -71,7 +71,7 @@ export function CalendarView({
       <div className="grid grid-cols-7 gap-1 sm:gap-2">
         {days.map((dayObj, index) => {
           const isToday = isSameDay(dayObj.date, today);
-          const dayActivities = activities.filter(a => isSameDayFromLocalDateTime(a.registeredAt, dayObj.date));
+          const dayActivities = activities.filter(a => isSameDayFromLocalDateTime(a.registeredAt ?? '', dayObj.date));
           
           const hasIncome = dayActivities.some(a => a.type === 'CREDIT');
           const hasExpense = dayActivities.some(a => a.type === 'DEBIT');

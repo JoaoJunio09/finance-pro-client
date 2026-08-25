@@ -1,22 +1,19 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Zap, AlertTriangle, Calendar } from 'lucide-react';
-import type { FiltersState, Recurrence } from './types/recurrence';
-import { mockRecurrences } from './mocks/recurrenceMocks';
-import { getDaysDifference } from './utils/recurrenceUtils';
-import { RecurrencesHeader } from './components/RecurrencesHeader/RecurrencesHeader';
-import { SummaryCards } from './components/SummaryCards/SummaryCards';
-import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesToolbar';
-import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
-import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
-import { RecurrenceSection } from './components/RecurrenceSection/RecurrenceSection';
-import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
+import { AlertTriangle, Calendar, Zap } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { DetailsDrawer } from './components/DetailsDrawer/DetailsDrawer';
+import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
+import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
+import { RecurrenceSection } from './components/RecurrenceSection/RecurrenceSection';
+import { RecurrencesHeader } from './components/RecurrencesHeader/RecurrencesHeader';
+import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesToolbar';
+import { SummaryCards } from './components/SummaryCards/SummaryCards';
+import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
+import { mockRecurrences } from './mocks/recurrenceMocks';
+import type { FiltersState, Recurrence } from './types/recurrence';
+import { getDaysDifference } from './utils/recurrenceUtils';
+import useRecurrences from './hooks/useRecurrences';
 
-// ==========================================
-// MAIN COMPONENT
-// ==========================================
 export function Recurrences() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FiltersState>({ type: 'ALL', status: 'ALL', frequency: 'ALL' });
 
@@ -25,15 +22,6 @@ export function Recurrences() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const [recurrencesList, setRecurrencesList] = useState<Recurrence[]>(mockRecurrences);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
 
   const handleDelete = (id: string) => {
     setRecurrencesList(prev => prev.filter(r => r.id !== id));
@@ -114,30 +102,30 @@ export function Recurrences() {
     return { count: active.length, income, expense };
   }, [recurrencesList]);
 
+  const {
+    allRecurrences
+  } = useRecurrences();
+
+  console.log(allRecurrences);
+
   return (
     <div className="page-container">
       <RecurrencesHeader
         onNew={() => setIsCreateOpen(true)}
-        theme={theme}
-        onThemeChange={setTheme}
       />
 
       <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up mt-6">
-
-        {/* SUMMARY CARDS */}
         <SummaryCards
-          count={summary.count}
-          income={summary.income}
-          expense={summary.expense}
+          count={allRecurrences?.totalActives ?? 0}
+          income={allRecurrences?.totalIncomeAmount ?? 0}
+          expense={allRecurrences?.totalExpenseAmount ?? 0}
         />
 
-        {/* CARDS DE DESTAQUE APRIMORADOS */}
         <UpcomingHighlights
-          items={upcomingHighlights}
-          onSelect={setSelectedItem}
+          items={allRecurrences?.recurrencesHighlightsOfTheWeek ?? []}
+          onSelect={() => {}}
         />
 
-        {/* TOOLBAR */}
         <div className="mb-8">
           <RecurrencesToolbar
             searchQuery={search}
@@ -147,51 +135,44 @@ export function Recurrences() {
           />
         </div>
 
-        {/* LISTAGEM ORGANIZADA EM 3 SEÇÕES DISTINTAS */}
         {filteredData.length === 0 ? (
           <EmptyRecurrencesState />
         ) : (
           <div className="flex flex-col gap-10">
-
-            {/* SEÇÃO 1: RECORRÊNCIAS PARA HOJE */}
             <RecurrenceSection
               icon={Zap}
               variant="expense"
               title="Recorrências para Hoje"
               description="Ações e lançamentos agendados para a data de hoje."
-              items={categorizedSections.today}
-              onSelect={setSelectedItem}
-              onConfirm={handleQuickConfirm}
+              items={allRecurrences?.recurrencesDueToday ?? []}
+              onSelect={() => {}}
+              onConfirm={() => {}}
             />
 
-            {/* SEÇÃO 2: RECORRÊNCIAS PENDENTES */}
             <RecurrenceSection
               icon={AlertTriangle}
               variant="warning"
               title="Recorrências Pendentes"
               description="Compromissos vencidos que requerem atenção ou confirmação."
-              items={categorizedSections.pending}
-              onSelect={setSelectedItem}
-              onConfirm={handleQuickConfirm}
+              items={allRecurrences?.recurrencesOverdue ?? []}
+              onSelect={() => {}}
+              onConfirm={() => {}}
             />
 
-            {/* SEÇÃO 3: PRÓXIMAS RECORRÊNCIAS */}
             <RecurrenceSection
               icon={Calendar}
               variant="accent"
               title="Próximas Recorrências"
               description="Compromissos e recebimentos previstos para datas futuras."
-              items={categorizedSections.upcoming}
-              onSelect={setSelectedItem}
-              onConfirm={handleQuickConfirm}
+              items={allRecurrences?.recurrencesUpcoming ?? []}
+              onSelect={() => {}}
+              onConfirm={() => {}}
             />
-
           </div>
         )}
 
       </main>
 
-      {/* DRAWERS */}
       <FiltersDrawer
         isOpen={isFiltersOpen}
         onClose={() => setIsFiltersOpen(false)}

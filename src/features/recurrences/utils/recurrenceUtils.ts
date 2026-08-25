@@ -1,4 +1,5 @@
-import type { RecurrenceFrequency, RecurrenceStatus } from '../types/recurrence';
+import type { FrequencyType } from '../../../types/FrequencyType';
+import type { RecurrenceStatus } from '../types/recurrence';
 
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -23,10 +24,9 @@ export const getDaysDifference = (dateString: string | null): number | null => {
   return Math.round(diffTime / (1000 * 60 * 60 * 24));
 };
 
-export const translateFrequency = (freq: RecurrenceFrequency): string => {
-  const map: Record<RecurrenceFrequency, string> = {
-    DAILY: 'Diário',
-    WEEKLY: 'Semanal',
+export const translateFrequency = (freq: FrequencyType): string => {
+  const map: Record<FrequencyType, string> = {
+    BIWEEKLY: 'Quinzenal',
     MONTHLY: 'Mensal',
     YEARLY: 'Anual',
   };

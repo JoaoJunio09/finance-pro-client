@@ -1,13 +1,11 @@
-import { Repeat, Plus, Sun, Moon } from 'lucide-react';
+import { Plus, Repeat } from 'lucide-react';
 import styles from './RecurrencesHeader.module.css';
 
 interface RecurrencesHeaderProps {
-  onNew: () => void;
-  theme: 'light' | 'dark';
-  onThemeChange: (t: 'light' | 'dark') => void;
+  onNew: () => void
 }
 
-export const RecurrencesHeader = ({ onNew, theme, onThemeChange }: RecurrencesHeaderProps) => (
+export const RecurrencesHeader = ({ onNew }: RecurrencesHeaderProps) => (
   <div className={`${styles.headerBg} w-full relative z-20 pt-8 pb-12 shadow-md`}>
     <div className={styles.patternOverlay}></div>
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6 relative z-10">

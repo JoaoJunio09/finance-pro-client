@@ -2,17 +2,22 @@ import { Repeat, ChevronRight, Check, Zap, UserCheck, AlertTriangle } from 'luci
 import type { Recurrence } from '../../types/recurrence';
 import { getDaysDifference, formatDate, formatCurrency, translateFrequency } from '../../utils/recurrenceUtils';
 import styles from './RecurrenceCard.module.css';
+import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 
 interface RecurrenceCardProps {
-  item: Recurrence;
-  onSelect: (r: Recurrence) => void;
-  onConfirm?: (e: React.MouseEvent, r: Recurrence) => void;
+  item: RecurrenceResponse;
+  onSelect: (r: RecurrenceResponse) => void;
+  onConfirm?: (e: React.MouseEvent, r: RecurrenceResponse) => void;
 }
 
-export const RecurrenceCard = ({ item, onSelect, onConfirm }: RecurrenceCardProps) => {
-  const Icon = item.category.icon;
-  const isIncome = item.type === 'INCOME';
-  const days = getDaysDifference(item.nextDate);
+export const RecurrenceCard = ({
+  item,
+  onSelect,
+  onConfirm
+}: RecurrenceCardProps) => {
+  const isIncome = item.type === 'CREDIT';
+  const days = getDaysDifference(item.nextExecutionDate);
   const isOverdue = days !== null && days < 0;
   const isToday = days === 0;
   const isAuto = item.executionType === 'AUTOMATIC';
@@ -36,7 +41,7 @@ export const RecurrenceCard = ({ item, onSelect, onConfirm }: RecurrenceCardProp
           className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 text-white shadow-sm transition-transform group-hover:scale-105"
           style={{ backgroundColor: item.category.color }}
         >
-          <Icon size={20} />
+          <DynamicIcon name={item.category.icon as IconName} size={20} />
         </div>
 
         <div className="min-w-0 flex flex-col gap-1">
@@ -71,11 +76,11 @@ export const RecurrenceCard = ({ item, onSelect, onConfirm }: RecurrenceCardProp
             <span>•</span>
             <span className="flex items-center gap-1">
               <Repeat size={11} className={styles.textMuted} />
-              {translateFrequency(item.frequency)}
+              {translateFrequency(item.frequencyType)}
             </span>
             <span>•</span>
             <span className={isOverdue ? 'text-amber-600 dark:text-amber-400 font-medium' : isToday ? `${styles.textExpense} font-semibold` : ''}>
-              {isToday ? 'Vence Hoje' : isOverdue ? `Venceu em ${formatDate(item.nextDate)}` : `Próxima: ${formatDate(item.nextDate)}`}
+              {isToday ? 'Vence Hoje' : isOverdue ? `Venceu em ${formatDate(item.nextExecutionDate)}` : `Próxima: ${formatDate(item.nextExecutionDate)}`}
             </span>
           </div>
         </div>
@@ -91,7 +96,7 @@ export const RecurrenceCard = ({ item, onSelect, onConfirm }: RecurrenceCardProp
         </div>
 
         <div className="flex items-center gap-2">
-          {!isAuto && onConfirm && item.status === 'ACTIVE' && (
+          {!isAuto && onConfirm && item.active && (
             <button
               onClick={(e) => onConfirm(e, item)}
               className="font-body px-3 py-1.5 rounded-xl bg-[#5B21B6] text-white text-xs font-medium hover:bg-[#4C1D95] transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"

@@ -1,14 +1,18 @@
-import { Clock, Zap, UserCheck, Calendar } from 'lucide-react';
-import type { Recurrence } from '../../types/recurrence';
-import { getDaysDifference, formatCurrency } from '../../utils/recurrenceUtils';
+import { Calendar, Clock, UserCheck, Zap } from 'lucide-react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
+import { formatCurrency, getDaysDifference } from '../../utils/recurrenceUtils';
 import styles from './UpcomingHighlights.module.css';
 
 interface UpcomingHighlightsProps {
-  items: Recurrence[];
-  onSelect: (r: Recurrence) => void;
+  items: RecurrenceResponse[];
+  onSelect: (r: RecurrenceResponse) => void;
 }
 
-export const UpcomingHighlights = ({ items, onSelect }: UpcomingHighlightsProps) => {
+export const UpcomingHighlights = ({
+  items,
+  onSelect
+}: UpcomingHighlightsProps) => {
   if (items.length === 0) return null;
 
   return (
@@ -26,9 +30,8 @@ export const UpcomingHighlights = ({ items, onSelect }: UpcomingHighlightsProps)
       {/* Container: Flex com Overflow no Mobile -> Grid Responsiva no Desktop */}
       <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
         {items.map(item => {
-          const Icon = item.category.icon;
-          const days = getDaysDifference(item.nextDate);
-          const isIncome = item.type === 'INCOME';
+          const days = getDaysDifference(item.nextExecutionDate);
+          const isIncome = item.type === 'CREDIT';
           const isToday = days === 0;
           const isTomorrow = days === 1;
           const isAuto = item.executionType === 'AUTOMATIC';
@@ -52,7 +55,7 @@ export const UpcomingHighlights = ({ items, onSelect }: UpcomingHighlightsProps)
                     className="p-2.5 rounded-xl text-white shadow-sm shrink-0 transition-transform group-hover:scale-105"
                     style={{ backgroundColor: item.category.color }}
                   >
-                    <Icon size={18} />
+                    <DynamicIcon name={item.category.icon as IconName} size={18} />
                   </div>
                   <div className="min-w-0">
                     <h4 className={`font-heading font-semibold text-sm ${styles.textMain} truncate leading-snug`}>

@@ -1,4 +1,4 @@
-import type { Recurrence } from '../../types/recurrence';
+import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { RecurrenceCard } from '../RecurrenceCard/RecurrenceCard';
 import styles from './RecurrenceSection.module.css';
 
@@ -15,9 +15,9 @@ interface RecurrenceSectionProps {
   variant: RecurrenceSectionVariant;
   title: string;
   description: string;
-  items: Recurrence[];
-  onSelect: (r: Recurrence) => void;
-  onConfirm?: (e: React.MouseEvent, r: Recurrence) => void;
+  items: RecurrenceResponse[];
+  onSelect: (r: RecurrenceResponse) => void;
+  onConfirm?: (e: React.MouseEvent, r: RecurrenceResponse) => void;
 }
 
 export const RecurrenceSection = ({
