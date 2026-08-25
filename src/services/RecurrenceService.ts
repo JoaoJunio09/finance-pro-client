@@ -1,6 +1,7 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AllRecurrenceResponse } from "../models/recurrence/AllRecurrenceResponse";
 import type { ParamsRecurrenceAPI } from "../models/recurrence/ParamsRecurrenceAPI";
+import type { RecurrenceConfirmResponse } from "../models/recurrence/RecurrenceConfirmResponse";
 import type { RecurrenceRequest } from "../models/recurrence/RecurrenceRequest";
 import type { RecurrenceResponse } from "../models/recurrence/RecurrenceResponse";
 import api from "./api";
@@ -95,6 +96,27 @@ class RecurrenceService {
 		catch (err: any) {
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao atualizar Recorrência');
+			}
+
+			throw err;
+		}
+	}
+
+	public async confirm(id: string) {
+		const URL = `${this.BASE_URL}/confirm/${id}`;
+		try {
+			const response = await api.put<RecurrenceConfirmResponse>(URL, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao confirm execução da Recorrência');
 			}
 
 			throw err;

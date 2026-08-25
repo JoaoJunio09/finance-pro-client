@@ -39,9 +39,9 @@ export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersD
   };
 
   const handleClear = () => {
-    const cleared = { type: 'ALL', active: 'ALL', frequency: 'ALL' };
-    // setLocalFilters(cleared);
-    // setFilters(cleared);
+    const cleared: Filters = { type: 'ALL', status: 'ALL', frequency: 'ALL' };
+    setLocalFilters(cleared);
+    setFilters(cleared);
     onClose();
   };
 

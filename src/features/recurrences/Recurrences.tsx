@@ -39,22 +39,44 @@ export function Recurrences() {
     setFilters
   } = useRecurrences();
 
+  const hasActiveFilters =
+    search.trim() !== '' ||
+    filters.type !== 'ALL' ||
+    filters.status !== 'ALL' ||
+    filters.frequency !== 'ALL';
+
   const filteredRecurrences = useMemo(() => {
+    if (!hasActiveFilters) return null;
+
     return allRecurrences?.recurrences.filter(rec => {
       if (search.trim() !== '') {
         const query = search.toLowerCase();
         const matchesDesc = rec.description.toLowerCase().includes(query);
         if (!matchesDesc) return false;
       }
+
+      if (filters.type === 'CREDIT' && rec.type !== 'CREDIT') return false;
+      if (filters.type === 'DEBIT' && rec.type !== 'DEBIT') return false;
+
+      if (filters.frequency === 'BIWEEKLY' && rec.frequencyType !== 'BIWEEKLY') return false;
+      if (filters.frequency === 'MONTHLY' && rec.frequencyType !== 'MONTHLY') return false;
+      if (filters.frequency === 'YEARLY' && rec.frequencyType !== 'YEARLY') return false;
+
+      if (filters.status === 'ACTIVE' && rec.status !== 'ACTIVE') return false;
+      if (filters.status === 'PAUSED' && rec.status !== 'PAUSED') return false;
+      if (filters.status === 'ENDED' && rec.status !== 'ENDED') return false;
+
+      return true;
     });
-  }, [search]);
+  }, [hasActiveFilters, search, filters.status, filters.frequency, filters.type, allRecurrences]);
 
-  const isEmpty = 
-    allRecurrences?.recurrencesDueToday.length &&
-    allRecurrences?.recurrencesOverdue.length &&
-    allRecurrences?.recurrencesUpcoming.length;
-
-  console.log(allRecurrences);
+  const isEmpty = hasActiveFilters
+    ? (filteredRecurrences?.length ?? 0) === 0
+    : (
+        allRecurrences?.recurrencesDueToday.length === 0 &&
+        allRecurrences?.recurrencesOverdue.length === 0 &&
+        allRecurrences?.recurrencesUpcoming.length === 0
+      );
 
   return (
     <div className="page-container">
@@ -85,41 +107,51 @@ export function Recurrences() {
 
         {isEmpty ? (
           <EmptyRecurrencesState />
-        ) : (
+        ) : (  
           <div className="flex flex-col gap-10">
-            <RecurrenceSection
-              icon={Zap}
-              variant="expense"
-              title="Recorrências para Hoje"
-              description="Ações e lançamentos agendados para a data de hoje."
-              items={
-                filteredRecurrences ?
-                  filteredRecurrences :
-                  allRecurrences?.recurrencesDueToday ?? []
-              }
-              onSelect={setSelectedRecurrence}
-              onConfirm={() => {}}
-            />
+            {hasActiveFilters ? (
+              <RecurrenceSection
+                icon={Zap}
+                variant="accent"
+                title="Recorrências"
+                description="Ações e lançamentos filtrados."
+                items={filteredRecurrences ?? []}
+                onSelect={setSelectedRecurrence}
+                onConfirm={() => {}}
+              />
+            ) : (
+              <>
+                <RecurrenceSection
+                  icon={Zap}
+                  variant="expense"
+                  title="Recorrências para Hoje"
+                  description="Ações e lançamentos agendados para a data de hoje."
+                  items={allRecurrences?.recurrencesDueToday ?? []}
+                  onSelect={setSelectedRecurrence}
+                  onConfirm={() => {}}
+                />
 
-            <RecurrenceSection
-              icon={AlertTriangle}
-              variant="warning"
-              title="Recorrências Pendentes"
-              description="Compromissos vencidos que requerem atenção ou confirmação."
-              items={allRecurrences?.recurrencesOverdue ?? []}
-              onSelect={setSelectedRecurrence}
-              onConfirm={() => {}}
-            />
+                <RecurrenceSection
+                  icon={AlertTriangle}
+                  variant="warning"
+                  title="Recorrências Pendentes"
+                  description="Compromissos vencidos que requerem atenção ou confirmação."
+                  items={allRecurrences?.recurrencesOverdue ?? []}
+                  onSelect={setSelectedRecurrence}
+                  onConfirm={() => {}}
+                />
 
-            <RecurrenceSection
-              icon={Calendar}
-              variant="accent"
-              title="Próximas Recorrências"
-              description="Compromissos e recebimentos previstos para datas futuras."
-              items={allRecurrences?.recurrencesUpcoming ?? []}
-              onSelect={setSelectedRecurrence}
-              onConfirm={() => {}}
-            />
+                <RecurrenceSection
+                  icon={Calendar}
+                  variant="accent"
+                  title="Próximas Recorrências"
+                  description="Compromissos e recebimentos previstos para datas futuras."
+                  items={allRecurrences?.recurrencesUpcoming ?? []}
+                  onSelect={setSelectedRecurrence}
+                  onConfirm={() => {}}
+                />
+              </>
+            )}
           </div>
         )}
       </main>
