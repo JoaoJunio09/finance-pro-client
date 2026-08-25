@@ -1,15 +1,21 @@
 import type { FrequencyType } from '../../../types/FrequencyType';
-import type { RecurrenceFrequency, RecurrenceStatus } from '../types/recurrence';
+import type { RecurrenceStatus } from '../types/recurrence';
 
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 };
 
-export const formatDate = (dateString: string | null): string => {
+// Cria a Date em horário LOCAL a partir de uma string "yyyy-MM-dd" (ou "yyyy-MM-ddTHH:mm:ss...")
+export const parseLocalDate = (dateString: string): Date => {
+  const datePart = dateString.split('T')[0]; // ignora hora/timezone, se houver
+  const [year, month, day] = datePart.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const formatDate = (dateString: string): string => {
   if (!dateString) return 'N/D';
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-    new Date(dateString)
-  );
+  const date = parseLocalDate(dateString);
+  return date.toLocaleDateString('pt-BR'); // ajuste o formato conforme já usa
 };
 
 export const getDaysDifference = (dateString: string | null): number | null => {

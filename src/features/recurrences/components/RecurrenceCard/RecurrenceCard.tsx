@@ -1,6 +1,6 @@
 import { Repeat, ChevronRight, Check, Zap, UserCheck, AlertTriangle } from 'lucide-react';
 import type { Recurrence } from '../../types/recurrence';
-import { getDaysDifference, formatDate, formatCurrency, translateFrequency } from '../../utils/recurrenceUtils';
+import { getDaysDifference, formatDate, formatCurrency, translateFrequency, parseLocalDate } from '../../utils/recurrenceUtils';
 import styles from './RecurrenceCard.module.css';
 import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
@@ -9,7 +9,7 @@ import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMar
 interface RecurrenceCardProps {
   item: RecurrenceResponse;
   onSelect: (r: RecurrenceResponse) => void;
-  onConfirm?: (e: React.MouseEvent, r: RecurrenceResponse) => void;
+  onConfirm?: (r: RecurrenceResponse) => void;
 }
 
 export const RecurrenceCard = ({
@@ -22,6 +22,21 @@ export const RecurrenceCard = ({
   const isOverdue = days !== null && days < 0;
   const isToday = days === 0;
   const isAuto = item.executionType === 'AUTOMATIC';
+
+  const isConfirmableInCurrentPeriod = (() => {
+    const next = parseLocalDate(item.nextExecutionDate);
+    const now = new Date();
+
+    if (item.frequencyType === 'YEARLY') {
+      return next.getFullYear() === now.getFullYear();
+    }
+
+    // MONTHLY e BIWEEKLY — mesmo mês/ano
+    return (
+      next.getFullYear() === now.getFullYear() &&
+      next.getMonth() === now.getMonth()
+    );
+  })();
 
   return (
     <div
@@ -70,10 +85,6 @@ export const RecurrenceCard = ({
           <div className={`font-body flex items-center gap-2 text-xs font-normal ${styles.textMuted} flex-wrap`}>
             <span>{item.category.name}</span>
             <span>•</span>
-            {/* <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: item.wallet.color }} />
-              {item.wallet.name}
-            </span> */}
             {item.wallet.bank ? (
               <BankBrandMark bank={item.wallet.bank} size='sm' />
             ) : (
@@ -102,9 +113,12 @@ export const RecurrenceCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {!isAuto && onConfirm && item.executionType === 'MANUALLY' && item.status === 'ACTIVE' && (
+          {!isAuto && onConfirm && item.executionType === 'MANUALLY' && item.status === 'ACTIVE' && isConfirmableInCurrentPeriod && (
             <button
-              onClick={(e) => onConfirm(e, item)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onConfirm(item);
+              }}
               className="font-body px-3 py-1.5 rounded-xl bg-[#5B21B6] text-white text-xs font-medium hover:bg-[#4C1D95] transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
               title="Registrar liquidação"
             >

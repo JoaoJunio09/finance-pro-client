@@ -57,7 +57,6 @@ export const DetailsDrawer = ({
 
   if (!shouldRender || !visibleItem) return null;
 
-  const Icon = visibleItem.category.icon;
   const isIncome = visibleItem.type === 'CREDIT';
 
   const content = (

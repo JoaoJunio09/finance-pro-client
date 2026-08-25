@@ -17,7 +17,7 @@ interface RecurrenceSectionProps {
   description: string;
   items: RecurrenceResponse[];
   onSelect: (r: RecurrenceResponse) => void;
-  onConfirm?: (e: React.MouseEvent, r: RecurrenceResponse) => void;
+  onConfirm?: (r: RecurrenceResponse) => void;
 }
 
 export const RecurrenceSection = ({

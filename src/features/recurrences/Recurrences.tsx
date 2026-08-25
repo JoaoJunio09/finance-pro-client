@@ -1,5 +1,6 @@
 import { AlertTriangle, Calendar, Zap } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import type { RecurrenceResponse } from '../../models/recurrence/RecurrenceResponse';
 import { DetailsDrawer } from './components/DetailsDrawer/DetailsDrawer';
 import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
 import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
@@ -9,8 +10,6 @@ import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesT
 import { SummaryCards } from './components/SummaryCards/SummaryCards';
 import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
 import useRecurrences from './hooks/useRecurrences';
-import type { FiltersState, Recurrence } from './types/recurrence';
-import type { RecurrenceResponse } from '../../models/recurrence/RecurrenceResponse';
 
 export function Recurrences() {
   const [search, setSearch] = useState('');
@@ -26,15 +25,17 @@ export function Recurrences() {
 
   };
 
-  const handleQuickConfirm = (e: React.MouseEvent, item: Recurrence) => {
+  const handleConfirm = (recurrence: RecurrenceResponse) => {
+    confirm(recurrence);
   };
 
-  const handleEdit = (_item: Recurrence) => {
+  const handleEdit = (_item: RecurrenceResponse) => {
     
   };
 
   const {
     allRecurrences,
+    confirm,
     filters,
     setFilters
   } = useRecurrences();
@@ -117,7 +118,7 @@ export function Recurrences() {
                 description="Ações e lançamentos filtrados."
                 items={filteredRecurrences ?? []}
                 onSelect={setSelectedRecurrence}
-                onConfirm={() => {}}
+                onConfirm={handleConfirm}
               />
             ) : (
               <>
@@ -128,7 +129,7 @@ export function Recurrences() {
                   description="Ações e lançamentos agendados para a data de hoje."
                   items={allRecurrences?.recurrencesDueToday ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={() => {}}
+                  onConfirm={handleConfirm}
                 />
 
                 <RecurrenceSection
@@ -138,7 +139,7 @@ export function Recurrences() {
                   description="Compromissos vencidos que requerem atenção ou confirmação."
                   items={allRecurrences?.recurrencesOverdue ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={() => {}}
+                  onConfirm={handleConfirm}
                 />
 
                 <RecurrenceSection
@@ -148,7 +149,7 @@ export function Recurrences() {
                   description="Compromissos e recebimentos previstos para datas futuras."
                   items={allRecurrences?.recurrencesUpcoming ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={() => {}}
+                  onConfirm={handleConfirm}
                 />
               </>
             )}

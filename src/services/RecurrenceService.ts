@@ -1,7 +1,6 @@
 import InternalServerError from "../exceptions/InternalServerError";
 import type { AllRecurrenceResponse } from "../models/recurrence/AllRecurrenceResponse";
 import type { ParamsRecurrenceAPI } from "../models/recurrence/ParamsRecurrenceAPI";
-import type { RecurrenceConfirmResponse } from "../models/recurrence/RecurrenceConfirmResponse";
 import type { RecurrenceRequest } from "../models/recurrence/RecurrenceRequest";
 import type { RecurrenceResponse } from "../models/recurrence/RecurrenceResponse";
 import api from "./api";
@@ -104,8 +103,9 @@ class RecurrenceService {
 
 	public async confirm(id: string) {
 		const URL = `${this.BASE_URL}/confirm/${id}`;
+
 		try {
-			const response = await api.put<RecurrenceConfirmResponse>(URL, {
+			const response = await api.patch<void>(URL, {}, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${this.accessToken}`
