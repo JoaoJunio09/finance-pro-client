@@ -4,6 +4,7 @@ import { getDaysDifference, formatDate, formatCurrency, translateFrequency } fro
 import styles from './RecurrenceCard.module.css';
 import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 
 interface RecurrenceCardProps {
   item: RecurrenceResponse;
@@ -69,10 +70,15 @@ export const RecurrenceCard = ({
           <div className={`font-body flex items-center gap-2 text-xs font-normal ${styles.textMuted} flex-wrap`}>
             <span>{item.category.name}</span>
             <span>•</span>
-            <span className="flex items-center gap-1.5">
+            {/* <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: item.wallet.color }} />
               {item.wallet.name}
-            </span>
+            </span> */}
+            {item.wallet.bank ? (
+              <BankBrandMark bank={item.wallet.bank} size='sm' />
+            ) : (
+              <BankBrandMark wallet={item.wallet} size='sm' />
+            )}
             <span>•</span>
             <span className="flex items-center gap-1">
               <Repeat size={11} className={styles.textMuted} />

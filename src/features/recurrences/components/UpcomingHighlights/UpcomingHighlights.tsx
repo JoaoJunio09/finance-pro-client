@@ -3,6 +3,7 @@ import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { formatCurrency, getDaysDifference } from '../../utils/recurrenceUtils';
 import styles from './UpcomingHighlights.module.css';
+import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 
 interface UpcomingHighlightsProps {
   items: RecurrenceResponse[];
@@ -77,10 +78,11 @@ export const UpcomingHighlights = ({
                   <span>{isAuto ? 'Automática' : 'Manual'}</span>
                 </span>
 
-                <span className={`font-body inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${styles.elevated} ${styles.textMuted} border ${styles.borderLight}`}>
-                  <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: item.wallet.color }} />
-                  <span>{item.wallet.name}</span>
-                </span>
+                {item.wallet.bank ? (
+                  <BankBrandMark bank={item.wallet.bank} size='sm' />
+                ) : (
+                  <BankBrandMark wallet={item.wallet} size='sm' />
+                )}
               </div>
 
               {/* Rodapé com Valor e Vencimento */}

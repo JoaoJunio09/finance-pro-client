@@ -60,7 +60,7 @@ export function Recurrences() {
 
         <UpcomingHighlights
           items={allRecurrences?.recurrencesHighlightsOfTheWeek ?? []}
-          onSelect={() => {}}
+          onSelect={setSelectedRecurrence}
         />
 
         <div className="mb-8">
