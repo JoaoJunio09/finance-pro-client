@@ -74,11 +74,11 @@ export const DetailsDrawer = ({
         <div className="flex items-center justify-between p-5 pb-0 shrink-0">
           <div className="flex items-center gap-2">
             <span className={`font-body px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${
-              visibleItem.active ? `${styles.badgeIncome} border-transparent` :
-              !visibleItem.active ? `${styles.badgeWarning} border-transparent` :
+              visibleItem.status === 'ACTIVE' ? `${styles.badgeIncome} border-transparent` :
+              visibleItem.status === 'PAUSED' ? `${styles.badgeWarning} border-transparent` :
               `${styles.elevated} ${styles.textMuted} ${styles.borderLight}`
             }`}>
-              {translateStatus(visibleItem.active)}
+              {translateStatus(visibleItem.status)}
             </span>
             <span className={`font-mono text-xs font-normal ${styles.textMuted} bg-elevated px-2 py-0.5 rounded border ${styles.borderLight} flex items-center gap-1`}>
               <Hash size={10} />
@@ -172,10 +172,10 @@ export const DetailsDrawer = ({
           <button
             onClick={() => onToggleStatus(visibleItem.id)}
             className={`font-body w-full sm:w-auto flex-1 py-3.5 px-4 rounded-xl border border-transparent font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-80 transition-opacity cursor-pointer ${
-              visibleItem.active ? styles.badgeWarning : styles.badgeIncome
+              visibleItem.status === 'ACTIVE' ? styles.badgeWarning : styles.badgeIncome
             }`}
           >
-            {visibleItem.active ? <><Pause size={18} /> Pausar</> : <><Play size={18} /> Ativar</>}
+            {visibleItem.status === 'ACTIVE' ? <><Pause size={18} /> Pausar</> : <><Play size={18} /> Ativar</>}
           </button>
 
           <button

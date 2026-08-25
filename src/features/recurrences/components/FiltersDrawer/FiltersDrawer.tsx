@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react';
+import { ArrowUpDown, Check, CheckCircle2, Filter, Repeat, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Filter, X, ArrowUpDown, CheckCircle2, Repeat, Check } from 'lucide-react';
-import type { FiltersState } from '../../types/recurrence';
+import type { FrequencyType } from '../../../../types/FrequencyType';
+import type { RecurrenceStatus } from '../../../../types/RecurrenceStatus';
+import type { RecurrenceType } from '../../../../types/RecurrenceType';
+import type { Filters } from '../../types/filter';
 import styles from './FiltersDrawer.module.css';
 
 interface FiltersDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  filters: FiltersState;
-  setFilters: React.Dispatch<React.SetStateAction<FiltersState>>;
+  filters: Filters;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
 }
 
 export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersDrawerProps) => {
-  const [localFilters, setLocalFilters] = useState<FiltersState>(filters);
+  const [localFilters, setLocalFilters] = useState<Filters>(filters);
   const [isVisible, setIsVisible] = useState(false);
   const [renderDrawer, setRenderDrawer] = useState(isOpen);
 
@@ -36,9 +39,9 @@ export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersD
   };
 
   const handleClear = () => {
-    const cleared = { type: 'ALL', status: 'ALL', frequency: 'ALL' };
-    setLocalFilters(cleared);
-    setFilters(cleared);
+    const cleared = { type: 'ALL', active: 'ALL', frequency: 'ALL' };
+    // setLocalFilters(cleared);
+    // setFilters(cleared);
     onClose();
   };
 
@@ -69,12 +72,12 @@ export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersD
             </label>
             <select
               value={localFilters.type}
-              onChange={(e) => setLocalFilters({ ...localFilters, type: e.target.value })}
+              onChange={(e) => setLocalFilters({ ...localFilters, type: e.target.value as RecurrenceType })}
               className={`font-body w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.elevated} ${styles.borderLight} ${styles.textMain} focus:border-accent hover:border-hover transition-colors`}
             >
               <option value="ALL">Todas as Recorrências</option>
-              <option value="INCOME">Entradas (Receitas)</option>
-              <option value="EXPENSE">Saídas (Despesas)</option>
+              <option value="CREDIT">Entradas (Receitas)</option>
+              <option value="DEBIT">Saídas (Despesas)</option>
             </select>
           </div>
 
@@ -84,7 +87,7 @@ export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersD
             </label>
             <select
               value={localFilters.status}
-              onChange={(e) => setLocalFilters({ ...localFilters, status: e.target.value })}
+              onChange={(e) => setLocalFilters({ ...localFilters, status: e.target.value as RecurrenceStatus })}
               className={`font-body w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.elevated} ${styles.borderLight} ${styles.textMain} focus:border-accent hover:border-hover transition-colors`}
             >
               <option value="ALL">Todos os Status</option>
@@ -100,12 +103,11 @@ export const FiltersDrawer = ({ isOpen, onClose, filters, setFilters }: FiltersD
             </label>
             <select
               value={localFilters.frequency}
-              onChange={(e) => setLocalFilters({ ...localFilters, frequency: e.target.value })}
+              onChange={(e) => setLocalFilters({ ...localFilters, frequency: e.target.value as FrequencyType })}
               className={`font-body w-full px-4 py-3 border rounded-xl text-sm font-medium focus:outline-none cursor-pointer ${styles.elevated} ${styles.borderLight} ${styles.textMain} focus:border-accent hover:border-hover transition-colors`}
             >
               <option value="ALL">Todas as Frequências</option>
-              <option value="DAILY">Diário</option>
-              <option value="WEEKLY">Semanal</option>
+              <option value="BIWEEKLY">Quinzenal</option>
               <option value="MONTHLY">Mensal</option>
               <option value="YEARLY">Anual</option>
             </select>

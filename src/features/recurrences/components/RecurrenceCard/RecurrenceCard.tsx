@@ -102,7 +102,7 @@ export const RecurrenceCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {!isAuto && onConfirm && item.active && (
+          {!isAuto && onConfirm && item.executionType === 'MANUALLY' && item.status === 'ACTIVE' && (
             <button
               onClick={(e) => onConfirm(e, item)}
               className="font-body px-3 py-1.5 rounded-xl bg-[#5B21B6] text-white text-xs font-medium hover:bg-[#4C1D95] transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"

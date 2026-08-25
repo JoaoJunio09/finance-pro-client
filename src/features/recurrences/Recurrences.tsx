@@ -1,5 +1,5 @@
 import { AlertTriangle, Calendar, Zap } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DetailsDrawer } from './components/DetailsDrawer/DetailsDrawer';
 import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
 import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
@@ -14,7 +14,6 @@ import type { RecurrenceResponse } from '../../models/recurrence/RecurrenceRespo
 
 export function Recurrences() {
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState<FiltersState>({ type: 'ALL', status: 'ALL', frequency: 'ALL' });
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [selectedRecurrence, setSelectedRecurrence] = useState<RecurrenceResponse | null>(null);
@@ -35,8 +34,20 @@ export function Recurrences() {
   };
 
   const {
-    allRecurrences
+    allRecurrences,
+    filters,
+    setFilters
   } = useRecurrences();
+
+  const filteredRecurrences = useMemo(() => {
+    return allRecurrences?.recurrences.filter(rec => {
+      if (search.trim() !== '') {
+        const query = search.toLowerCase();
+        const matchesDesc = rec.description.toLowerCase().includes(query);
+        if (!matchesDesc) return false;
+      }
+    });
+  }, [search]);
 
   const isEmpty = 
     allRecurrences?.recurrencesDueToday.length &&
@@ -81,7 +92,11 @@ export function Recurrences() {
               variant="expense"
               title="Recorrências para Hoje"
               description="Ações e lançamentos agendados para a data de hoje."
-              items={allRecurrences?.recurrencesDueToday ?? []}
+              items={
+                filteredRecurrences ?
+                  filteredRecurrences :
+                  allRecurrences?.recurrencesDueToday ?? []
+              }
               onSelect={setSelectedRecurrence}
               onConfirm={() => {}}
             />

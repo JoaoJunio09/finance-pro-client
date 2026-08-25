@@ -1,11 +1,11 @@
-import { Search, X, Filter } from 'lucide-react';
-import type { FiltersState } from '../../types/recurrence';
+import { Filter, Search, X } from 'lucide-react';
+import type { Filters } from '../../types/filter';
 import styles from './RecurrencesToolbar.module.css';
 
 interface RecurrencesToolbarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  filters: FiltersState;
+  filters: Filters;
   onOpenFilters: () => void;
 }
 
@@ -17,7 +17,7 @@ export const RecurrencesToolbar = ({
 }: RecurrencesToolbarProps) => {
   const hasActiveFilters =
     filters.type !== 'ALL' ||
-    filters.status !== 'ALL' ||
+    filters.active !== 'ALL' ||
     filters.frequency !== 'ALL';
 
   return (
