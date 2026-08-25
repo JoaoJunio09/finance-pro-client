@@ -1,43 +1,184 @@
-import { 
-  Briefcase, Utensils, HomeIcon, Car, Tv, HeartPulse, GraduationCap, 
-  ShoppingBag, TrendingUp, Tag, PlayCircle, PauseCircle, StopCircle 
+import {
+  Briefcase,
+  Home,
+  MonitorPlay,
+  Dumbbell,
+  Shield,
+  Wifi,
 } from 'lucide-react';
-import type { CategoryConfig, WalletConfig, Recurrence, RecurrenceFrequency, RecurrenceStatus } from '../types/recurrence';
+import type { Category, Wallet, Recurrence } from '../types/recurrence';
 
-export const CATEGORIES: Record<string, CategoryConfig> = {
-  salario: { id: 'salario', name: 'Salário & Renda', icon: Briefcase, color: '#10B981', bgColor: 'rgba(16, 185, 129, 0.12)' },
-  alimentacao: { id: 'alimentacao', name: 'Alimentação', icon: Utensils, color: '#F59E0B', bgColor: 'rgba(245, 158, 11, 0.12)' },
-  moradia: { id: 'moradia', name: 'Moradia & Contas', icon: HomeIcon, color: '#3B82F6', bgColor: 'rgba(59, 130, 246, 0.12)' },
-  transporte: { id: 'transporte', name: 'Transporte', icon: Car, color: '#8B5CF6', bgColor: 'rgba(139, 92, 246, 0.12)' },
-  lazer: { id: 'lazer', name: 'Lazer & Cultura', icon: Tv, color: '#EC4899', bgColor: 'rgba(236, 72, 153, 0.12)' },
-  saude: { id: 'saude', name: 'Saúde & Bem-estar', icon: HeartPulse, color: '#EF4444', bgColor: 'rgba(239, 68, 68, 0.12)' },
-  educacao: { id: 'educacao', name: 'Educação', icon: GraduationCap, color: '#6366F1', bgColor: 'rgba(99, 102, 241, 0.12)' },
-  compras: { id: 'compras', name: 'Compras', icon: ShoppingBag, color: '#14B8A6', bgColor: 'rgba(20, 184, 166, 0.12)' },
-  investimento: { id: 'investimento', name: 'Investimentos', icon: TrendingUp, color: '#10B981', bgColor: 'rgba(16, 185, 129, 0.12)' },
-  outros: { id: 'outros', name: 'Outros', icon: Tag, color: '#6B7280', bgColor: 'rgba(107, 114, 128, 0.12)' }
+const mockCategories: Record<string, Category> = {
+  salary: { id: 'c1', name: 'Salário', icon: Briefcase, color: '#10B981' },
+  housing: { id: 'c2', name: 'Moradia', icon: Home, color: '#6366F1' },
+  streaming: { id: 'c3', name: 'Assinaturas', icon: MonitorPlay, color: '#EC4899' },
+  health: { id: 'c4', name: 'Saúde & Fitness', icon: Dumbbell, color: '#F59E0B' },
+  insurance: { id: 'c5', name: 'Seguros', icon: Shield, color: '#3B82F6' },
+  internet: { id: 'c6', name: 'Internet & TV', icon: Wifi, color: '#8B5CF6' },
 };
 
-export const WALLETS: Record<string, WalletConfig> = {
-  w1: { id: 'w1', name: 'Conta Principal', bankName: 'Nubank', bankLogoColor: '#820AD1' },
-  w2: { id: 'w2', name: 'Cartão Ultra', bankName: 'Itaú Uniclass', bankLogoColor: '#EC7000' },
-  w3: { id: 'w3', name: 'Conta Salário', bankName: 'Bradesco', bankLogoColor: '#CC092F' },
-  w4: { id: 'w4', name: 'Reserva Digital', bankName: 'Banco Inter', bankLogoColor: '#FF7A00' },
-  w5: { id: 'w5', name: 'Carteira Global', bankName: 'BTG Pactual', bankLogoColor: '#001E62' }
+const mockWallets: Record<string, Wallet> = {
+  nubank: { id: 'w1', name: 'Nubank', color: '#8A05BE' },
+  itau: { id: 'w2', name: 'Itaú', color: '#EC7000' },
+  inter: { id: 'w3', name: 'Banco Inter', color: '#FF7A00' },
 };
 
-export const INITIAL_RECURRENCES: Recurrence[] = [
-  { id: 'rec-1', description: 'Salário Mensal Tech Corp', amount: 11500.00, type: 'income', status: 'active', frequency: 'monthly', categoryId: 'salario', walletId: 'w3', startDate: '2024-01-05', nextDate: '2026-09-05', history: [{ id: 'h1', date: '2026-07-05', amount: 11500.00, status: 'paid' }, { id: 'h2', date: '2026-08-05', amount: 11500.00, status: 'paid' }], future: [{ id: 'f1', date: '2026-09-05', amount: 11500.00, status: 'pending' }, { id: 'f2', date: '2026-10-05', amount: 11500.00, status: 'pending' }] },
-  { id: 'rec-2', description: 'Aluguel do Apartamento', amount: 3200.00, type: 'expense', status: 'active', frequency: 'monthly', categoryId: 'moradia', walletId: 'w1', startDate: '2025-02-10', nextDate: '2026-09-10', history: [{ id: 'h3', date: '2026-07-10', amount: 3200.00, status: 'paid' }, { id: 'h4', date: '2026-08-10', amount: 3200.00, status: 'paid' }], future: [{ id: 'f3', date: '2026-09-10', amount: 3200.00, status: 'pending' }, { id: 'f4', date: '2026-10-10', amount: 3200.00, status: 'pending' }] },
-  { id: 'rec-3', description: 'Assinatura Netflix', amount: 39.90, type: 'expense', status: 'active', frequency: 'monthly', categoryId: 'lazer', walletId: 'w2', startDate: '2023-11-15', nextDate: '2026-09-15', history: [{ id: 'h5', date: '2026-08-15', amount: 39.90, status: 'paid' }], future: [{ id: 'f5', date: '2026-09-15', amount: 39.90, status: 'pending' }] },
-  { id: 'rec-4', description: 'Consultoria Freelance Semanal', amount: 850.00, type: 'income', status: 'paused', frequency: 'weekly', categoryId: 'salario', walletId: 'w4', startDate: '2026-05-01', nextDate: null, notes: 'Projeto pausado temporariamente pelo cliente.', history: [{ id: 'h6', date: '2026-08-01', amount: 850.00, status: 'paid' }, { id: 'h7', date: '2026-08-08', amount: 850.00, status: 'paid' }], future: [] }
+// Helpers apenas para gerar datas relativas — uso exclusivo dos mocks,
+// não são utilitários de produção (por isso não estão em utils/).
+const getTodayIso = () => new Date().toISOString();
+
+const getFutureDate = (days: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString();
+};
+
+const getPastDate = (days: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString();
+};
+
+export const mockRecurrences: Recurrence[] = [
+  // --- RECORRÊNCIAS PARA HOJE ---
+  {
+    id: 'rec-today-1',
+    code: 'REC-2001',
+    description: 'SmartFit - Plano Black',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'AUTOMATIC',
+    amount: 119.90,
+    frequency: 'MONTHLY',
+    category: mockCategories.health,
+    wallet: mockWallets.nubank,
+    startDate: '2023-01-24T00:00:00Z',
+    nextDate: getTodayIso(),
+    lastDate: getPastDate(30),
+    occurrences: 14,
+    totalAmountProcessed: 1678.60,
+  },
+  {
+    id: 'rec-today-2',
+    code: 'REC-2002',
+    description: 'Adobe Creative Cloud',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'MANUAL',
+    amount: 224.00,
+    frequency: 'MONTHLY',
+    category: mockCategories.streaming,
+    wallet: mockWallets.itau,
+    startDate: '2022-08-24T00:00:00Z',
+    nextDate: getTodayIso(),
+    lastDate: getPastDate(31),
+    occurrences: 24,
+    totalAmountProcessed: 5376.00,
+  },
+
+  // --- RECORRÊNCIAS PENDENTES ---
+  {
+    id: 'rec-pending-1',
+    code: 'REC-2003',
+    description: 'Claro Internet Fibra 500M',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'MANUAL',
+    amount: 129.90,
+    frequency: 'MONTHLY',
+    category: mockCategories.internet,
+    wallet: mockWallets.itau,
+    startDate: '2023-03-20T00:00:00Z',
+    nextDate: getPastDate(4),
+    lastDate: getPastDate(34),
+    occurrences: 16,
+    totalAmountProcessed: 2078.40,
+  },
+  {
+    id: 'rec-pending-2',
+    code: 'REC-2004',
+    description: 'Seguro Residencial Porto',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'AUTOMATIC',
+    amount: 180.00,
+    frequency: 'MONTHLY',
+    category: mockCategories.insurance,
+    wallet: mockWallets.inter,
+    startDate: '2023-05-18T00:00:00Z',
+    nextDate: getPastDate(6),
+    lastDate: getPastDate(36),
+    occurrences: 15,
+    totalAmountProcessed: 2700.00,
+  },
+
+  // --- PRÓXIMAS RECORRÊNCIAS ---
+  {
+    id: 'rec-upcoming-1',
+    code: 'REC-1092',
+    description: 'Salário Mensal TechCorp',
+    type: 'INCOME',
+    status: 'ACTIVE',
+    executionType: 'AUTOMATIC',
+    amount: 9500.00,
+    frequency: 'MONTHLY',
+    category: mockCategories.salary,
+    wallet: mockWallets.itau,
+    startDate: '2023-01-05T00:00:00Z',
+    nextDate: getFutureDate(3),
+    lastDate: getPastDate(27),
+    occurrences: 18,
+    totalAmountProcessed: 171000.00,
+  },
+  {
+    id: 'rec-upcoming-2',
+    code: 'REC-1093',
+    description: 'Aluguel Apartamento Jardins',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'MANUAL',
+    amount: 2800.00,
+    frequency: 'MONTHLY',
+    category: mockCategories.housing,
+    wallet: mockWallets.nubank,
+    startDate: '2023-02-10T00:00:00Z',
+    nextDate: getFutureDate(7),
+    lastDate: getPastDate(23),
+    occurrences: 17,
+    totalAmountProcessed: 47600.00,
+  },
+  {
+    id: 'rec-upcoming-4',
+    code: 'REC-1095',
+    description: 'Consultoria UI/UX Semanal',
+    type: 'INCOME',
+    status: 'PAUSED',
+    executionType: 'MANUAL',
+    amount: 1500.00,
+    frequency: 'WEEKLY',
+    category: mockCategories.salary,
+    wallet: mockWallets.inter,
+    startDate: '2023-08-01T00:00:00Z',
+    nextDate: null,
+    lastDate: getPastDate(45),
+    occurrences: 10,
+    totalAmountProcessed: 15000.00,
+  },
+  {
+    id: 'rec-upcoming-3',
+    code: 'REC-1094',
+    description: 'Netflix Family Plan',
+    type: 'EXPENSE',
+    status: 'ACTIVE',
+    executionType: 'AUTOMATIC',
+    amount: 55.90,
+    frequency: 'MONTHLY',
+    category: mockCategories.streaming,
+    wallet: mockWallets.nubank,
+    startDate: '2022-05-15T00:00:00Z',
+    nextDate: getFutureDate(12),
+    lastDate: getPastDate(18),
+    occurrences: 26,
+    totalAmountProcessed: 1453.40,
+  },
 ];
-
-export const FREQUENCY_LABELS: Record<RecurrenceFrequency, string> = { 
-  daily: 'Diariamente', weekly: 'Semanalmente', biweekly: 'Quinzenalmente', monthly: 'Mensalmente', yearly: 'Anualmente' 
-};
-
-export const STATUS_CONFIG: Record<RecurrenceStatus, { label: string; icon: React.ElementType; colorClass: string; bgClass: string }> = {
-  active: { label: 'Ativa', icon: PlayCircle, colorClass: 'text-[var(--income)]', bgClass: 'bg-[var(--income-muted)]' },
-  paused: { label: 'Pausada', icon: PauseCircle, colorClass: 'text-[var(--warning)]', bgClass: 'bg-[var(--warning-muted)]' },
-  finished: { label: 'Finalizada', icon: StopCircle, colorClass: 'text-[var(--text-muted)]', bgClass: 'bg-[var(--border-light)]' }
-};

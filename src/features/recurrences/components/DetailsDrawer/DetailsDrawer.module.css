@@ -15,17 +15,21 @@
   color: var(--text-muted);
 }
 
+.textAccent {
+  color: var(--accent);
+}
+
 .textIncome {
   color: var(--income);
 }
 
-.textExpense {
-  color: var(--expense);
+.borderLight {
+  border-color: var(--border-light);
 }
 
-.badgeAccent {
-  background-color: var(--accent-muted);
-  color: var(--accent);
+.badgeIncome {
+  background-color: var(--income-muted);
+  color: var(--income);
 }
 
 .badgeWarning {
@@ -33,10 +37,12 @@
   color: var(--warning);
 }
 
-.borderDefault {
-  border-color: var(--border-color);
+.badgeAccent {
+  background-color: var(--accent-muted);
+  color: var(--accent);
 }
 
-.borderLight {
-  border-color: var(--border-light);
+.badgeExpense {
+  background-color: var(--expense-muted);
+  color: var(--expense);
 }

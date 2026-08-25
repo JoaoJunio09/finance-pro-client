@@ -1,0 +1,129 @@
+
+/* CreateModal.module.css */
+
+/* =========================================
+   Overlays e Animações
+   ========================================= */
+.overlay {
+  background-color: var(--overlay-bg, rgba(0, 0, 0, 0.5));
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.modal {
+  background-color: var(--bg-surface);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* =========================================
+   Tipografia
+   ========================================= */
+.textMain {
+  color: var(--text-main);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.borderLight {
+  border-color: var(--border-light);
+}
+
+/* =========================================
+   Formulários (Inputs, Selects)
+   ========================================= */
+.inputField {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+  border-color: var(--border-light);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputField::placeholder {
+  color: var(--text-muted);
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.label {
+  color: var(--text-main);
+}
+
+/* =========================================
+   Botões e Ações
+   ========================================= */
+.closeButton {
+  color: var(--text-muted);
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+}
+
+.btnSecondary {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+  border-color: var(--border-light);
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.btnSecondary:hover {
+  background-color: var(--border-light);
+}
+
+.btnPrimary {
+  background-color: var(--accent);
+  color: #ffffff;
+  border-color: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   Keyframes
+   ========================================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Ajuste responsivo para mobile onde o modal costuma vir de baixo */
+@media (max-width: 639px) {
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .modal {
+    transform: none !important; /* Sobrescreve o translate do absolute no mobile, caso usemos grid/flex para centralizar */
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}

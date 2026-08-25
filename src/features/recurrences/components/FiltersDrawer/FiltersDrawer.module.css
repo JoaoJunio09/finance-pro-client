@@ -15,27 +15,14 @@
   color: var(--text-muted);
 }
 
+.textAccent {
+  color: var(--accent);
+}
+
 .borderDefault {
   border-color: var(--border-color);
 }
 
 .borderLight {
   border-color: var(--border-light);
-}
-
-.focusAccent:focus {
-  border-color: var(--accent);
-}
-
-.placeholderMuted::placeholder {
-  color: var(--text-muted);
-}
-
-.hoverTextMain:hover {
-  color: var(--text-main);
-}
-
-.hoverAccent:hover {
-  border-color: var(--accent);
-  color: var(--accent);
 }

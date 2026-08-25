@@ -12,6 +12,10 @@
   --font-body: var(--font-sans);
   --font-metric: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* Cores de marca fixas: não mudam entre light/dark (usadas no header) */
+  --header-accent: #4C1D95;
+  --header-gradient-end: #312E81;
 }
 
 @theme {

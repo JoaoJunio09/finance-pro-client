@@ -1,122 +1,214 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { Zap, AlertTriangle, Calendar } from 'lucide-react';
+import type { FiltersState, Recurrence } from './types/recurrence';
+import { mockRecurrences } from './mocks/recurrenceMocks';
+import { getDaysDifference } from './utils/recurrenceUtils';
+import { RecurrencesHeader } from './components/RecurrencesHeader/RecurrencesHeader';
+import { SummaryCards } from './components/SummaryCards/SummaryCards';
 import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesToolbar';
-import { RecurrenceCard } from './components/RecurrenceCard/RecurrenceCard';
+import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
+import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
+import { RecurrenceSection } from './components/RecurrenceSection/RecurrenceSection';
+import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
+import { DetailsDrawer } from './components/DetailsDrawer/DetailsDrawer';
 
-import styles from './Recurrences.module.css';
-import { Inbox } from 'lucide-react';
-import type { ActiveTab, Recurrence, SortOption } from './types/recurrence';
-import { INITIAL_RECURRENCES } from './mocks/recurrenceMocks';
-import { RecurrencesHeader } from './components/RecurrenceHeader/RecurrenceHeader';
-import { SummaryCards } from './SummaryCards/SummaryCards';
-import { RecurrencesAnalysis } from './components/RecurrencesAnalytics/RecurrencesAnalytics';
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
+export function Recurrences() {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<FiltersState>({ type: 'ALL', status: 'ALL', frequency: 'ALL' });
 
-function Recurrences() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('nextDate');
-  const [recurrences] = useState<Recurrence[]>(INITIAL_RECURRENCES);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Recurrence | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // Lógica de Filtro e Busca
-  const filteredRecurrences = useMemo(() => {
-    return recurrences.filter((rec) => {
-      const matchesTab = 
-        activeTab === 'all' ? true :
-        activeTab === 'active' ? rec.status === 'active' :
-        rec.type === activeTab;
-      
-      const matchesSearch = rec.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      return matchesTab && matchesSearch;
+  const [recurrencesList, setRecurrencesList] = useState<Recurrence[]>(mockRecurrences);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const handleDelete = (id: string) => {
+    setRecurrencesList(prev => prev.filter(r => r.id !== id));
+    setSelectedItem(null);
+  };
+
+  const handleToggleStatus = (id: string) => {
+    setRecurrencesList(prev => prev.map(r =>
+      r.id === id ? { ...r, status: r.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE' } : r
+    ));
+    setSelectedItem(prev => prev && prev.id === id
+      ? { ...prev, status: prev.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE' }
+      : prev
+    );
+  };
+
+  const handleQuickConfirm = (e: React.MouseEvent, item: Recurrence) => {
+    e.stopPropagation();
+    alert(`Recorrência "${item.description}" confirmada e registrada no fluxo financeiro!`);
+  };
+
+  const handleEdit = (_item: Recurrence) => {
+    setSelectedItem(null);
+    setIsCreateOpen(true);
+  };
+
+  // Filtragem base dos dados
+  const filteredData = useMemo(() => {
+    return recurrencesList.filter(item => {
+      const matchSearch = item.description.toLowerCase().includes(search.toLowerCase()) ||
+                          item.category.name.toLowerCase().includes(search.toLowerCase());
+      const matchType = filters.type === 'ALL' || item.type === filters.type;
+      const matchStatus = filters.status === 'ALL' || item.status === filters.status;
+      const matchFreq = filters.frequency === 'ALL' || item.frequency === filters.frequency;
+
+      return matchSearch && matchType && matchStatus && matchFreq;
     });
-  }, [recurrences, activeTab, searchTerm]);
+  }, [search, filters, recurrencesList]);
 
-  // Lógica de Ordenação
-  const sortedRecurrences = useMemo(() => {
-    return [...filteredRecurrences].sort((a, b) => {
-      switch (sortBy) {
-        case 'nextDate':
-          if (!a.nextDate) return 1;
-          if (!b.nextDate) return -1;
-          return new Date(a.nextDate).getTime() - new Date(b.nextDate).getTime();
-        case 'highest':
-          return b.amount - a.amount;
-        case 'lowest':
-          return a.amount - b.amount;
-        case 'recent':
-          return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
-        case 'oldest':
-          return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
-        default:
-          return 0;
+  // Divisão em 3 Seções Claras
+  const categorizedSections = useMemo(() => {
+    const today: Recurrence[] = [];
+    const pending: Recurrence[] = [];
+    const upcoming: Recurrence[] = [];
+
+    filteredData.forEach(item => {
+      if (!item.nextDate) {
+        upcoming.push(item);
+        return;
+      }
+
+      const diffDays = getDaysDifference(item.nextDate);
+
+      if (diffDays === 0) {
+        today.push(item);
+      } else if (diffDays !== null && diffDays < 0 && item.status === 'ACTIVE') {
+        pending.push(item);
+      } else {
+        upcoming.push(item);
       }
     });
-  }, [filteredRecurrences, sortBy]);
 
-  const handleOpenAddModal = () => {
-    console.log('Abrir modal de nova recorrência');
-    // Implementar lógica de modal futuramente
-  };
+    return { today, pending, upcoming };
+  }, [filteredData]);
 
-  const handleCardClick = (id: string) => {
-    console.log('Detalhes da recorrência:', id);
-    // Implementar navegação ou modal de detalhes
-  };
+  // Destaques superiores (semana)
+  const upcomingHighlights = useMemo(() => {
+    return recurrencesList
+      .filter(item => item.status === 'ACTIVE' && item.nextDate && getDaysDifference(item.nextDate)! >= 0 && getDaysDifference(item.nextDate)! <= 15)
+      .sort((a, b) => getDaysDifference(a.nextDate)! - getDaysDifference(b.nextDate)!);
+  }, [recurrencesList]);
+
+  // Totais
+  const summary = useMemo(() => {
+    const active = recurrencesList.filter(i => i.status === 'ACTIVE');
+    const income = active.filter(i => i.type === 'INCOME').reduce((acc, curr) => acc + curr.amount, 0);
+    const expense = active.filter(i => i.type === 'EXPENSE').reduce((acc, curr) => acc + curr.amount, 0);
+    return { count: active.length, income, expense };
+  }, [recurrencesList]);
 
   return (
-    <div className={`relative w-full ${styles.pageContainer}`}>
-      
-      {/* Header com as Tabs */}
-      <RecurrencesHeader 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        onOpenAddModal={handleOpenAddModal} 
+    <div className="page-container">
+      <RecurrencesHeader
+        onNew={() => setIsCreateOpen(true)}
+        theme={theme}
+        onThemeChange={setTheme}
       />
 
-      {/* Área de Conteúdo Principal */}
-      <div className={`w-full mt-4 sm:mt-6 pt-6 px-4 sm:px-6 lg:px-8 pb-12 transition-colors relative z-10 ${styles.listContainer}`}>
-        <div className="max-w-[1400px] mx-auto flex flex-col">
-          
-          <SummaryCards recurrences={recurrences} />
-          
-          <RecurrencesAnalysis recurrences={recurrences} />
-          
-          <div className="w-full h-px bg-gray-200/50 my-6" />
-          
-          <RecurrencesToolbar 
-            searchTerm={searchTerm} 
-            setSearchTerm={setSearchTerm} 
-            sortBy={sortBy} 
-            setSortBy={setSortBy} 
+      <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up mt-6">
+
+        {/* SUMMARY CARDS */}
+        <SummaryCards
+          count={summary.count}
+          income={summary.income}
+          expense={summary.expense}
+        />
+
+        {/* CARDS DE DESTAQUE APRIMORADOS */}
+        <UpcomingHighlights
+          items={upcomingHighlights}
+          onSelect={setSelectedItem}
+        />
+
+        {/* TOOLBAR */}
+        <div className="mb-8">
+          <RecurrencesToolbar
+            searchQuery={search}
+            setSearchQuery={setSearch}
+            filters={filters}
+            onOpenFilters={() => setIsFiltersOpen(true)}
           />
-
-          {/* Lista de Cards */}
-          <div className="flex flex-col gap-3 sm:gap-4 animate-fade-in">
-            {sortedRecurrences.map(recurrence => (
-              <RecurrenceCard 
-                key={recurrence.id} 
-                recurrence={recurrence} 
-                onClick={handleCardClick} 
-              />
-            ))}
-
-            {/* Empty State */}
-            {sortedRecurrences.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 text-center px-4 rounded-2xl border border-dashed border-gray-300">
-                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                  <Inbox size={32} className="text-gray-400" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">Nenhuma regra encontrada</h3>
-                <p className={`text-sm max-w-md ${styles.emptyText}`}>
-                  Não encontramos nenhuma recorrência que corresponda aos filtros atuais. Tente mudar a aba ou o termo de busca.
-                </p>
-              </div>
-            )}
-          </div>
-
         </div>
-      </div>
+
+        {/* LISTAGEM ORGANIZADA EM 3 SEÇÕES DISTINTAS */}
+        {filteredData.length === 0 ? (
+          <EmptyRecurrencesState />
+        ) : (
+          <div className="flex flex-col gap-10">
+
+            {/* SEÇÃO 1: RECORRÊNCIAS PARA HOJE */}
+            <RecurrenceSection
+              icon={Zap}
+              variant="expense"
+              title="Recorrências para Hoje"
+              description="Ações e lançamentos agendados para a data de hoje."
+              items={categorizedSections.today}
+              onSelect={setSelectedItem}
+              onConfirm={handleQuickConfirm}
+            />
+
+            {/* SEÇÃO 2: RECORRÊNCIAS PENDENTES */}
+            <RecurrenceSection
+              icon={AlertTriangle}
+              variant="warning"
+              title="Recorrências Pendentes"
+              description="Compromissos vencidos que requerem atenção ou confirmação."
+              items={categorizedSections.pending}
+              onSelect={setSelectedItem}
+              onConfirm={handleQuickConfirm}
+            />
+
+            {/* SEÇÃO 3: PRÓXIMAS RECORRÊNCIAS */}
+            <RecurrenceSection
+              icon={Calendar}
+              variant="accent"
+              title="Próximas Recorrências"
+              description="Compromissos e recebimentos previstos para datas futuras."
+              items={categorizedSections.upcoming}
+              onSelect={setSelectedItem}
+              onConfirm={handleQuickConfirm}
+            />
+
+          </div>
+        )}
+
+      </main>
+
+      {/* DRAWERS */}
+      <FiltersDrawer
+        isOpen={isFiltersOpen}
+        onClose={() => setIsFiltersOpen(false)}
+        filters={filters}
+        setFilters={setFilters}
+      />
+
+      <DetailsDrawer
+        item={selectedItem}
+        isOpen={!!selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onDelete={handleDelete}
+        onToggleStatus={handleToggleStatus}
+        onEdit={handleEdit}
+      />
     </div>
   );
-};
+}
 
 export default Recurrences;

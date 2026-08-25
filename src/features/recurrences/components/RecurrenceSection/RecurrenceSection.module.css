@@ -1,0 +1,26 @@
+.textMain {
+  color: var(--text-main);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.borderLight {
+  border-color: var(--border-light);
+}
+
+.badgeExpense {
+  background-color: var(--expense-muted);
+  color: var(--expense);
+}
+
+.badgeWarning {
+  background-color: var(--warning-muted);
+  color: var(--warning);
+}
+
+.badgeAccent {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}

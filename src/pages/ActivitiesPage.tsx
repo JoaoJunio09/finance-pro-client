@@ -42,6 +42,7 @@ function ActivitiesPage() {
 				isOpen={isOpenTxModal}
 				onClose={() => setIsOpenTxModal(false)}
 				initialType={txType}
+				transaction={null}
 			/>
 		</div>
 	)

@@ -1,57 +1,63 @@
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, X, Filter } from 'lucide-react';
+import type { FiltersState } from '../../types/recurrence';
 import styles from './RecurrencesToolbar.module.css';
-import type { SortOption } from '../../types/recurrence';
 
 interface RecurrencesToolbarProps {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  sortBy: SortOption;
-  setSortBy: (sort: SortOption) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  filters: FiltersState;
+  onOpenFilters: () => void;
 }
 
-export const RecurrencesToolbar = ({ searchTerm, setSearchTerm, sortBy, setSortBy }: RecurrencesToolbarProps) => {
-  return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 relative z-10">
-      
-      {/* Campo de Busca */}
-      <div className="relative w-full sm:w-96 group">
-        <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none transition-colors group-focus-within:text-indigo-600 ${styles.searchIcon}`}>
-          <Search size={18} />
-        </div>
-        <input
-          type="text"
-          placeholder="Buscar por descrição..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-0 ${styles.searchInput} ${styles.searchPlaceholder}`}
-        />
-      </div>
+export const RecurrencesToolbar = ({
+  searchQuery,
+  setSearchQuery,
+  filters,
+  onOpenFilters
+}: RecurrencesToolbarProps) => {
+  const hasActiveFilters =
+    filters.type !== 'ALL' ||
+    filters.status !== 'ALL' ||
+    filters.frequency !== 'ALL';
 
-      {/* Select de Ordenação */}
-      <div className="flex items-center gap-3 w-full sm:w-auto">
-        <div className={`p-2.5 rounded-xl border flex items-center justify-center shrink-0 ${styles.sortSelect} ${styles.sortIcon}`}>
-          <SlidersHorizontal size={18} />
+  return (
+    <div className={`${styles.surface} rounded-2xl p-4 shadow-sm border ${styles.borderDefault}`}>
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1">
+          <Search
+            className={`absolute left-3.5 top-1/2 -translate-y-1/2 ${styles.textMuted}`}
+            size={18}
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Pesquisar por nome ou categoria..."
+            className={`font-body w-full pl-10 pr-4 py-2.5 rounded-xl text-sm font-normal focus:outline-none transition-all border ${styles.elevated} ${styles.borderLight} ${styles.textMain} ${styles.focusAccent} ${styles.placeholderMuted}`}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 ${styles.textMuted} ${styles.hoverTextMain} transition-colors cursor-pointer`}
+              title="Limpar pesquisa"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className={`w-full sm:w-auto px-4 py-2.5 rounded-xl border text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:ring-0 transition-colors ${styles.sortSelect}`}
-          style={{ 
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236B7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', 
-            backgroundPosition: 'right 0.75rem center', 
-            backgroundRepeat: 'no-repeat', 
-            backgroundSize: '1.25em 1.25em', 
-            paddingRight: '2.5rem' 
-          }}
+
+        <button
+          onClick={onOpenFilters}
+          className={`relative flex items-center justify-center w-[42px] h-[42px] rounded-xl transition-all shrink-0 shadow-sm border ${styles.elevated} ${styles.borderLight} ${styles.textMain} ${styles.hoverAccent} cursor-pointer`}
+          aria-label="Filtros"
+          title="Filtros"
         >
-          <option value="nextDate">Próximo Vencimento</option>
-          <option value="highest">Maior Valor</option>
-          <option value="lowest">Menor Valor</option>
-          <option value="recent">Adicionadas Recentemente</option>
-          <option value="oldest">Mais Antigas</option>
-        </select>
+          <Filter size={18} />
+          {hasActiveFilters && (
+            <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 rounded-full border-2 border-elevated bg-[var(--accent)]" />
+          )}
+        </button>
       </div>
-      
     </div>
   );
 };

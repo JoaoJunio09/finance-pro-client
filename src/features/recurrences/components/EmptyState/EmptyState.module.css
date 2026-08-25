@@ -1,0 +1,17 @@
+.surface {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.badgeAccent {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.textMain {
+  color: var(--text-main);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}

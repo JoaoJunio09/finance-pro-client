@@ -1,0 +1,110 @@
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.backdropOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer / Side Panel */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 400px; /* Mantém proporção em telas grandes */
+  height: 100vh;
+  background-color: var(--bg-surface);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+/* Tipografia e Layout interno */
+.header {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  color: var(--text-main);
+}
+
+.closeButton {
+  background-color: var(--bg-elevated);
+  color: var(--text-muted);
+  border: 1px solid transparent;
+}
+
+.closeButton:hover, .closeButton:focus-visible {
+  color: var(--text-main);
+  border-color: var(--border-color);
+  outline: none;
+}
+
+.content {
+  overflow-y: auto;
+}
+
+.sectionTitle {
+  color: var(--text-muted);
+}
+
+/* Segmented Buttons (Pills) */
+.pillUnselected {
+  background-color: var(--bg-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+}
+
+.pillUnselected:hover {
+  border-color: var(--border-color);
+}
+
+.pillSelected {
+  background-color: var(--accent);
+  color: #ffffff; /* Contraste forçado para legibilidade */
+  border: 1px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Action */
+.footer {
+  border-top: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+}
+
+.clearAllButton {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+}
+
+.clearAllButton:not(:disabled):hover {
+  background-color: rgba(239, 68, 68, 0.05);
+  color: #dc2626; /* Hover state destrutivo */
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.clearAllButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

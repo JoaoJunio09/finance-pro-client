@@ -1,100 +1,110 @@
-import { Calendar, ChevronRight, CreditCard, RefreshCw } from 'lucide-react';
-import { CATEGORIES, WALLETS } from '../../mocks/recurrenceMocks';
+import { Repeat, ChevronRight, Check, Zap, UserCheck, AlertTriangle } from 'lucide-react';
 import type { Recurrence } from '../../types/recurrence';
-import { formatCurrency, formatDate, getDaysUntil } from '../../utils/recurrenceUtils';
-
+import { getDaysDifference, formatDate, formatCurrency, translateFrequency } from '../../utils/recurrenceUtils';
 import styles from './RecurrenceCard.module.css';
 
 interface RecurrenceCardProps {
-  recurrence: Recurrence;
-  onClick: (id: string) => void;
+  item: Recurrence;
+  onSelect: (r: Recurrence) => void;
+  onConfirm?: (e: React.MouseEvent, r: Recurrence) => void;
 }
 
-export const RecurrenceCard = ({ recurrence, onClick }: RecurrenceCardProps) => {
-  const category = CATEGORIES[recurrence.categoryId] || CATEGORIES.outros;
-  const wallet = WALLETS[recurrence.walletId];
-  const CategoryIcon = category.icon;
-  
-  const daysUntil = getDaysUntil(recurrence.nextDate);
-  const isImminent = daysUntil !== null && daysUntil >= 0 && daysUntil <= 5;
-
-  const getStatusBadge = () => {
-    switch (recurrence.status) {
-      case 'active':
-        return <span className={`px-2.5 py-1 text-[10px] sm:text-xs font-bold rounded-full ${styles.badgeActive}`}>Ativa</span>;
-      case 'paused':
-        return <span className={`px-2.5 py-1 text-[10px] sm:text-xs font-bold rounded-full ${styles.badgePaused}`}>Pausada</span>;
-      case 'finished':
-        return <span className={`px-2.5 py-1 text-[10px] sm:text-xs font-bold rounded-full ${styles.badgeFinished}`}>Finalizada</span>;
-    }
-  };
-
-  const getFrequencyText = () => {
-    const freqs: Record<string, string> = {
-      daily: 'Diário', weekly: 'Semanal', biweekly: 'Quinzenal', monthly: 'Mensal', yearly: 'Anual'
-    };
-    return freqs[recurrence.frequency] || recurrence.frequency;
-  };
+export const RecurrenceCard = ({ item, onSelect, onConfirm }: RecurrenceCardProps) => {
+  const Icon = item.category.icon;
+  const isIncome = item.type === 'INCOME';
+  const days = getDaysDifference(item.nextDate);
+  const isOverdue = days !== null && days < 0;
+  const isToday = days === 0;
+  const isAuto = item.executionType === 'AUTOMATIC';
 
   return (
-    <div 
-      onClick={() => onClick(recurrence.id)}
-      className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer group shadow-sm hover:shadow-md ${styles.card}`}
+    <div
+      onClick={() => onSelect(item)}
+      className={`group ${styles.surface} interactive-card p-4 sm:p-4.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+        isOverdue ? 'border-amber-500/30 dark:border-amber-500/20' : styles.borderDefault
+      }`}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
-        
-        {/* Ícone da Categoria */}
-        <div 
-          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
-          style={{ backgroundColor: category.bgColor, color: category.color }}
+      {/* Borda Lateral Colorida de Identidade Visual */}
+      <div
+        className="absolute top-0 left-0 w-1.5 h-full transition-all duration-200 group-hover:w-2"
+        style={{ backgroundColor: item.category.color }}
+      />
+
+      {/* Conteúdo Principal Esquerda */}
+      <div className="flex items-start sm:items-center gap-3.5 pl-1 min-w-0">
+        <div
+          className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 text-white shadow-sm transition-transform group-hover:scale-105"
+          style={{ backgroundColor: item.category.color }}
         >
-          <CategoryIcon size={24} />
+          <Icon size={20} />
         </div>
 
-        {/* Detalhes Principais */}
-        <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+        <div className="min-w-0 flex flex-col gap-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <h4 className={`text-sm sm:text-base font-bold truncate ${styles.textMain}`}>
-              {recurrence.description}
+            <h4 className={`font-heading font-semibold text-sm sm:text-base ${styles.textMain} truncate`}>
+              {item.description}
             </h4>
-            {getStatusBadge()}
-            {isImminent && recurrence.status === 'active' && (
-              <span className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full animate-pulse">
-                <Calendar size={12} /> Em {daysUntil} dias
+
+            {/* Badges do Item */}
+            <span className={`font-body inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${
+              isAuto ? styles.badgeAccent : `${styles.elevated} ${styles.textMuted} border ${styles.borderLight}`
+            }`}>
+              {isAuto ? <Zap size={10} /> : <UserCheck size={10} />}
+              <span>{isAuto ? 'Automática' : 'Manual'}</span>
+            </span>
+
+            {isOverdue && (
+              <span className={`font-body inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold ${styles.badgeWarning}`}>
+                <AlertTriangle size={10} />
+                <span>Pendente ({Math.abs(days!)}d atrás)</span>
               </span>
             )}
           </div>
-          
-          <div className="flex items-center gap-3 text-[11px] sm:text-xs font-medium flex-wrap">
-            <div className={`flex items-center gap-1.5 ${styles.textMuted}`}>
-              <RefreshCw size={14} />
-              {getFrequencyText()}
-            </div>
-            <div className={`w-1 h-1 rounded-full ${styles.textMuted}`} />
-            <div className={`flex items-center gap-1.5 ${styles.textMuted}`}>
-              <CreditCard size={14} />
-              {wallet?.name || 'Carteira não encontrada'}
-            </div>
+
+          <div className={`font-body flex items-center gap-2 text-xs font-normal ${styles.textMuted} flex-wrap`}>
+            <span>{item.category.name}</span>
+            <span>•</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: item.wallet.color }} />
+              {item.wallet.name}
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Repeat size={11} className={styles.textMuted} />
+              {translateFrequency(item.frequency)}
+            </span>
+            <span>•</span>
+            <span className={isOverdue ? 'text-amber-600 dark:text-amber-400 font-medium' : isToday ? `${styles.textExpense} font-semibold` : ''}>
+              {isToday ? 'Vence Hoje' : isOverdue ? `Venceu em ${formatDate(item.nextDate)}` : `Próxima: ${formatDate(item.nextDate)}`}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Lado Direito: Valores & Ação Directa */}
+      <div className={`flex items-center justify-between md:justify-end gap-4 shrink-0 pl-1 pt-2 md:pt-0 border-t md:border-t-0 ${styles.borderLight}`}>
+        <div className="text-left md:text-right">
+          <span className={`font-body text-[10px] font-medium ${styles.textMuted} uppercase tracking-wider block md:hidden`}>Valor</span>
+          <div className={`font-metric font-bold text-lg sm:text-xl ${isIncome ? styles.textIncome : styles.textMain}`}>
+            {isIncome ? '+ ' : '- '}{formatCurrency(item.amount)}
           </div>
         </div>
 
-        {/* Valores e Próxima Data */}
-        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100 sm:border-none gap-1">
-          <div className={`text-base sm:text-lg font-black tracking-tight ${recurrence.type === 'income' ? styles.textIncome : styles.textExpense}`}>
-            {recurrence.type === 'income' ? '+' : '-'}{formatCurrency(recurrence.amount)}
-          </div>
-          <div className={`text-[11px] sm:text-xs font-semibold ${styles.textMuted}`}>
-            {recurrence.status === 'active' ? (
-              <span>Próx: <strong className={styles.textMain}>{formatDate(recurrence.nextDate)}</strong></span>
-            ) : (
-              <span>Última: {formatDate(recurrence.history[0]?.date || recurrence.startDate)}</span>
-            )}
-          </div>
-        </div>
+        <div className="flex items-center gap-2">
+          {!isAuto && onConfirm && item.status === 'ACTIVE' && (
+            <button
+              onClick={(e) => onConfirm(e, item)}
+              className="font-body px-3 py-1.5 rounded-xl bg-[#5B21B6] text-white text-xs font-medium hover:bg-[#4C1D95] transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+              title="Registrar liquidação"
+            >
+              <Check size={14} />
+              <span>Confirmar</span>
+            </button>
+          )}
 
-        {/* Seta de Ação */}
-        <div className={`hidden sm:flex items-center justify-center pl-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300 ${styles.textMuted}`}>
-          <ChevronRight size={20} />
+          <div className={`p-1.5 rounded-lg ${styles.textMuted} group-hover:text-main group-hover:bg-elevated transition-all`}>
+            <ChevronRight size={18} />
+          </div>
         </div>
       </div>
     </div>

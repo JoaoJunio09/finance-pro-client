@@ -15,22 +15,17 @@
   color: var(--text-muted);
 }
 
-.textIncome {
-  color: var(--income);
+.textAccent {
+  color: var(--accent);
 }
 
-.textExpense {
-  color: var(--expense);
+.textIncome {
+  color: var(--income);
 }
 
 .badgeAccent {
   background-color: var(--accent-muted);
   color: var(--accent);
-}
-
-.badgeWarning {
-  background-color: var(--warning-muted);
-  color: var(--warning);
 }
 
 .borderDefault {

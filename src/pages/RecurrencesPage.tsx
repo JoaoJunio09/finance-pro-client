@@ -1,16 +1,48 @@
 import { useState } from "react";
 import Recurrences from "../features/recurrences/Recurrences";
-
+import Header from "../components/layout/Header/Header";
+import Sidebar from "../components/layout/Navigation/Desktop/Sidebar";
+import MobileBottomNav from "../components/layout/Navigation/Mobile/MobileBottomNav";
+import QuickActions from "../components/layout/QuickActions/QuickActions";
+import TransactionModal from "../features/transactionModal/TransactionModal";
+import type { TransactionType } from "../types/TransactionType";
 function RecurrencesPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
+	const [isOpenQuickActions, setIsOpenQuickActions] = useState(false);
+
+	const [isOpenTxModal, setIsOpenTxModal] = useState(false);
+	const [txType, setTxType] = useState<TransactionType>('CREDIT');
 
 	return (
-		<div className="min-h-screen flex bg-[#09090B] text-zinc-100 selection:bg-[#7C3AED]/30 font-sans">
-			<div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[100vw] h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.08)_0%,_rgba(9,9,11,0)_60%)]"></div>
-      </div>
-
+		<div className={`min-h-screen ${false ? 'theme-dark' : 'theme-light'} bg-[var(--bg-base)] text-[var(--text-main)] relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)]`}>
+			<Header
+				handleOpenSidebar={() => setIsOpenSidebar(!isOpenSidebar)}
+			/>
+			<Sidebar
+				isOpen={isOpenSidebar}
+				onClose={() => setIsOpenSidebar(false)}
+				mainView="recurrences"
+			/>
+			<MobileBottomNav
+				isOpenQuickActions={isOpenQuickActions}
+				onToggleQuickActions={() => setIsOpenQuickActions(!isOpenQuickActions)}
+				mainView={undefined}
+			/>
+			<QuickActions
+				isOpen={isOpenQuickActions}
+				onToggle={() => setIsOpenQuickActions(!isOpenQuickActions)}
+				handleOpenTxModal={() => setIsOpenTxModal(true)}
+				selectTxType={setTxType}
+			/>
+			
 			<Recurrences />
+
+			<TransactionModal
+				isOpen={isOpenTxModal}
+				onClose={() => setIsOpenTxModal(false)}
+				initialType={txType}
+				transaction={null}
+			/>
 		</div>
 	)
 }

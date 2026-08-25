@@ -1,16 +1,62 @@
+/* Recurrences.module.css */
+
 .pageContainer {
-  background-color: var(--bg-base);
-  min-height: 100vh;
-  padding-bottom: 3rem;
+  /* Caso o fundo da sua página principal seja diferente das superfícies/cards */
+  background-color: var(--bg-background, transparent); 
 }
 
-.listContainer {
-  background-color: var(--bg-base); /* Fundo onde os cards vão ficar */
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
-  box-shadow: 0 -10px 40px -10px rgba(0,0,0,0.1);
+.title {
+  color: var(--text-main);
 }
 
-.emptyText {
+.createButton {
+  background-color: var(--accent);
+  color: #ffffff;
+  transition: opacity 0.2s ease;
+  border: none;
+}
+
+.createButton:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   Títulos de Seção e Badges
+   ========================================= */
+.sectionTitle {
+  color: var(--text-main);
+}
+
+.sectionTitleOverdue {
+  color: var(--warning);
+}
+
+.sectionTitleToday {
+  color: var(--expense);
+}
+
+.badgeOverdue {
+  background-color: var(--warning-muted);
+  color: var(--warning);
+}
+
+.badgeToday {
+  background-color: var(--badge-expense-bg);
+  color: var(--badge-expense-text);
+}
+
+/* =========================================
+   Empty State
+   ========================================= */
+.emptyState {
+  border-color: var(--border-light);
+  background-color: var(--bg-surface);
+}
+
+.textMain {
+  color: var(--text-main);
+}
+
+.textMuted {
   color: var(--text-muted);
 }
