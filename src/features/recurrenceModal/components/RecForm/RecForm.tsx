@@ -1,18 +1,60 @@
-import React from 'react';
-import { X, RefreshCcw, Hand } from 'lucide-react';
-import styles from './RecurrenceForm.module.css';
+import { Hand, RefreshCcw, X } from 'lucide-react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import CustomSelect from '../../../../components/shared/CustomSelect/CustomSelect';
+import type { CategoryResponse } from '../../../../models/category/CategoryResponse';
+import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
+import type { ExecutionType } from '../../../../types/ExecutionType';
+import type { RecurrenceType } from '../../../../types/RecurrenceType';
 import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
-// import { CustomSelect } from '../caminho-do-seu-componente';
-// import { TxWalletBrandMark } from '../caminho-do-seu-componente';
+import type { RecFormData } from '../../types/RecFormData';
+import styles from './RecForm.module.css';
 
-export function RecurrenceForm({ 
-  isEditing, handleOnChange, onTypeChange, onRecurrenceTypeChange, 
-  form, onWalletChange, type, amountStr, wallet, wallets, onClose 
-}: any) {
+interface RecurrenceFormProps {
+  isEditing: boolean;
+  handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onTypeChange: (type: RecurrenceType) => void;
+  onExecutionType: (executionType: ExecutionType) => void;
+  form: RecFormData | undefined;
+  onCategoryChange: (category: CategoryResponse) => void;
+  onWalletChange: (wallet: WalletResponse) => void;
+  type: RecurrenceType | undefined;
+  amountStr: string | undefined;
+  category: CategoryResponse | undefined;
+  wallet: WalletResponse | undefined;
+  categories: CategoryResponse[];
+  wallets: WalletResponse[];
+  onClose: () => void;
+}
+
+export function RecurrenceForm({
+  isEditing,
+  form,
+  handleOnChange,
+  onTypeChange,
+  onExecutionType,
+  onCategoryChange,
+  onWalletChange,
+  type,
+  amountStr,
+  category,
+  wallet,
+  categories,
+  wallets,
+  onClose,
+}: RecurrenceFormProps) {
   
   const isIncome = type === 'CREDIT';
   const numericAmount = amountStr ? Number(amountStr) : 0;
+
+  const renderCategory = (cat: CategoryResponse) => (
+    <div className="flex items-center gap-3">
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${styles.categoryIconWrap}`} style={{ color: cat.color }}>
+        <DynamicIcon name={cat.icon as IconName} size={16} />
+      </div>
+      <span className={`text-sm font-medium ${styles.categoryName}`}>{cat.name}</span>
+    </div>
+  );
+
   const renderWallet = (w: any) => <BankBrandMark bank={w.bank} wallet={w} size="md" />;
 
   // Lógica de verificação de datas passadas
@@ -20,12 +62,12 @@ export function RecurrenceForm({
   const currentDay = today.getDate();
   const currentMonth = today.getMonth() + 1;
   
-  const isPastMonthly = form.frequency === 'MONTHLY' && Number(form.monthlyDay) < currentDay;
-  const isPastBiweeklyDay1 = form.frequency === 'BIWEEKLY' && Number(form.biweeklyDay1) < currentDay;
-  const isPastBiweeklyDay2 = form.frequency === 'BIWEEKLY' && Number(form.biweeklyDay2) < currentDay;
-  const isPastYearly = form.frequency === 'YEARLY' && (
-    Number(form.yearlyMonth) < currentMonth || 
-    (Number(form.yearlyMonth) === currentMonth && Number(form.yearlyDay) < currentDay)
+  const isPastMonthly = form?.frequencyType === 'MONTHLY' && Number(form.dayOne) < currentDay;
+  const isPastBiweeklyDay1 = form?.frequencyType === 'BIWEEKLY' && Number(form?.dayOne) < currentDay;
+  const isPastBiweeklyDay2 = form?.frequencyType === 'BIWEEKLY' && Number(form?.dayTwo) < currentDay;
+  const isPastYearly = form?.frequencyType === 'YEARLY' && (
+    Number(form?.monthOfTheYear) < currentMonth || 
+    (Number(form?.monthOfTheYear) === currentMonth && Number(form?.dayOne) < currentDay)
   );
 
   const statusText = isIncome ? 'recebido' : 'pago';
@@ -69,7 +111,7 @@ export function RecurrenceForm({
       <div className="flex flex-col gap-1.5 items-center justify-center py-4">
         <span className={`text-xs font-semibold uppercase tracking-wider ${styles.textMuted}`}>Valor da recorrência</span>
         <input 
-          name="amount" type="number" value={form.amount} onChange={handleOnChange} placeholder="R$ 0,00"
+          name="amount" id='amount' value={form?.amount} onChange={handleOnChange} placeholder="R$ 0,00"
           className={`w-full text-center text-4xl sm:text-5xl font-black tracking-tighter bg-transparent focus:outline-none transition-colors ${amountInputStyle}`}
         />
       </div>
@@ -80,7 +122,7 @@ export function RecurrenceForm({
         <div className="flex flex-col gap-2">
           <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Descrição</label>
           <input 
-            name="description" type="text" value={form.description} onChange={handleOnChange} placeholder="Ex: Assinatura de Software, Aluguel..."
+            name="description" type="text" value={form?.description} onChange={handleOnChange} placeholder="Ex: Assinatura de Software, Aluguel..."
             className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}
           />
         </div>
@@ -88,55 +130,74 @@ export function RecurrenceForm({
         {/* FREQUÊNCIA E CARTEIRA */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="flex flex-col gap-2">
-            <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Frequência</label>
-            <select 
-              name="frequency" value={form.frequency} onChange={handleOnChange}
-              className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}
-            >
-              <option value="WEEKLY">Semanal</option>
-              <option value="MONTHLY">Mensal</option>
-              <option value="BIWEEKLY">Quinzenal</option>
-              <option value="YEARLY">Anual</option>
-            </select>
+            <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Categorias</label>
+            <CustomSelect
+              options={categories}
+              value={category}
+              onChange={onCategoryChange}
+              placeholder="Selecione..."
+              renderOption={renderCategory}
+              renderSelected={renderCategory}
+            />
           </div>
           
           <div className="flex flex-col gap-2">
             <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Carteira / Banco</label>
-            <CustomSelect options={wallets} value={wallet} onChange={onWalletChange} placeholder="Selecione..." renderOption={renderWallet} renderSelected={renderWallet} />
+            <CustomSelect
+              options={wallets}
+              value={wallet}
+              onChange={onWalletChange}
+              placeholder="Selecione..."
+              renderOption={renderWallet}
+              renderSelected={renderWallet}
+            />
           </div>
         </div>
 
+        <div className="flex flex-col gap-2">
+          <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Frequência</label>
+          <select 
+            name="frequency" value={form?.frequencyType} onChange={handleOnChange}
+            className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}
+          >
+            <option value="WEEKLY">Semanal</option>
+            <option value="MONTHLY">Mensal</option>
+            <option value="BIWEEKLY">Quinzenal</option>
+            <option value="YEARLY">Anual</option>
+          </select>
+        </div>
+
         {/* CAMPOS DINÂMICOS - MENSAL */}
-        {form.frequency === 'MONTHLY' && (
+        {form?.frequencyType === 'MONTHLY' && (
           <div className="flex flex-col gap-2">
             <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Dia do Vencimento</label>
             <input 
-              name="monthlyDay" type="number" min="1" max="31" value={form.monthlyDay} onChange={handleOnChange}
+              name="dayOne" id='dayOne' min="1" max="31" value={form.dayOne} onChange={handleOnChange}
               className={`w-full sm:w-1/2 rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} 
             />
           </div>
         )}
 
         {/* CAMPOS DINÂMICOS - QUINZENAL */}
-        {form.frequency === 'BIWEEKLY' && (
+        {form?.frequencyType === 'BIWEEKLY' && (
           <div className="grid grid-cols-2 gap-3 sm:w-1/2">
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>1º Dia</label>
-              <input name="biweeklyDay1" type="number" min="1" max="31" value={form.biweeklyDay1} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <input name="dayOne" id='dayOne' min="1" max="31" value={form.dayOne} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>2º Dia</label>
-              <input name="biweeklyDay2" type="number" min="1" max="31" value={form.biweeklyDay2} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <input name="dayTwo" id='dayTwo' min="1" max="31" value={form.dayTwo} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
           </div>
         )}
 
         {/* CAMPOS DINÂMICOS - ANUAL */}
-        {form.frequency === 'YEARLY' && (
+        {form?.frequencyType === 'YEARLY' && (
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Mês de Cobrança</label>
-              <select name="yearlyMonth" value={form.yearlyMonth} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}>
+              <select name="yearlyMonth" value={form.monthOfTheYear} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}>
                 <option value="1">Janeiro</option>
                 <option value="2">Fevereiro</option>
                 <option value="3">Março</option>
@@ -153,41 +214,54 @@ export function RecurrenceForm({
             </div>
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Dia</label>
-              <input name="yearlyDay" type="number" min="1" max="31" value={form.yearlyDay} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <input name="yearlyDay" type="number" min="1" max="31" value={form.dayOne} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
           </div>
         )}
 
-        {/* CHECKBOXES - MENSAL E ANUAL */}
-        {((form.frequency === 'MONTHLY' && isPastMonthly) || (form.frequency === 'YEARLY' && isPastYearly)) && (
+        {/* CHECKBOX - MENSAL*/}
+        {(form?.frequencyType === 'MONTHLY' && isPastMonthly) && (
           <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up mt-1 ${styles.checkboxContainer}`}>
             <input 
-              type="checkbox" name="alreadyPaid" id="alreadyPaid" checked={form.alreadyPaid} onChange={handleOnChange}
+              type="checkbox" name="dayOneAlreadyOccurred" id="dayOneAlreadyOccurred" checked={form.dayOneAlreadyOccurred} onChange={handleOnChange}
               className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`}
             />
-            <label htmlFor="alreadyPaid" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
+            <label htmlFor="dayOneAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
+              Marcar como já {statusText} neste período
+            </label>
+          </div>
+        )}
+
+        {/* CHECKBOX - ANUAL*/}
+        {(form?.frequencyType === 'YEARLY' && isPastYearly) && (
+          <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up mt-1 ${styles.checkboxContainer}`}>
+            <input 
+              type="checkbox" name="monthOfTheYearAlreadyOccurred" id="monthOfTheYearAlreadyOccurred" checked={form.monthOfTheYearAlreadyOccurred} onChange={handleOnChange}
+              className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`}
+            />
+            <label htmlFor="monthOfTheYearAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
               Marcar como já {statusText} neste período
             </label>
           </div>
         )}
 
         {/* CHECKBOXES - QUINZENAL */}
-        {form.frequency === 'BIWEEKLY' && (isPastBiweeklyDay1 || isPastBiweeklyDay2) && (
+        {form?.frequencyType === 'BIWEEKLY' && (isPastBiweeklyDay1 || isPastBiweeklyDay2) && (
           <div className="flex flex-col gap-2 mt-1">
             {isPastBiweeklyDay1 && (
               <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up ${styles.checkboxContainer}`}>
-                <input type="checkbox" name="alreadyPaid" id="alreadyPaid1" checked={form.alreadyPaid} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
-                <label htmlFor="alreadyPaid1" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
-                  Marcar como já {statusText} ref. ao 1º Dia ({form.biweeklyDay1})
+                <input type="checkbox" name="dayOneAlreadyOccurred" id="dayOneAlreadyOccurred" checked={form.dayOneAlreadyOccurred} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
+                <label htmlFor="dayOneAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
+                  Marcar como já {statusText} ref. ao 1º Dia ({form.dayOneAlreadyOccurred})
                 </label>
               </div>
             )}
             
             {isPastBiweeklyDay2 && (
               <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up ${styles.checkboxContainer}`}>
-                <input type="checkbox" name="alreadyPaid2" id="alreadyPaid2" checked={form.alreadyPaid2} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
-                <label htmlFor="alreadyPaid2" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
-                  Marcar como já {statusText} ref. ao 2º Dia ({form.biweeklyDay2})
+                <input type="checkbox" name="dayTwoAlreadyOccurred" id="dayTwoAlreadyOccurred" checked={form.dayTwoAlreadyOccurred} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
+                <label htmlFor="dayTwoAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
+                  Marcar como já {statusText} ref. ao 2º Dia ({form.dayTwoAlreadyOccurred})
                 </label>
               </div>
             )}
@@ -198,29 +272,29 @@ export function RecurrenceForm({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-2">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">
-              <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Início</label>
-              <input name="startDate" type="date" value={form.startDate} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Início (Opc.)</label>
+              <input name="startDate" type="date" value={form?.startDate} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Fim (Opc.)</label>
-              <input name="endDate" type="date" value={form.endDate} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <input name="endDate" type="date" value={form?.endDate} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
           </div>
           
           <div className="flex flex-col gap-2">
             <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Tipo de Lançamento</label>
             <div className={`flex p-1 rounded-xl border h-[50px] ${styles.toggleContainer}`}>
-              <button 
-                onClick={() => onRecurrenceTypeChange('AUTOMATIC')} 
-                className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg border ${form.recurrenceType === 'AUTOMATIC' ? styles.activeAuto : styles.toggleBtn}`}
+              <button
+                onClick={() => onExecutionType('AUTOMATIC')}
+                className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg border ${form?.executionType === 'AUTOMATIC' ? styles.activeAuto : styles.toggleBtn}`}
               >
-                {form.recurrenceType === 'AUTOMATIC' && <RefreshCcw size={16} />} Automático
+                {form?.executionType === 'AUTOMATIC' && <RefreshCcw size={16} />} Automático
               </button>
-              <button 
-                onClick={() => onRecurrenceTypeChange('MANUAL')} 
-                className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg border ${form.recurrenceType === 'MANUAL' ? styles.activeManual : styles.toggleBtn}`}
+              <button
+                onClick={() => onExecutionType('MANUALLY')}
+                className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg border ${form?.executionType === 'MANUALLY' ? styles.activeManual : styles.toggleBtn}`}
               >
-                {form.recurrenceType === 'MANUAL' && <Hand size={16} />} Manual
+                {form?.executionType === 'MANUALLY' && <Hand size={16} />} Manual
               </button>
             </div>
           </div>

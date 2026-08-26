@@ -1,2 +1,2 @@
-.backdrop { background-color: rgba(0, 0, 0, 0.6); }
-.modalContainer { background-color: var(--bg-surface); border: 1px solid var(--border-color); }
+.overlay { background: rgba(0, 0, 0, 0.6); }
+.modal { background: var(--bg-surface); border-color: var(--border-color); }

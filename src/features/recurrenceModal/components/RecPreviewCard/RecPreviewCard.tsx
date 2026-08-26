@@ -1,11 +1,23 @@
-import React from 'react';
-import { Eye, Calendar, Wallet, RefreshCcw } from 'lucide-react';
-import styles from './RecurrencePreviewCard.module.css';
+import { Calendar, Eye, RefreshCcw, Wallet } from 'lucide-react';
 import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
-// Lembre-se de importar o TxWalletBrandMark do caminho correto
-// import { TxWalletBrandMark } from '../caminho-do-seu-componente';
+import styles from './RecPreviewCard.module.css';
+import type { RecFormData } from '../../types/RecFormData';
 
-export function RecurrencePreviewCard({ isEditing, form, onClose, onSubmit, isSaving }: any) {
+interface RecurrencePreviewCardProps {
+  isEditing: boolean;
+  form: RecFormData;
+  onClose: () => void;
+  onSubmit: () => void;
+  isSaving: boolean;
+}
+
+export function RecurrencePreviewCard({
+  isEditing,
+  form,
+  onClose,
+  onSubmit,
+  isSaving
+}: RecurrencePreviewCardProps) {
   const isIncome = form.type === 'CREDIT';
   const numericAmount = form.amount ? Number(form.amount) : 0;
   
@@ -32,7 +44,7 @@ export function RecurrencePreviewCard({ isEditing, form, onClose, onSubmit, isSa
             {form.description || 'Nova recorrência'}
           </span>
           <span className={`text-xs font-medium mt-0.5 ${styles.textMuted}`}>
-            Repetição {frequencyLabels[form.frequency]}
+            Repetição {frequencyLabels[form.frequencyType]}
           </span>
         </div>
 
@@ -57,7 +69,7 @@ export function RecurrencePreviewCard({ isEditing, form, onClose, onSubmit, isSa
           
           <div className="flex justify-between items-center text-xs font-medium mt-1">
             <span className={`flex items-center gap-1.5 ${styles.textMuted}`}><RefreshCcw size={14} /> Tipo</span>
-            {form.recurrenceType === 'AUTOMATIC' ? (
+            {form.executionType === 'AUTOMATIC' ? (
               <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full border ${styles.badgeAuto} ${isIncome ? styles.textIncome : styles.textMain}`}>
                 Automático
               </span>

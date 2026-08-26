@@ -10,10 +10,13 @@ import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesT
 import { SummaryCards } from './components/SummaryCards/SummaryCards';
 import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
 import useRecurrences from './hooks/useRecurrences';
+import { RecurrenceModal } from '../recurrenceModal/RecurrenceModal';
+import type { RecurrenceType } from '../../types/RecurrenceType';
 
 export function Recurrences() {
   const [search, setSearch] = useState('');
-
+  const [recModalOpen, setRecModalOpen] = useState(false);
+  const [recType, setRecType] = useState<RecurrenceType>('CREDIT');
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [selectedRecurrence, setSelectedRecurrence] = useState<RecurrenceResponse | null>(null);
 
@@ -82,7 +85,7 @@ export function Recurrences() {
   return (
     <div className="page-container">
       <RecurrencesHeader
-        onNew={() => {}}
+        onNew={() => setRecModalOpen(true)}
       />
 
       <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up mt-6">
@@ -171,6 +174,13 @@ export function Recurrences() {
         onDelete={handleDelete}
         onToggleStatus={handleToggleStatus}
         onEdit={() => {}}
+      />
+
+      <RecurrenceModal
+        isOpen={recModalOpen}
+        onClose={() => setRecModalOpen(!recModalOpen)}
+        initialType={recType}
+        isEditing={false}
       />
     </div>
   );
