@@ -32,8 +32,14 @@ export function Recurrences() {
     confirm(recurrence);
   };
 
-  const handleEdit = (_item: RecurrenceResponse) => {
-    
+  const handleEdit = (recurrence: RecurrenceResponse) => {
+    setSelectedRecurrence(recurrence);
+    setRecModalOpen(true);
+  };
+
+  const handleOnClose = () => {
+    setSelectedRecurrence(null);
+    setRecModalOpen(false);
   };
 
   const {
@@ -170,10 +176,10 @@ export function Recurrences() {
       <DetailsDrawer
         item={selectedRecurrence}
         isOpen={!!selectedRecurrence}
-        onClose={() => setSelectedRecurrence(null)}
+        onClose={handleOnClose}
         onDelete={handleDelete}
         onToggleStatus={handleToggleStatus}
-        onEdit={setSelectedRecurrence}
+        onEdit={handleEdit}
       />
 
       <RecurrenceModal
