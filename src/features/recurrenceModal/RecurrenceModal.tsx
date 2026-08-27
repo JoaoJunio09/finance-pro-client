@@ -1,41 +1,22 @@
-import React, { useState } from 'react';
+import type { RecurrenceResponse } from '../../models/recurrence/RecurrenceResponse';
 import { RecurrenceForm } from './components/RecForm/RecForm';
 import { RecurrencePreviewCard } from './components/RecPreviewCard/RecPreviewCard';
-import styles from './RecurrenceModal.module.css';
 import useRecurrenceModal from './hooks/useRecurrenceModal';
-
-export interface BankResponse {
-  name: string;
-  color: string;
-}
-
-export interface WalletResponse {
-  id: string;
-  name: string;
-  bank?: BankResponse;
-}
-
-const MOCK_WALLETS: WalletResponse[] = [
-  { id: '1', name: 'Nubank', bank: { name: 'Nubank', color: '#8A05BE' } },
-  { id: '2', name: 'Itaú', bank: { name: 'Itau', color: '#EC7000' } },
-  { id: '3', name: 'Carteira Física' }
-];
+import styles from './RecurrenceModal.module.css';
 
 interface RecurrenceModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialType?: 'CREDIT' | 'DEBIT';
-  isEditing?: boolean;
+  recurrence: RecurrenceResponse | null;
 }
 
 export function RecurrenceModal({
   isOpen,
   onClose,
   initialType = 'DEBIT',
-  isEditing = false
+  recurrence
 }: RecurrenceModalProps) {  
-  const [isSaving, setIsSaving] = useState(false);
-
 	const {
 		form,
 		handleOnChange,
@@ -44,8 +25,10 @@ export function RecurrenceModal({
 		changeCustomSelectCategory,
 		changeCustomSelectWallet,
 		categories,
-		wallets
-	} = useRecurrenceModal(null, initialType, () => {});
+		wallets,
+    saveOrUpdate,
+    isSaving
+	} = useRecurrenceModal(recurrence, initialType, onClose);
 
   if (!isOpen) return null;
 
@@ -72,10 +55,10 @@ export function RecurrenceModal({
         />
 
         <RecurrencePreviewCard
-          isEditing={isEditing}
+          isEditing={!!recurrence}
           form={form}
           onClose={onClose}
-          onSubmit={() => {}}
+          onSubmit={saveOrUpdate}
           isSaving={isSaving}
         />
       </div>

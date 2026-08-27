@@ -173,14 +173,14 @@ export function Recurrences() {
         onClose={() => setSelectedRecurrence(null)}
         onDelete={handleDelete}
         onToggleStatus={handleToggleStatus}
-        onEdit={() => {}}
+        onEdit={setSelectedRecurrence}
       />
 
       <RecurrenceModal
         isOpen={recModalOpen}
         onClose={() => setRecModalOpen(!recModalOpen)}
         initialType={recType}
-        isEditing={false}
+        recurrence={selectedRecurrence}
       />
     </div>
   );

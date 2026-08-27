@@ -1,7 +1,7 @@
 import { Calendar, Eye, RefreshCcw, Wallet } from 'lucide-react';
 import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
-import styles from './RecPreviewCard.module.css';
 import type { RecFormData } from '../../types/RecFormData';
+import styles from './RecPreviewCard.module.css';
 
 interface RecurrencePreviewCardProps {
   isEditing: boolean;
@@ -33,7 +33,7 @@ export function RecurrencePreviewCard({
   return (
     <div className={`w-full lg:w-[380px] border-t lg:border-t-0 lg:border-l p-6 sm:p-8 flex flex-col ${styles.sidebar}`}>
       <h3 className={`text-sm font-bold mb-6 flex items-center gap-2 ${styles.textMain}`}>
-         <Eye size={18} className={styles.accentIcon} /> Pré-visualização da recorrência
+         <Eye size={18} className={styles.accentIcon} /> Pré-visualização
       </h3>
 
       <div className={`rounded-[1.5rem] p-5 flex flex-col gap-5 shadow-lg relative overflow-hidden group mt-auto mb-auto lg:mt-0 lg:mb-0 ${styles.previewCard}`}>

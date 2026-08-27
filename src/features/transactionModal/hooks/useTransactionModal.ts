@@ -131,7 +131,7 @@ function useTransactionModal(
 
 		let isUpdate = transaction?.id;
 
-		const data: TransactionRequest = {
+		const request: TransactionRequest = {
 			id: form.id,
 			amount: formatCurrencyToAPI(form.amount),
 			description: form.description,
@@ -144,10 +144,10 @@ function useTransactionModal(
 		}
 
 		if (isUpdate) {
-			txMutationUpdate.mutate(data);
+			txMutationUpdate.mutate(request);
 		}
 		else {
-			txMutationSave.mutate(data);
+			txMutationSave.mutate(request);
 		}
 	}
 
@@ -157,9 +157,7 @@ function useTransactionModal(
 	useEffect(() => {	
 		if (!transaction) return;
 		
-		setCategoryType(
-			transaction.type === 'CREDIT' ? 'CREDIT' : 'DEBIT'
-		);
+		setCategoryType(transaction.type === 'CREDIT' ? 'CREDIT' : 'DEBIT');
 
 		setForm({
 			id: transaction.id,

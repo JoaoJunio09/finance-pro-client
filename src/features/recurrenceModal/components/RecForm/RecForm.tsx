@@ -157,10 +157,9 @@ export function RecurrenceForm({
         <div className="flex flex-col gap-2">
           <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Frequência</label>
           <select 
-            name="frequency" value={form?.frequencyType} onChange={handleOnChange}
+            name="frequencyType" id='frequencyType' value={form?.frequencyType} onChange={handleOnChange}
             className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}
           >
-            <option value="WEEKLY">Semanal</option>
             <option value="MONTHLY">Mensal</option>
             <option value="BIWEEKLY">Quinzenal</option>
             <option value="YEARLY">Anual</option>
@@ -197,7 +196,7 @@ export function RecurrenceForm({
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Mês de Cobrança</label>
-              <select name="yearlyMonth" value={form.monthOfTheYear} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}>
+              <select name="monthOfTheYear" id='monthOfTheYear' value={form.monthOfTheYear} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`}>
                 <option value="1">Janeiro</option>
                 <option value="2">Fevereiro</option>
                 <option value="3">Março</option>
@@ -214,7 +213,7 @@ export function RecurrenceForm({
             </div>
             <div className="flex flex-col gap-2">
               <label className={`text-xs font-semibold ml-1 ${styles.textMuted}`}>Dia</label>
-              <input name="yearlyDay" type="number" min="1" max="31" value={form.dayOne} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
+              <input name="dayOne" id="dayOne" min="1" max="31" value={form.dayOne} onChange={handleOnChange} className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm ${styles.inputBase}`} />
             </div>
           </div>
         )}
@@ -233,7 +232,7 @@ export function RecurrenceForm({
         )}
 
         {/* CHECKBOX - ANUAL*/}
-        {(form?.frequencyType === 'YEARLY' && isPastYearly) && (
+        {(form?.frequencyType === 'YEARLY' && form.dayOne && isPastYearly) && (
           <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up mt-1 ${styles.checkboxContainer}`}>
             <input 
               type="checkbox" name="monthOfTheYearAlreadyOccurred" id="monthOfTheYearAlreadyOccurred" checked={form.monthOfTheYearAlreadyOccurred} onChange={handleOnChange}
@@ -252,7 +251,7 @@ export function RecurrenceForm({
               <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up ${styles.checkboxContainer}`}>
                 <input type="checkbox" name="dayOneAlreadyOccurred" id="dayOneAlreadyOccurred" checked={form.dayOneAlreadyOccurred} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
                 <label htmlFor="dayOneAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
-                  Marcar como já {statusText} ref. ao 1º Dia ({form.dayOneAlreadyOccurred})
+                  Marcar como já {statusText} ref. ao 1º Dia ({form.dayOne})
                 </label>
               </div>
             )}
@@ -261,7 +260,7 @@ export function RecurrenceForm({
               <div className={`flex items-center gap-3 p-4 rounded-xl border shadow-sm animate-fade-in-up ${styles.checkboxContainer}`}>
                 <input type="checkbox" name="dayTwoAlreadyOccurred" id="dayTwoAlreadyOccurred" checked={form.dayTwoAlreadyOccurred} onChange={handleOnChange} className={`w-5 h-5 rounded cursor-pointer ${styles.checkboxInput}`} />
                 <label htmlFor="dayTwoAlreadyOccurred" className={`text-sm font-medium cursor-pointer select-none ${styles.textMain}`}>
-                  Marcar como já {statusText} ref. ao 2º Dia ({form.dayTwoAlreadyOccurred})
+                  Marcar como já {statusText} ref. ao 2º Dia ({form.dayTwo})
                 </label>
               </div>
             )}
