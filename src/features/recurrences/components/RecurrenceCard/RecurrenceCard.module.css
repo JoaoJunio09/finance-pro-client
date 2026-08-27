@@ -3,6 +3,10 @@
   border: 1px solid var(--border-color);
 }
 
+.bgPaused {
+  background-color: #eaff0019;
+}
+
 .elevated {
   background-color: var(--bg-elevated);
 }

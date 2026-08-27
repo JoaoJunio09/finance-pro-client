@@ -1,10 +1,9 @@
-import { Repeat, ChevronRight, Check, Zap, UserCheck, AlertTriangle } from 'lucide-react';
-import type { Recurrence } from '../../types/recurrence';
-import { getDaysDifference, formatDate, formatCurrency, translateFrequency, parseLocalDate } from '../../utils/recurrenceUtils';
-import styles from './RecurrenceCard.module.css';
-import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
+import { AlertTriangle, Check, ChevronRight, Repeat, UserCheck, Zap } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import { formatCurrency, formatDate, getDaysDifference, parseLocalDate, translateFrequency } from '../../utils/recurrenceUtils';
+import styles from './RecurrenceCard.module.css';
 
 interface RecurrenceCardProps {
   item: RecurrenceResponse;
@@ -22,6 +21,7 @@ export const RecurrenceCard = ({
   const isOverdue = days !== null && days < 0;
   const isToday = days === 0;
   const isAuto = item.executionType === 'AUTOMATIC';
+  const isPaused = item.status === 'PAUSED';
 
   const isConfirmableInCurrentPeriod = (() => {
     const next = parseLocalDate(item.nextExecutionDate);
@@ -41,7 +41,7 @@ export const RecurrenceCard = ({
   return (
     <div
       onClick={() => onSelect(item)}
-      className={`group ${styles.surface} interactive-card p-4 sm:p-4.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+      className={`group ${isPaused ? styles.bgPaused : styles.surface} interactive-card p-4 sm:p-4.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 ${
         isOverdue ? 'border-amber-500/30 dark:border-amber-500/20' : styles.borderDefault
       }`}
     >

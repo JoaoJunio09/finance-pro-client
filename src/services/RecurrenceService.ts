@@ -116,7 +116,51 @@ class RecurrenceService {
 		}
 		catch (err: any) {
 			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao confirm execução da Recorrência');
+				throw new InternalServerError('Erro ao confirmar execução da Recorrência');
+			}
+
+			throw err;
+		}
+	}
+
+	public async pause(id: string) {
+		const URL = `${this.BASE_URL}/pause/${id}`;
+
+		try {
+			const response = await api.patch<void>(URL, {}, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao pausar Recorrência');
+			}
+
+			throw err;
+		}
+	}
+
+	public async activate(id: string) {
+		const URL = `${this.BASE_URL}/activate/${id}`;
+
+		try {
+			const response = await api.patch<void>(URL, {}, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${this.accessToken}`
+				}
+			});
+
+			return response.data
+		}
+		catch (err: any) {
+			if (err?.response?.status === 500) {
+				throw new InternalServerError('Erro ao ativar Recorrência');
 			}
 
 			throw err;

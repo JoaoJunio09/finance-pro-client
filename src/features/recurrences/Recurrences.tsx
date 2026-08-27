@@ -1,6 +1,8 @@
 import { AlertTriangle, Calendar, Zap } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { RecurrenceResponse } from '../../models/recurrence/RecurrenceResponse';
+import type { RecurrenceType } from '../../types/RecurrenceType';
+import { RecurrenceModal } from '../recurrenceModal/RecurrenceModal';
 import { DetailsDrawer } from './components/DetailsDrawer/DetailsDrawer';
 import { EmptyRecurrencesState } from './components/EmptyState/EmptyState';
 import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
@@ -10,8 +12,6 @@ import { RecurrencesToolbar } from './components/RecurrencesToolbar/RecurrencesT
 import { SummaryCards } from './components/SummaryCards/SummaryCards';
 import { UpcomingHighlights } from './components/UpcomingHighlights/UpcomingHighlights';
 import useRecurrences from './hooks/useRecurrences';
-import { RecurrenceModal } from '../recurrenceModal/RecurrenceModal';
-import type { RecurrenceType } from '../../types/RecurrenceType';
 
 export function Recurrences() {
   const [search, setSearch] = useState('');
@@ -24,8 +24,14 @@ export function Recurrences() {
 
   };
 
-  const handleToggleStatus = (id: string) => {
+  const handleToggleStatus = (recurrence: RecurrenceResponse) => {
+    if (recurrence.status === 'ACTIVE') {
+      pause(recurrence);
+    } else {
+      activate(recurrence);
+    }
 
+    handleOnClose();
   };
 
   const handleConfirm = (recurrence: RecurrenceResponse) => {
@@ -45,6 +51,8 @@ export function Recurrences() {
   const {
     allRecurrences,
     confirm,
+    pause,
+    activate,
     filters,
     setFilters
   } = useRecurrences();

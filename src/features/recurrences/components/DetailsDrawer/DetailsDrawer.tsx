@@ -24,7 +24,7 @@ interface DetailsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete: (id: string) => void;
-  onToggleStatus: (id: string) => void;
+  onToggleStatus: (item: RecurrenceResponse) => void;
   onEdit: (item: RecurrenceResponse) => void;
 }
 
@@ -169,7 +169,7 @@ export const DetailsDrawer = ({
           </button>
 
           <button
-            onClick={() => onToggleStatus(visibleItem.id)}
+            onClick={() => onToggleStatus(visibleItem)}
             className={`font-body w-full sm:w-auto flex-1 py-3.5 px-4 rounded-xl border border-transparent font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-80 transition-opacity cursor-pointer ${
               visibleItem.status === 'ACTIVE' ? styles.badgeWarning : styles.badgeIncome
             }`}
