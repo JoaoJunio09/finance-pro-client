@@ -141,22 +141,22 @@ export const DetailsDrawer = ({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-4">
+              {/* <div className="flex items-center justify-between p-4">
                 <span className={`font-body flex items-center gap-2.5 font-normal ${styles.textMuted}`}>
                   <CheckCircle2 size={18} /> Ocorrências
                 </span>
                 <span className={`font-metric font-medium ${styles.textMain}`}>12 processadas</span>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          <div className={`border ${styles.borderLight} rounded-2xl p-5 ${styles.surface} flex items-center justify-between gap-4`}>
+          {/* <div className={`border ${styles.borderLight} rounded-2xl p-5 ${styles.surface} flex items-center justify-between gap-4`}>
             <div className="flex flex-col">
               <span className={`font-body text-xs font-medium ${styles.textMuted} uppercase tracking-wide`}>Total Histórico</span>
               <span className={`font-body text-[11px] font-normal ${styles.textMuted} mt-0.5`}>Montante acumulado</span>
             </div>
             <span className={`font-metric text-lg font-bold ${styles.textMain}`}>{formatCurrency(2000)}</span>
-          </div>
+          </div> */}
         </div>
 
         <div className={`p-5 border-t ${styles.borderLight} flex flex-col sm:flex-row items-center gap-3 shrink-0 ${styles.surface}`}>

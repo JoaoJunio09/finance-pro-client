@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
-import { useMemo, useState } from "react";
-import type { Filters } from "../types/filter";
 import type { RecurrenceResponse } from "../../../models/recurrence/RecurrenceResponse";
+import type { Filters } from "../types/filter";
 
 function useRecurrences() {
 	const [filters, setFilters] = useState<Filters>({ status: 'ALL', frequency: 'ALL', type: 'ALL' });
@@ -17,7 +18,12 @@ function useRecurrences() {
 	const recMutationConfirm = useMutation({
 		mutationFn: (id: string) => recurrenceService.confirm(id),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['recurrences', account?.id] })
+			queryClient.invalidateQueries({ queryKey: ['recurrences', account?.id] });
+			showToast({
+				type: 'success',
+				title: 'Confirmado',
+				message: 'Recorrência confirmada com sucesso!!'
+			});
 		}
 	});
 

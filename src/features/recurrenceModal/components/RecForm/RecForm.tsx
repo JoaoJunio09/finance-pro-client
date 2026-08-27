@@ -8,6 +8,7 @@ import type { RecurrenceType } from '../../../../types/RecurrenceType';
 import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
 import type { RecFormData } from '../../types/RecFormData';
 import styles from './RecForm.module.css';
+import { formatCurrencyDisplay } from '../../../../utils/FormatCurrency';
 
 interface RecurrenceFormProps {
   isEditing: boolean;
@@ -111,7 +112,7 @@ export function RecurrenceForm({
       <div className="flex flex-col gap-1.5 items-center justify-center py-4">
         <span className={`text-xs font-semibold uppercase tracking-wider ${styles.textMuted}`}>Valor da recorrência</span>
         <input 
-          name="amount" id='amount' value={form?.amount} onChange={handleOnChange} placeholder="R$ 0,00"
+          name="amount" id='amount' value={formatCurrencyDisplay(form?.amount ?? '')} onChange={handleOnChange} placeholder="R$ 0,00"
           className={`w-full text-center text-4xl sm:text-5xl font-black tracking-tighter bg-transparent focus:outline-none transition-colors ${amountInputStyle}`}
         />
       </div>
