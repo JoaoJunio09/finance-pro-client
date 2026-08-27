@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Recurrences from "../features/recurrences/Recurrences";
 import Header from "../components/layout/Header/Header";
 import Sidebar from "../components/layout/Navigation/Desktop/Sidebar";
 import MobileBottomNav from "../components/layout/Navigation/Mobile/MobileBottomNav";
 import QuickActions from "../components/layout/QuickActions/QuickActions";
+import Recurrences from "../features/recurrences/Recurrences";
 import TransactionModal from "../features/transactionModal/TransactionModal";
 import type { TransactionType } from "../types/TransactionType";
+
 function RecurrencesPage() {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 	const [isOpenQuickActions, setIsOpenQuickActions] = useState(false);
