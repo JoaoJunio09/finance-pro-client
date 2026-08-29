@@ -1,13 +1,20 @@
 import type { RecurrenceResponse } from "../recurrence/RecurrenceResponse";
 import type { TransactionResponse } from "../transaction/TransactionResponse";
 
-interface CategorySpending {
+export interface CategorySpending {
 	id: string;
 	name: string;
 	color: string;
 	icon: string;
 	amount: number;
 	percentage: number;
+}
+
+export interface EvolutionDataPoint {
+	date: string,
+  income: string,
+  expense: string,
+  balance: string
 }
 
 export interface AnalyticsResponse {
@@ -18,4 +25,5 @@ export interface AnalyticsResponse {
 	transactions: TransactionResponse[];
 	recurrences: RecurrenceResponse[];
 	categorySpending: CategorySpending[];
+	evolution: EvolutionDataPoint[];
 }

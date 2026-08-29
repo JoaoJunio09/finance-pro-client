@@ -8,20 +8,20 @@ function useAnalytics() {
 
 	const accountService = useAccountService();
 
-	const queryActivities = useQuery({
+	const queryAnalytics = useQuery({
 		queryKey: [
 			'activities',
 			account?.id
 		],
-		queryFn: () => accountService.getActivities(account?.id ?? '', {}),
+		queryFn: () => accountService.getAnalytics(account?.id ?? ''),
 		enabled: !!account?.id,
 		retry: 3
 	});
 
-	const activities = useMemo(() => queryActivities.data, [queryActivities.data]);
+	const analytics = useMemo(() => queryAnalytics.data, [queryAnalytics.data]);
 
 	return {
-		activities
+		analytics
 	}
 }
 

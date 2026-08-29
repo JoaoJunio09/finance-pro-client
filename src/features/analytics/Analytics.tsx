@@ -239,8 +239,10 @@ function Analytics() {
   const { summary } = data;
 
   const {
-    activities
+    analytics
   } = useAnalytics();
+
+  console.log(analytics);
 
   return (
       <main className="w-full">
@@ -252,12 +254,24 @@ function Analytics() {
           />
 
           <MobileFlushHero
-            availableToSpend={summary.availableToSpend}
-            futureCommitments={summary.futureCommitments}
+            availableToSpend={analytics?.availableToSpend ?? 0}
+            futureCommitments={analytics?.commitments ?? 0}
           />
           
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10">
-            {currentSubpage === 'overview' && <OverviewSubpage summary={data.summary} evolution={data.evolution} categories={data.categories} health={data.health} onOpenHealthModal={() => setIsHealthModalOpen(true)} onNavigate={setCurrentSubpage} />}
+            {currentSubpage === 'overview' &&
+              <OverviewSubpage
+                income={analytics?.income ?? 0}
+                expense={analytics?.expense ?? 0}
+                availableToSpend={analytics?.availableToSpend ?? 0}
+                commitments={analytics?.commitments ?? 0}
+                evolution={analytics?.evolution ?? []}
+                categories={analytics?.categorySpending ?? []}
+                health={data.health}
+                onOpenHealthModal={() => setIsHealthModalOpen(true)}
+                onNavigate={setCurrentSubpage}
+              />
+            }
             {currentSubpage === 'cashflow' && <CashflowSubpage summary={data.summary} evolution={data.evolution} />}
             {currentSubpage === 'categories' && <CategoriesSubpage categories={data.categories} />}
             {currentSubpage === 'health' && <HealthSubpage health={data.health} onOpenHealthModal={() => setIsHealthModalOpen(true)} />}

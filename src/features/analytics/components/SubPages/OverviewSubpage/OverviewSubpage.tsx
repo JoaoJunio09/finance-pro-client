@@ -1,42 +1,49 @@
 import { AlertCircle, ArrowDownRight, ArrowUpRight, CheckCircle2, ChevronRight, Download, HelpCircle, ShieldCheck, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import {
-	Area,
-	AreaChart,
-	CartesianGrid,
-	ResponsiveContainer,
-	Tooltip,
-	XAxis,
-	YAxis,
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
-
 import { ProgressBar } from '../../../../../components/shared/ProgressBar/ProgressBar';
-import type { EvolutionDataPoint, ExpenseCategory, FinancialHealth, MonthlySummary } from '../../../Analytics';
+import type { CategorySpending, EvolutionDataPoint } from '../../../../../models/account/AnalyticsResponse';
+import { formatCurrencyLabel } from '../../../../../utils/FormatCurrency';
+import type { FinancialHealth } from '../../../Analytics';
+import AnalyticsMetric from '../../AnalyticsMetric/AnalyticsMetric';
 import type { AnalyticsSubpage } from '../../AnalyticsTabs/AnalyticsTabs';
 import CustomTooltip from '../../CustomTooltip/CustomTooltip';
 import FinancialHealthGauge from '../../FinancialHealthGauge/FinancialHealthGauge';
-
 import styles from './OverviewSubpage.module.css';
-import AnalyticsMetric from '../../AnalyticsMetric/AnalyticsMetric';
+
+export type Trend = 'up' | 'down' | 'neutral';
 
 interface OverviewSubpageProps {
-  summary: MonthlySummary;
+  income: number;
+  expense: number;
+  commitments: number;
+  availableToSpend: number;
   evolution: EvolutionDataPoint[];
-  categories: ExpenseCategory[];
+  categories: CategorySpending[];
   health: FinancialHealth;
   onOpenHealthModal: () => void;
   onNavigate: (subpage: AnalyticsSubpage) => void;
 }
 
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-export function OverviewSubpage({ summary, evolution, categories, health, onOpenHealthModal, onNavigate }: OverviewSubpageProps) {
+export function OverviewSubpage({ 
+  income,
+  expense,
+  availableToSpend,
+  commitments,
+  evolution,
+  categories,
+  health,
+  onOpenHealthModal,
+  onNavigate
+}: OverviewSubpageProps) {
   return (
     <div className="flex flex-col gap-8 animate-fade-in-up">
       {/* Hero + métricas — Desktop */}
@@ -50,12 +57,12 @@ export function OverviewSubpage({ summary, evolution, categories, health, onOpen
             </span>
             <div className="flex items-baseline gap-3 mt-1">
               <span className="text-5xl font-bold tracking-tight text-white tabular-nums drop-shadow-sm">
-                {formatCurrency(summary.availableToSpend)}
+                {formatCurrencyLabel(availableToSpend)}
               </span>
             </div>
             <p className={`text-sm mt-1 max-w-md font-medium leading-relaxed ${styles.heroCaption}`}>
               Saldo livre calculado após descontar{' '}
-              <span className="text-white font-semibold">{formatCurrency(summary.futureCommitments)}</span> em
+              <span className="text-white font-semibold">{formatCurrencyLabel(commitments)}</span> em
               compromissos e assinaturas recorrentes fixadas.
             </p>
           </div>
@@ -64,18 +71,18 @@ export function OverviewSubpage({ summary, evolution, categories, health, onOpen
         <div className="flex flex-col gap-4 w-80">
           <AnalyticsMetric
             title="Entradas Totais"
-            amount={summary.income.value}
-            trend={summary.income.trend}
-            trendValue={summary.income.percentageChange}
+            amount={income}
+            trend={'up'}
+            trendValue={10}
             icon={TrendingUp}
             tone="income"
             animationDelay="100ms"
           />
           <AnalyticsMetric
             title="Saídas Realizadas"
-            amount={summary.expense.value}
-            trend={summary.expense.trend}
-            trendValue={summary.expense.percentageChange}
+            amount={expense}
+            trend={'down'}
+            trendValue={10}
             icon={TrendingDown}
             tone="expense"
             animationDelay="200ms"
@@ -87,18 +94,18 @@ export function OverviewSubpage({ summary, evolution, categories, health, onOpen
       <section className="grid grid-cols-2 gap-3 lg:hidden">
         <AnalyticsMetric
           title="Entradas"
-          amount={summary.income.value}
-          trend={summary.income.trend}
-          trendValue={summary.income.percentageChange}
+          amount={income}
+          trend={'up'}
+          trendValue={10}
           icon={ArrowUpRight}
           tone="income"
           animationDelay="0ms"
         />
         <AnalyticsMetric
           title="Saídas"
-          amount={summary.expense.value}
-          trend={summary.expense.trend}
-          trendValue={summary.expense.percentageChange}
+          amount={expense}
+          trend={'down'}
+          trendValue={10}
           icon={ArrowDownRight}
           tone="expense"
           animationDelay="100ms"
@@ -165,18 +172,18 @@ export function OverviewSubpage({ summary, evolution, categories, health, onOpen
                     <div className="flex items-center gap-3">
                       <div
                         className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors shadow-xs"
-                        style={{ backgroundColor: `${cat.colorHex}20`, color: cat.colorHex, border: `1px solid ${cat.colorHex}40` }}
+                        style={{ backgroundColor: `${cat.color}20`, color: cat.color, border: `1px solid ${cat.color}40` }}
                       >
-                        <cat.icon size={15} />
+                        <DynamicIcon name={cat.icon as IconName} size={15} />
                       </div>
                       <span className={`text-xs sm:text-sm font-semibold transition-colors ${styles.categoryName}`}>{cat.name}</span>
                     </div>
                     <div className="flex items-end flex-col">
-                      <span className={`text-xs sm:text-sm font-bold tabular-nums ${styles.categoryAmount}`}>{formatCurrency(cat.amount)}</span>
+                      <span className={`text-xs sm:text-sm font-bold tabular-nums ${styles.categoryAmount}`}>{formatCurrencyLabel(cat.amount)}</span>
                       <span className={`text-[10px] sm:text-xs font-semibold ${styles.categoryPercent}`}>{cat.percentage.toFixed(1)}%</span>
                     </div>
                   </div>
-                  <ProgressBar percentage={cat.percentage} colorHex={cat.colorHex} />
+                  <ProgressBar percentage={cat.percentage} colorHex={cat.color} />
                 </div>
               ))}
             </div>
@@ -209,7 +216,7 @@ export function OverviewSubpage({ summary, evolution, categories, health, onOpen
             <div className={`grid grid-cols-2 gap-2.5 pt-2 border-t ${styles.healthHeader}`}>
               <div className={`p-3 rounded-xl border flex flex-col gap-0.5 ${styles.statTile}`}>
                 <span className={`text-[11px] font-medium ${styles.cardSubtitle}`}>Capacidade Economia</span>
-                <span className={`text-xs font-bold ${styles.categoryAmount}`}>{formatCurrency(health.metrics.savingsCapacity)}</span>
+                <span className={`text-xs font-bold ${styles.categoryAmount}`}>{formatCurrencyLabel(health.metrics.savingsCapacity)}</span>
               </div>
               <div className={`p-3 rounded-xl border flex flex-col gap-0.5 ${styles.statTile}`}>
                 <span className={`text-[11px] font-medium ${styles.cardSubtitle}`}>Renda Comprometida</span>
