@@ -1,12 +1,14 @@
-import type { CategoryResponse } from "../category/CategoryResponse";
 import type { RecurrenceSummary } from "../recurrence/RecurrenceSummary";
 import type { TransactionResponse } from "../transaction/TransactionResponse";
 import type { WalletResponse } from "../wallet/WalletResponse";
 
-export interface ExpensesByCategory {
-	category: CategoryResponse,
-	percentage: number,
-	amount: number
+export interface CategorySpendingDTO {
+	id: string,
+	name: string,
+	color: string,
+	icon: string,
+	amount: number,
+	percentage: number
 }
 
 export interface DashboardResponse {
@@ -18,5 +20,5 @@ export interface DashboardResponse {
 	wallets: WalletResponse[],
 	transactions: TransactionResponse[],
 	recurrences: RecurrenceSummary[],
-	expensesByCategory: ExpensesByCategory[]
+	expensesByCategory: CategorySpendingDTO[]
 }

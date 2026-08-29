@@ -1,13 +1,13 @@
 import { ChevronRight } from 'lucide-react';
-import type { ExpensesByCategory } from '../../../../models/account/DashboardResponse';
+import type { CategorySpendingDTO } from '../../../../models/account/DashboardResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
-import styles from './TopCategories.module.css';
 import { ProgressBar } from '../../../../components/shared/ProgressBar/ProgressBar';
+import styles from './TopCategories.module.css';
 
 interface TopCategoriesProps {
-  categories: ExpensesByCategory[];
+  categories: CategorySpendingDTO[];
   showBalance: boolean;
   onViewAll: () => void;
   onCategoryClick: (categoryId: string) => void;
@@ -26,7 +26,7 @@ export function TopCategories({ categories, showBalance, onViewAll, onCategoryCl
 
       <div className="flex flex-col gap-5 mt-1">
         {categories.slice(0, 3).map((cat) => (
-          <div key={cat.category.id} className={`flex flex-col gap-2 group cursor-pointer ${styles.row}`} onClick={() => onCategoryClick(cat.category.id)}>
+          <div key={cat.id} className={`flex flex-col gap-2 group cursor-pointer ${styles.row}`} onClick={() => onCategoryClick(cat.id)}>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div
@@ -35,20 +35,20 @@ export function TopCategories({ categories, showBalance, onViewAll, onCategoryCl
                     ${styles.iconWrap}
                   `}
                   style={{
-                    background: cat.category.color,
+                    background: cat.color,
                     color: "#000"
                   }}
                 >                  
-                  <DynamicIcon name={cat.category.icon as IconName} size={16} />
+                  <DynamicIcon name={cat.icon as IconName} size={16} />
                 </div>
-                <span className={`text-sm font-medium transition-colors ${styles.categoryName}`}>{cat.category.name}</span>
+                <span className={`text-sm font-medium transition-colors ${styles.categoryName}`}>{cat.name}</span>
               </div>
               <span className={`text-sm font-bold ${styles.amount}`}>
                 {showBalance ? formatCurrencyLabel(cat.amount) : '••••'}
               </span>
             </div>
             <div className="pl-12">
-              <ProgressBar percentage={cat.percentage} colorHex={cat.category.color} />
+              <ProgressBar percentage={cat.percentage} colorHex={cat.color} />
             </div>
           </div>
         ))}

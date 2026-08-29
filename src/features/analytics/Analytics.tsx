@@ -18,6 +18,7 @@ import HealthSubpage from './components/SubPages/HealthSubpage/HealthSubpage';
 import OverviewSubpage from './components/SubPages/OverviewSubpage/OverviewSubpage';
 import RecurrencesSubpage from './components/SubPages/RecurrencesSubpage/RecurrencesSubpage';
 import ReportsSubpage from './components/SubPages/ReportsSubpage/ReportsSubpage';
+import useAnalytics from './hooks/useAnalytics';
 
 export type Trend = 'up' | 'down' | 'neutral';
 export type InsightType = 'positive' | 'negative' | 'neutral' | 'alert';
@@ -236,6 +237,10 @@ function Analytics() {
 
   const data = useMemo(() => generateMockData(period), [period]);
   const { summary } = data;
+
+  const {
+    activities
+  } = useAnalytics();
 
   return (
       <main className="w-full">

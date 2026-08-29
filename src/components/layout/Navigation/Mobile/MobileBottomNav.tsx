@@ -41,7 +41,6 @@ const SECONDARY_LIST = [
 ];
 
 const ACCOUNT_LIST = [
-  { id: 'profile', label: 'Perfil', icon: User, path: '/perfil' },
   { id: 'settings', label: 'Configurações', icon: Settings, path: '/configuracoes' },
 ];
 
