@@ -19,8 +19,7 @@ export type AnalyticsSubpage =
   | 'categories'
   | 'health'
   | 'evolution'
-  | 'reports'
-  | 'recurrences';
+  | 'reports';
 
 export interface SubpageOption {
   id: AnalyticsSubpage;
@@ -35,8 +34,7 @@ export const SUBPAGES: SubpageOption[] = [
   { id: 'categories', label: 'Categorias', description: 'Composição de gastos e impactos no seu orçamento.', icon: PieChart },
   { id: 'health', label: 'Saúde Financeira', description: 'Diagnóstico completo sobre seus hábitos financeiros.', icon: ShieldCheck },
   { id: 'evolution', label: 'Evolução', description: 'Acompanhamento do seu patrimônio e performance acumulada.', icon: TrendingUp },
-  { id: 'reports', label: 'Relatórios', description: 'Exportação de demonstrativos e extratos contábeis.', icon: FileText },
-  { id: 'recurrences', label: 'Recorrências', description: 'Visão consolidada de assinaturas e gastos fixos.', icon: Repeat },
+  { id: 'reports', label: 'Relatórios', description: 'Exportação de demonstrativos e extratos contábeis.', icon: FileText }
 ];
 
 interface AnalyticsTabsProps {

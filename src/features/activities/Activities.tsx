@@ -10,7 +10,6 @@ import styles from './Activities.module.css';
 
 function Activities() {
   const [currentSubpage, setCurrentSubpage] = useState<ActivitySubpage>('overview');
-  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -19,10 +18,18 @@ function Activities() {
     setIsDrawerOpen(true);
   };
 
-  const { activities, transactions, transactionsPending, recurrences } = useActivities();
+  const {
+    activities,
+    transactions,
+    transactionsPending,
+    recurrences,
+    currentMonth,
+    setCurrentMonth
+  } = useActivities();
+
+  console.log(activities)
 
   const handleNewActivity = () => {
-    // Lógica para abrir modal ou nova rota
     console.log('Nova atividade clicada!');
   };
 
@@ -46,7 +53,7 @@ function Activities() {
             <CalendarView 
               currentMonth={currentMonth}
               activities={activities}
-              onDayClick={handleDayClick} 
+              onDayClick={handleDayClick}
             />
           )}
           
@@ -70,7 +77,7 @@ function Activities() {
             <SimpleListView 
               title="Recorrências Fixas" 
               desc="Assinaturas e contas com cobrança programada mensalmente." 
-              activities={recurrences} 
+              activities={recurrences}
             />
           )}
 

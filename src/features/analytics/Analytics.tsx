@@ -16,7 +16,6 @@ import CategoriesSubpage from './components/SubPages/CategoriesSubpage/Categorie
 import EvolutionSubpage from './components/SubPages/EvolutionSubpage/EvolutionSubpage';
 import HealthSubpage from './components/SubPages/HealthSubpage/HealthSubpage';
 import OverviewSubpage from './components/SubPages/OverviewSubpage/OverviewSubpage';
-import RecurrencesSubpage from './components/SubPages/RecurrencesSubpage/RecurrencesSubpage';
 import ReportsSubpage from './components/SubPages/ReportsSubpage/ReportsSubpage';
 import useAnalytics from './hooks/useAnalytics';
 
@@ -24,7 +23,7 @@ export type Trend = 'up' | 'down' | 'neutral';
 export type InsightType = 'positive' | 'negative' | 'neutral' | 'alert';
 export type HealthStatus = 'Excelente' | 'Muito Boa' | 'Boa' | 'Regular' | 'Crítica';
 export type PeriodOption = 'current_month' | 'last_3_months' | 'last_6_months' | 'this_year';
-export type AnalyticsSubpage = 'overview' | 'cashflow' | 'categories' | 'health' | 'evolution' | 'reports' | 'recurrences';
+export type AnalyticsSubpage = 'overview' | 'cashflow' | 'categories' | 'health' | 'evolution' | 'reports';
 
 export interface SubpageOption {
   id: AnalyticsSubpage;
@@ -236,13 +235,10 @@ function Analytics() {
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
 
   const data = useMemo(() => generateMockData(period), [period]);
-  const { summary } = data;
 
   const {
     analytics
   } = useAnalytics();
-
-  console.log(analytics);
 
   return (
       <main className="w-full">
@@ -289,12 +285,6 @@ function Analytics() {
             }
             {currentSubpage === 'reports' &&
               <ReportsSubpage onDownload={() => {}} />
-            }
-            {currentSubpage === 'recurrences' &&
-              <RecurrencesSubpage
-                recurrences={data.recurrences}
-                onItemClick={() => {}}
-              />
             }
           </div>
         </div>

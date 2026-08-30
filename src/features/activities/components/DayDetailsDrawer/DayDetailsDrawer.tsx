@@ -2,9 +2,10 @@ import { CalendarDays, Calendar as CalendarIcon, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { isSameDayFromLocalDateTime } from '../../../../utils/FormatDate';
 import type { FinancialActivity } from '../../types/FinancialActivity';
-import { ActivityListItem, formatCurrency } from '../ActivityListItem/ActivityListItem';
 
 import styles from './DayDetailsDrawer.module.css';
+import ActivityListItem from '../ActivityListItem/ActivityListItem';
+import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 
 interface DayDetailsDrawerProps {
   isOpen: boolean;
@@ -97,12 +98,12 @@ export function DayDetailsDrawer({
           <div className={`px-6 py-4 border-b flex gap-4 ${styles.borderLight} ${styles.drawerDivider}`}>
             <div className="flex flex-col">
               <span className={`text-[10px] font-medium ${styles.textMuted}`}>Receitas do dia</span>
-              <span className={`text-sm font-bold ${styles.textIncome}`}>{formatCurrency(totalIncome)}</span>
+              <span className={`text-sm font-bold ${styles.textIncome}`}>{formatCurrencyLabel(totalIncome)}</span>
             </div>
             <div className={`w-px ${styles.bgBorderColor}`} />
             <div className="flex flex-col">
               <span className={`text-[10px] font-medium ${styles.textMuted}`}>Despesas do dia</span>
-              <span className={`text-sm font-bold ${styles.textExpense}`}>{formatCurrency(totalExpense)}</span>
+              <span className={`text-sm font-bold ${styles.textExpense}`}>{formatCurrencyLabel(totalExpense)}</span>
             </div>
           </div>
         )}

@@ -121,3 +121,20 @@ export const isSameDayFromLocalDateTime = (
     day === date.getDate()
   );
 };
+
+// Extrai ano/mês/dia de uma string LocalDate "YYYY-MM-DD" sem sofrer conversão de timezone.
+// month já sai 0-indexed (0 = Janeiro), igual ao Date nativo do JS.
+export function parseLocalDateParts(dateStr: string) {
+  const [year, month, day] = dateStr
+    .split('-')
+    .map(Number);
+
+  return { year, month: month - 1, day };
+}
+
+// Monta uma string LocalDateTime local (sem shift de timezone) a partir de ano/mês/dia.
+// month aqui é 0-indexed (0 = Janeiro), igual ao Date nativo do JS.
+export function buildLocalDate(year: number, month: number, day: number): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${year}-${pad(month + 1)}-${pad(day)}T00:00:00`;
+}
