@@ -1,21 +1,19 @@
 import {
-	Bar,
-	BarChart,
-	CartesianGrid,
-	ResponsiveContainer,
-	Tooltip,
-	XAxis,
-	YAxis,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
-import type { EvolutionDataPoint, MonthlySummary } from '../../../Analytics';
+import type { AnalyticsResponse } from '../../../../../models/account/AnalyticsResponse';
 import CustomTooltip from '../../CustomTooltip/CustomTooltip';
 import StatSummaryCard from '../../StatSummaryCard/StatSummaryCard';
-
 import styles from './CashflowSubpage.module.css';
 
 interface CashflowSubpageProps {
-  summary: MonthlySummary;
-  evolution: EvolutionDataPoint[];
+  analytics?: AnalyticsResponse;
 }
 
 function formatCurrency(value: number): string {
@@ -27,25 +25,26 @@ function formatCurrency(value: number): string {
   }).format(value);
 }
 
-export function CashflowSubpage({ summary, evolution }: CashflowSubpageProps) {
+export function CashflowSubpage({ analytics }: CashflowSubpageProps) {
+  if (!analytics) return;
   return (
     <div className="flex flex-col gap-6 animate-fade-in-up">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatSummaryCard
           label="Entradas do Período"
-          value={formatCurrency(summary.income.value)}
+          value={formatCurrency(analytics.income)}
           caption="Crescimento de +4.2% frente ao mês anterior"
           tone="income"
         />
         <StatSummaryCard
           label="Saídas do Período"
-          value={formatCurrency(summary.expense.value)}
+          value={formatCurrency(analytics.expense)}
           caption="Redução de -5.1% em gastos variáveis"
           tone="expense"
         />
         <StatSummaryCard
           label="Resultado Líquido"
-          value={formatCurrency(summary.netBalance.value)}
+          value={formatCurrency(analytics.availableToSpend)}
           caption="Margem líquida de 44.5% retida"
           tone="income"
         />
@@ -61,7 +60,7 @@ export function CashflowSubpage({ summary, evolution }: CashflowSubpageProps) {
 
         <div className="h-[350px] w-full mt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={evolution.slice(0, 15)} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+            <BarChart data={analytics.evolution.slice(0, 15)} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
               <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 11 }} tickFormatter={(v) => `R$${v / 1000}k`} />

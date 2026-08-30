@@ -272,12 +272,30 @@ function Analytics() {
                 onNavigate={setCurrentSubpage}
               />
             }
-            {currentSubpage === 'cashflow' && <CashflowSubpage summary={data.summary} evolution={data.evolution} />}
-            {currentSubpage === 'categories' && <CategoriesSubpage categories={data.categories} />}
-            {currentSubpage === 'health' && <HealthSubpage health={data.health} onOpenHealthModal={() => setIsHealthModalOpen(true)} />}
-            {currentSubpage === 'evolution' && <EvolutionSubpage evolution={data.evolution} />}
-            {currentSubpage === 'reports' && <ReportsSubpage onDownload={() => {}} />}
-            {currentSubpage === 'recurrences' && <RecurrencesSubpage recurrences={data.recurrences} onItemClick={() => {}} />}
+            {currentSubpage === 'cashflow' &&
+              <CashflowSubpage analytics={analytics} />
+            }
+            {currentSubpage === 'categories' &&
+              <CategoriesSubpage categories={analytics?.categorySpending ?? []} />
+            }
+            {currentSubpage === 'health' &&
+              <HealthSubpage
+                health={data.health}
+                onOpenHealthModal={() => setIsHealthModalOpen(true)}
+              />
+            }
+            {currentSubpage === 'evolution' &&
+              <EvolutionSubpage evolution={analytics?.trajectory ?? []} />
+            }
+            {currentSubpage === 'reports' &&
+              <ReportsSubpage onDownload={() => {}} />
+            }
+            {currentSubpage === 'recurrences' &&
+              <RecurrencesSubpage
+                recurrences={data.recurrences}
+                onItemClick={() => {}}
+              />
+            }
           </div>
         </div>
 

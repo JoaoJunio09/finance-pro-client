@@ -1,24 +1,14 @@
-// CategoriesSubpage.tsx
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from 'recharts';
-import type { ExpenseCategory } from '../../../Analytics';
-
+import type { CategorySpending } from '../../../../../models/account/AnalyticsResponse';
+import { formatCurrencyLabel } from '../../../../../utils/FormatCurrency';
 import styles from './CategoriesSubpage.module.css';
 
 interface CategoriesSubpageProps {
-  categories: ExpenseCategory[];
+  categories: CategorySpending[];
 }
 
-// Fallback de cores caso alguma categoria não tenha colorHex definido (defensivo)
 const FALLBACK_COLORS = ['#8B5CF6', '#A78BFA', '#C4B5FD', '#DDD6FE', '#EDE9FE', '#F5F3FF'];
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
 
 export function CategoriesSubpage({ categories }: CategoriesSubpageProps) {
   return (
@@ -32,10 +22,10 @@ export function CategoriesSubpage({ categories }: CategoriesSubpageProps) {
               <RechartsPieChart>
                 <Pie data={categories} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="amount">
                   {categories.map((entry, index) => (
-                    <Cell key={entry.id} fill={entry.colorHex || FALLBACK_COLORS[index % FALLBACK_COLORS.length]} />
+                    <Cell key={entry.id} fill={entry.color || FALLBACK_COLORS[index % FALLBACK_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                <Tooltip formatter={(value: number) => formatCurrencyLabel(value)} />
               </RechartsPieChart>
             </ResponsiveContainer>
           </div>
@@ -49,17 +39,18 @@ export function CategoriesSubpage({ categories }: CategoriesSubpageProps) {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${cat.colorHex}25`, color: cat.colorHex }}
+                    style={{ backgroundColor: `${cat.color}25`, color: cat.color }}
                   >
-                    <cat.icon size={18} />
+                    <DynamicIcon name={cat.icon as IconName} size={18} />
                   </div>
                   <div>
                     <h4 className={`text-sm font-semibold ${styles.categoryName}`}>{cat.name}</h4>
-                    <span className={`text-xs ${styles.categoryMeta}`}>{cat.transactionCount} transações registradas</span>
+                    {/* <span className={`text-xs ${styles.categoryMeta}`}>{cat.transactionCount} transações registradas</span> */}
+                    <span className={`text-xs ${styles.categoryMeta}`}>12 transações registradas</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className={`text-sm font-bold block ${styles.categoryAmount}`}>{formatCurrency(cat.amount)}</span>
+                  <span className={`text-sm font-bold block ${styles.categoryAmount}`}>{formatCurrencyLabel(cat.amount)}</span>
                   <span className={`text-xs font-medium ${styles.categoryMeta}`}>{cat.percentage.toFixed(1)}% do total</span>
                 </div>
               </div>

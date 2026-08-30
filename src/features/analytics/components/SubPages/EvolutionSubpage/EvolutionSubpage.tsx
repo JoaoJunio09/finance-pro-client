@@ -1,11 +1,10 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { EvolutionDataPoint } from '../../../Analytics';
+import type { BalanceTrajectoryPoint } from '../../../../../models/account/AnalyticsResponse';
 import CustomTooltip from '../../CustomTooltip/CustomTooltip';
-
 import styles from './EvolutionSubpage.module.css';
 
 interface EvolutionSubpageProps {
-  evolution: EvolutionDataPoint[];
+  evolution: BalanceTrajectoryPoint[];
 }
 
 export function EvolutionSubpage({ evolution }: EvolutionSubpageProps) {

@@ -11,10 +11,15 @@ export interface CategorySpending {
 }
 
 export interface EvolutionDataPoint {
-	date: string,
-  income: string,
-  expense: string,
-  balance: string
+	date: string;
+  income: string;
+  expense: string;
+  balance: string;
+}
+
+export interface BalanceTrajectoryPoint {
+	date: string;
+	balance: number;
 }
 
 export interface AnalyticsResponse {
@@ -26,4 +31,5 @@ export interface AnalyticsResponse {
 	recurrences: RecurrenceResponse[];
 	categorySpending: CategorySpending[];
 	evolution: EvolutionDataPoint[];
+	trajectory: BalanceTrajectoryPoint[];
 }
