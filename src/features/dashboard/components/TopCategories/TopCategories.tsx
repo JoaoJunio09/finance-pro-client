@@ -1,13 +1,12 @@
 import { ChevronRight } from 'lucide-react';
-import type { CategorySpendingDTO } from '../../../../models/account/DashboardResponse';
-import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { ProgressBar } from '../../../../components/shared/ProgressBar/ProgressBar';
+import type { CategorySpending } from '../../../../models/account/AnalyticsResponse';
+import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 import styles from './TopCategories.module.css';
 
 interface TopCategoriesProps {
-  categories: CategorySpendingDTO[];
+  categories: CategorySpending[];
   showBalance: boolean;
   onViewAll: () => void;
   onCategoryClick: (categoryId: string) => void;
@@ -39,7 +38,7 @@ export function TopCategories({ categories, showBalance, onViewAll, onCategoryCl
                     color: "#000"
                   }}
                 >                  
-                  <DynamicIcon name={cat.icon as IconName} size={16} />
+                  <DynamicIcon name={cat.icon as IconName} size={16} color='#f3f3f3' />
                 </div>
                 <span className={`text-sm font-medium transition-colors ${styles.categoryName}`}>{cat.name}</span>
               </div>

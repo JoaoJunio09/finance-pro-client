@@ -61,8 +61,8 @@ export const DetailsDrawer = ({
 
   const content = (
     <div className={`fixed inset-0 z-50 flex sm:justify-end flex-col sm:flex-row ${animateIn ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-      <div
-        className={`fixed inset-0 drawer-overlay transition-opacity duration-300 ${animateIn ? 'opacity-100' : 'opacity-0'}`}
+      <div 
+        className={`fixed inset-0 transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${styles.overlay} ${visibleItem ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
       />
 

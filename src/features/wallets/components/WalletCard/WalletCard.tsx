@@ -14,7 +14,7 @@ interface Props {
 
 export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, isPreview = false }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const colorStyle = wallet.color ? wallet.color : wallet.bank?.gradient;
+  const colorStyle = wallet.bank ? wallet.bank?.gradient : wallet.color;
 
   useEffect(() => {
     if (showMenu) {
@@ -38,7 +38,7 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, isPrevie
       <div className="flex justify-between items-start relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center border border-white/10">
-            <Building2 size={20} />
+            <Building2 size={20} color='#f2f2f2' />
           </div>
           <div>
             <h3 className="font-bold text-sm sm:text-base leading-tight truncate max-w-[140px] sm:max-w-[180px] text-white">{wallet.name}</h3>
@@ -49,7 +49,7 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, isPrevie
         {!isPreview && (
           <div className="relative" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setShowMenu(!showMenu)} className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 hover:bg-black/10">
-              <MoreVertical size={18} />
+              <MoreVertical size={18} color='#f2f2f2' />
             </button>
             
             {showMenu && (
