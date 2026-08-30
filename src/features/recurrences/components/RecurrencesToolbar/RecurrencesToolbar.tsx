@@ -17,7 +17,7 @@ export const RecurrencesToolbar = ({
 }: RecurrencesToolbarProps) => {
   const hasActiveFilters =
     filters.type !== 'ALL' ||
-    filters.active !== 'ALL' ||
+    filters.status !== 'ALL' ||
     filters.frequency !== 'ALL';
 
   return (

@@ -1,16 +1,12 @@
-'use client';
-
 import {
-	Activity,
-	BarChart3,
-	FileText,
-	PieChart,
-	Repeat,
-	ShieldCheck,
-	TrendingUp,
+  Activity,
+  BarChart3,
+  FileText,
+  PieChart,
+  ShieldCheck,
+  TrendingUp
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-
 import styles from './AnalyticsTabs.module.css';
 
 export type AnalyticsSubpage =

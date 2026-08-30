@@ -21,7 +21,7 @@ export function Recurrences() {
   const [selectedRecurrence, setSelectedRecurrence] = useState<RecurrenceResponse | null>(null);
 
   const handleDelete = (id: string) => {
-
+    console.log(id);
   };
 
   const handleToggleStatus = (recurrence: RecurrenceResponse) => {

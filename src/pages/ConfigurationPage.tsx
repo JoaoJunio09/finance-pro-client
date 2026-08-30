@@ -1,34 +1,32 @@
-import React, { useState } from 'react';
-import { 
-  LayoutGrid, 
-  RefreshCw, 
-  Settings as SettingsIcon,
-  Menu,
-  X,
-  User,
-  ShieldCheck,
-  EyeOff,
-  Palette,
+import {
   Accessibility,
-  Bell,
-  Sparkles,
-  CreditCard,
-  Receipt,
-  Blocks,
-  Webhook,
-  Database,
-  Info,
-  AlertTriangle,
   ArrowRight,
-  LogOut,
-  Mail,
-  Phone,
+  Bell,
+  Blocks,
   CalendarDays,
   CheckCircle2,
-  Crown,
   ChevronRight,
-  ShieldAlert
+  CreditCard,
+  Crown,
+  Database,
+  EyeOff,
+  Info,
+  LayoutGrid,
+  LogOut,
+  Mail,
+  Menu,
+  Palette,
+  Phone,
+  Receipt,
+  RefreshCw,
+  Settings as SettingsIcon,
+  ShieldAlert,
+  ShieldCheck,
+  Sparkles,
+  User,
+  Webhook
 } from 'lucide-react';
+import { useState } from 'react';
 
 // ==========================================
 // 1. ESTILOS GLOBAIS E TIPOGRAFIA

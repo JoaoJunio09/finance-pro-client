@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
 import useBankService from "../../../hooks/useBankService";
 import useWalletService from "../../../hooks/useWalletService";
@@ -9,8 +10,6 @@ import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import { formatCurrencyToAPI } from "../../../utils/FormatCurrency";
 import { AVAILABLE_COLORS } from "../components/WalletFormModal/WalletFormModal";
 import type { WalletFormData } from "../types/WalletFormData";
-import showToast from "../../../components/ui/Toast/Toast";
-import type { WalletType } from "../../../types/WalletType";
 
 function useWallets(
 	wallet: WalletResponse | null,

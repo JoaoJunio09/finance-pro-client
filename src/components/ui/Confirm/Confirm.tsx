@@ -1,4 +1,4 @@
-import { AlertTriangle, Icon } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 const CONFIG = {
 	success: {

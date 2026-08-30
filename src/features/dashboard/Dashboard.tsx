@@ -45,7 +45,7 @@ function Dashboard() {
           categories={dashboard?.expensesByCategory ?? []}
           showBalance={showBalance}
           onViewAll={() => {}}
-          onCategoryClick={(categoryId) => {}}
+          onCategoryClick={() => {}}
         />
       </section>
 
@@ -54,12 +54,12 @@ function Dashboard() {
           transactions={dashboard?.transactions ?? []}
           showBalance={showBalance}
           onViewAll={() => {}}
-          onTransactionClick={(transactionId) => {}}
+          onTransactionClick={() => {}}
         />
 
         <WatchList
           showBalance={showBalance}
-          onItemClick={(itemId) => {}}
+          onItemClick={() => {}}
         />
       </section>
     </div>

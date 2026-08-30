@@ -42,6 +42,7 @@ function WalletsPage() {
 				isOpen={isOpenTxModal}
 				onClose={() => setIsOpenTxModal(false)}
 				initialType={txType}
+				transaction={null}
 			/>
 		</div>
 	)

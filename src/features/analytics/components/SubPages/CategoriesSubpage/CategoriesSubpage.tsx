@@ -25,7 +25,7 @@ export function CategoriesSubpage({ categories }: CategoriesSubpageProps) {
                     <Cell key={entry.id} fill={entry.color || FALLBACK_COLORS[index % FALLBACK_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => formatCurrencyLabel(value)} />
+                <Tooltip formatter={(value) => formatCurrencyLabel(Number(value))} />
               </RechartsPieChart>
             </ResponsiveContainer>
           </div>
