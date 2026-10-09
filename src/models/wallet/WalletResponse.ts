@@ -7,6 +7,9 @@ export interface WalletResponse {
 	description: string,
 	cardDigits: string,
 	type: WalletType,
+	closingDate: string;
+	expirationDate: string;
+	daysUntilExpiration: number;
 	color: string,
 	balance: number,
 	bank?: BankResponse

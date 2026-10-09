@@ -1,4 +1,5 @@
-import { ArrowLeft, BarChart3, Calendar, Download } from 'lucide-react';
+import { BarChart3, Calendar, Download } from 'lucide-react';
+import { BackButton } from '../../../../components/ui/BackButton/BackButton';
 import { getCurrentMonth } from '../../../../utils/FormatDate';
 import AnalyticsTabs, { SUBPAGES, type AnalyticsSubpage } from '../AnalyticsTabs/AnalyticsTabs';
 
@@ -25,14 +26,10 @@ export function ContextualAnalyticsHeader({
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2 mb-1 h-6">
               {!isOverview ? (
-                <button
+                <BackButton
+                  label="Voltar para Análises"
                   onClick={() => onSelectSubpage('overview')}
-                  className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-colors group h-full ${styles.backLink}`}
-                  type="button"
-                >
-                  <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-                  Voltar para Análises
-                </button>
+                />
               ) : (
                 <div className="flex items-center gap-2 h-full">
                   <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${styles.overviewBadge}`}>

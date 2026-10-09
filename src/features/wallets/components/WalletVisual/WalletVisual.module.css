@@ -1,0 +1,324 @@
+.walletVisual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  min-height: 194px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 22px;
+  padding: 18px;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(10, 10, 16, 0.22);
+}
+
+.default {
+  aspect-ratio: 1.58 / 1;
+}
+
+.large {
+  min-height: 264px;
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.large .cardDates {
+  display: grid;
+  flex: 0 0 auto;
+}
+
+.compact {
+  min-height: 0;
+  max-width: 220px;
+  border-radius: 16px;
+  padding: 12px;
+  aspect-ratio: 1.68 / 1;
+}
+
+.creditCard {
+  background: linear-gradient(135deg, #4338ca, #7c3aed 56%, #a855f7);
+}
+
+.account {
+  background: linear-gradient(135deg, #1e3a5f, #315d92);
+}
+
+.savings {
+  background: linear-gradient(135deg, #116050, #1a8d72);
+}
+
+.reserve {
+  background: linear-gradient(135deg, #24524f, #326d66);
+}
+
+.investments {
+  background: linear-gradient(135deg, #183d59, #206b85);
+}
+
+.physical {
+  background: linear-gradient(135deg, #68452d, #9b6842);
+}
+
+.texture {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.56;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(255, 255, 255, 0.24), transparent 28%),
+    radial-gradient(circle at 14% 108%, rgba(0, 0, 0, 0.24), transparent 34%);
+}
+
+.creditCard .texture {
+  background:
+    radial-gradient(circle at 96% -8%, rgba(255, 255, 255, 0.29), transparent 29%),
+    linear-gradient(125deg, transparent 30%, rgba(255, 255, 255, 0.08) 30.5%, transparent 31%),
+    linear-gradient(155deg, transparent 48%, rgba(0, 0, 0, 0.14) 48.5%, transparent 49%);
+}
+
+.topRow,
+.bottomRow,
+.identity {
+  display: flex;
+}
+
+.topRow,
+.bottomRow {
+  position: relative;
+  z-index: 1;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.identity {
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+}
+
+.iconWrap {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.identityText {
+  min-width: 0;
+}
+
+.identityText p,
+.balanceLabel,
+.institution {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.76;
+  text-transform: uppercase;
+}
+
+.identityText h3 {
+  overflow: hidden;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  position: relative;
+  z-index: 3;
+}
+
+.cardChip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  width: 38px;
+  height: 28px;
+  margin: 8px 0;
+  overflow: hidden;
+  border: 1px solid rgba(96, 65, 24, 0.48);
+  border-radius: 6px;
+  background: linear-gradient(135deg, #e8cf87, #b69243);
+}
+
+.cardChip span {
+  border-right: 1px solid rgba(96, 65, 24, 0.36);
+}
+
+.cardChip span:nth-child(2) {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.bottomRow {
+  align-items: end;
+}
+
+.bottomRow strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.institution {
+  max-width: 100px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardDigits {
+  align-self: end;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.cardDates {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cardDate {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  padding: 7px 9px;
+  background: rgba(19, 14, 28, 0.38);
+}
+
+.cardDate span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cardDate strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.walletFold {
+  position: absolute;
+  z-index: -1;
+  top: 40%;
+  right: -12%;
+  width: 70%;
+  height: 74%;
+  border: 1px solid rgba(255, 235, 210, 0.18);
+  border-radius: 16px 0 0 16px;
+  background: rgba(38, 22, 14, 0.18);
+  transform: rotate(-7deg);
+}
+
+.physical .iconWrap {
+  border-radius: 50%;
+}
+
+.marketLine {
+  position: absolute;
+  z-index: -1;
+  right: -18px;
+  bottom: 28px;
+  width: 62%;
+  height: 62px;
+  border-top: 2px solid rgba(173, 236, 244, 0.58);
+  border-right: 2px solid rgba(173, 236, 244, 0.58);
+  clip-path: polygon(0 70%, 23% 38%, 42% 56%, 63% 16%, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.62;
+}
+
+.reserveRing {
+  position: absolute;
+  z-index: -1;
+  right: -42px;
+  bottom: -56px;
+  width: 174px;
+  height: 174px;
+  border: 22px solid rgba(202, 248, 235, 0.1);
+  border-radius: 50%;
+}
+
+.compact .identity {
+  gap: 8px;
+}
+
+.compact .iconWrap {
+  width: 29px;
+  height: 29px;
+  border-radius: 9px;
+}
+
+.compact .identityText p {
+  font-size: 8px;
+}
+
+.compact .identityText h3 {
+  max-width: 132px;
+  font-size: 11px;
+}
+
+.compactBalance {
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.compact .cardDates {
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.compact .cardDate {
+  border-radius: 7px;
+  padding: 5px 6px;
+}
+
+.compact .cardDate span {
+  gap: 3px;
+  font-size: 8px;
+}
+
+.compact .cardDate svg {
+  width: 10px;
+  height: 10px;
+}
+
+.compact .cardDate strong {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+@media (max-width: 640px) {
+  .large {
+    min-height: 240px;
+  }
+}

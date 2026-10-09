@@ -3,13 +3,6 @@
 	background: var(--bg-surface);
 }
 
-.backLink {
-	color: var(--text-muted);
-}
-.backLink:hover {
-	color: var(--text-main);
-}
-
 .overviewBadge {
 	background: var(--bg-elevated);
 	border: 1px solid var(--border-light);

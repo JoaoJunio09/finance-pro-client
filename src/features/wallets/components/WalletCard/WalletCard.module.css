@@ -1,27 +1,94 @@
 .card {
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s ease;
-  border-color: var(--border-light);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 18px 30px rgba(10, 10, 16, 0.3);
+  transform: translateY(-3px);
 }
 
-.abstractBg {
-  background: rgba(255, 255, 255, 0.05);
-  filter: blur(24px);
-  pointer-events: none;
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.menu {
+  position: relative;
+}
+
+.menuTrigger {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(8px);
+  transition: background-color 160ms ease;
+}
+
+.menuTrigger:hover {
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .menuDropdown {
-  background-color: var(--bg-surface);
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 10;
+  width: 140px;
+  overflow: hidden;
   border: 1px solid var(--border-color);
-  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transform-origin: top right;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-hover);
+  animation: scaleIn 160ms ease-out both;
 }
 
-@keyframes scaleIn { 
-  from { opacity: 0; transform: scale(0.95); } 
-  to { opacity: 1; transform: scale(1); } 
+.menuDropdown button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  padding: 10px 12px;
+  color: var(--text-main);
+  font-size: 13px;
+  text-align: left;
+}
+
+.menuDropdown button:hover {
+  background: var(--bg-elevated);
+}
+
+.menuDropdown .deleteAction {
+  color: var(--expense);
+}
+
+.menuDropdown .deleteAction:hover {
+  background: var(--expense-muted);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .menuTrigger,
+  .menuDropdown {
+    transition: none;
+    animation: none;
+  }
 }

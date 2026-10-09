@@ -8,8 +8,11 @@ export interface WalletFormData {
 	balance: string;
 	cardDigits?: string;
 	type: WalletType;
+	closingDate: string;
+	daysUntilExpiration?: number;
+	expirationDate?: string;
 	color?: string;
 	goalId?: string;
-	accountId: string;
 	bank?: BankResponse;
+	accountId: string;
 }

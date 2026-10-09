@@ -7,6 +7,8 @@ export interface WalletRequest {
 	balance: number,
 	cardDigits: string | null,
 	type: WalletType,
+	closingDate: string;
+	daysUntilExpiration: number;
 	color?: string
 	goalId?: string,
 	bankId?: string | null,

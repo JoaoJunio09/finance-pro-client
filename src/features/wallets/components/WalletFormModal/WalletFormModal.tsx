@@ -62,6 +62,9 @@ function WalletFormModal({
     description: form.description,
     bank: form.bank || undefined,
     type: (form.type as WalletType) || 'checking',
+    closingDate: form.closingDate,
+    expirationDate: form.expirationDate ?? '',
+    daysUntilExpiration: Number(form.daysUntilExpiration),
     balance: Number(form.balance) || 0,
     cardDigits: '',
     color: form.color as any || 'purple'
@@ -128,9 +131,60 @@ function WalletFormModal({
                 </select>
               </div>
 
+              {form.type === 'CHECKING' || form.type === 'CREDIT_CARD' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Data de fechamento</label>
+                    <input 
+                      type="date"
+                      id='closingDate'
+                      name="closingDate"
+                      value={form.closingDate}
+                      onChange={handleOnChange}
+                      className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                    />
+                  </div>
+                  <div className={`flex flex-col gap-2`}>
+                    <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
+                      Validade (dias após o fechamento)
+                    </label>
+                    <input 
+                      type="text"
+                      id='daysUntilExpiration'
+                      name="daysUntilExpiration"
+                      value={form.daysUntilExpiration}
+                      onChange={handleOnChange}
+                      placeholder='7'
+                      className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                    />
+                  </div>
+                  {form.id && (
+                    <div className={`flex flex-col gap-2`}>
+                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
+                        Data de Validade
+                      </label>
+                      <input 
+                        type="date"
+                        id='expirationDate'
+                        name="expirationDate"
+                        value={form.expirationDate}
+                        onChange={handleOnChange}
+                        className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
-                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Saldo Inicial (R$)</label>
+                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
+                    {form.id ? (
+                      'Saldol'
+                    ) : (
+                      'Saldo Inicial (R$)'
+                    )}
+                  </label>
                   <input 
                     type="number" id='balance' name="balance" value={form.balance} onChange={handleOnChange}
                     step="0.01"

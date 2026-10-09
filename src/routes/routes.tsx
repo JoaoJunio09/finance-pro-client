@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AccountProvider } from "../context/AccountContext";
 import { AuthProvider } from "../context/AuthContext";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -12,6 +12,25 @@ import TransactionsPage from "../pages/TransactionsPage";
 import WalletsPage from "../pages/WalletsPage";
 import ScrollToTop from "./ScrollToTop";
 
+function AppRoutes() {
+	const location = useLocation();
+
+	return (
+		<div className="page-fade" key={location.pathname}>
+			<Routes location={location}>
+				<Route path="/" element={<SignInPage />} />
+				<Route path="/dashboard" element={<DashboardPage />} />
+				<Route path="/atividades" element={<ActivitiesPage />} />
+				<Route path="/analises" element={<AnalyticsPage />} />
+				<Route path="/carteiras" element={<WalletsPage />} />
+				<Route path="/transacoes" element={<TransactionsPage />} />
+				<Route path="/recorrencias" element={<RecurrencesPage />} />
+				<Route path="/configuracoes" element={<Settings />} />
+			</Routes>
+		</div>
+	);
+}
+
 function RoutesApp() {
 	return (
 		<BrowserRouter>
@@ -19,16 +38,7 @@ function RoutesApp() {
 				<AccountProvider>
 					<ThemeProvider>
 						<ScrollToTop />
-						<Routes>
-							<Route path="/" element={<SignInPage />} />
-							<Route path="/dashboard" element={<DashboardPage />} />
-							<Route path="/atividades" element={<ActivitiesPage />} />
-							<Route path="/analises" element={<AnalyticsPage />} />
-							<Route path="/carteiras" element={<WalletsPage />} />
-							<Route path="/transacoes" element={<TransactionsPage />} />
-							<Route path="/recorrencias" element={<RecurrencesPage />} />
-							<Route path="/configuracoes" element={<Settings />} />
-						</Routes>
+						<AppRoutes />
 					</ThemeProvider>
 				</AccountProvider>
 			</AuthProvider>

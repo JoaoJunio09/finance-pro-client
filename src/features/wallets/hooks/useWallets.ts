@@ -23,6 +23,7 @@ function useWallets(
 		description: '',
 		balance: '',
 		type: 'CHECKING',
+		closingDate: '',
 		color: AVAILABLE_COLORS[0].value,
 		cardDigits: '1234',
 		goalId: '',
@@ -129,12 +130,12 @@ function useWallets(
 			description: form.description,
 			cardDigits: form.cardDigits ?? null,
 			type: form.type,
+			closingDate: form.closingDate,
+			daysUntilExpiration: Number(form.daysUntilExpiration),
 			color: form.color ?? form.bank?.gradient,
 			accountId: account?.id ?? '',
 			bankId: form.bank?.id ?? null
 		}
-
-		console.log(request)
 
 		if (isUpdate) {
 			walletMutationUpdate.mutate(request);
@@ -155,6 +156,9 @@ function useWallets(
 			description: '',
 			balance: '',
 			type: 'CHECKING',
+			closingDate: '',
+			daysUntilExpiration: 0,
+			expirationDate: '',
 			color: '',
 			cardDigits: '1234',
 			goalId: '',
@@ -176,6 +180,9 @@ function useWallets(
 			balance: wallet.balance.toString(),
 			cardDigits: wallet.cardDigits,
 			type: wallet.type,
+			closingDate: wallet.closingDate,
+			expirationDate: wallet.expirationDate,
+			daysUntilExpiration: wallet.daysUntilExpiration,
 			color: wallet.color,
 			bank: wallet.bank,
 			accountId: account?.id ?? ''

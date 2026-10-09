@@ -31,3 +31,8 @@
 .statusBtnInactive:hover { color: var(--text-main); }
 .statusBtnCompletedActive { background: var(--bg-surface); color: var(--text-main); box-shadow: var(--shadow-card); border-color: var(--border-color); }
 .statusBtnPendingActive { background: var(--bg-surface); color: var(--warning); box-shadow: var(--shadow-card); border-color: var(--border-color); }
+
+.installmentSection { background: var(--bg-elevated); border-color: var(--border-light); }
+.installmentTitle { color: var(--text-main); }
+.installmentDescription { color: var(--text-muted); }
+.installmentSummary { color: var(--accent); }

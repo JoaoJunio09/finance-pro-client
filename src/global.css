@@ -33,6 +33,7 @@ html {
   scrollbar-color: #312E81 #0A0A0A;
   scrollbar-gutter: stable;
   background-color: var(--color-background);
+  overflow-x: clip;
 }
 
 /* Chrome, Edge e Safari */
@@ -59,7 +60,13 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+#root {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 ::-webkit-scrollbar {
@@ -95,6 +102,18 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes pageFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-fade {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  animation: pageFade 220ms ease-out both;
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) forwards;
   opacity: 0;
@@ -110,4 +129,13 @@ body {
 .interactive-card:hover {
   box-shadow: var(--shadow-hover);
   border-color: var(--border-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade,
+  .animate-fade-in-up,
+  .animate-scale-in {
+    animation: none;
+    opacity: 1;
+  }
 }

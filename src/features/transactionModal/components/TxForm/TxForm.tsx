@@ -46,6 +46,11 @@ export function TransactionForm({
 }: TransactionFormProps) {
   const isIncome = type === 'CREDIT';
   const numericAmount = amountStr ? Number(amountStr) : 0;
+  const isCreditCard = wallet?.type === 'CREDIT_CARD';
+  const installments = Math.max(form?.installments ?? 1, 1);
+  const interestRate = Math.max(form?.interestRate ?? 0, 0);
+  const totalWithInterest = numericAmount * (1 + interestRate / 100);
+  const installmentValue = totalWithInterest / installments;
   
   const renderCategory = (cat: CategoryResponse) => (
     <div className="flex items-center gap-3">
@@ -106,7 +111,7 @@ export function TransactionForm({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-5">
+        <div className="grid grid-cols-1 gap-5">
         <div className="flex flex-col gap-2">
           <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Descrição</label>
           <input
@@ -199,6 +204,36 @@ export function TransactionForm({
             </div>
           </div>
         </div>
+
+        {isCreditCard && (
+          <div className={`rounded-xl border p-4 ${styles.installmentSection}`}>
+            <div>
+              <h3 className={`text-sm font-bold ${styles.installmentTitle}`}>Compra parcelada</h3>
+              <p className={`mt-1 text-xs ${styles.installmentDescription}`}>
+                Informe a quantidade de parcelas e os juros mensais, se houver.
+              </p>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Parcelas</label>
+                <input name="installments" type="number" min="1" step="1" value={installments} onChange={handleOnChange}
+                  className={`w-full rounded-xl px-4 py-3 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`} />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Juros ao mês (%)</label>
+                <input name="interestRate" type="number" min="0" step="0.01" value={interestRate} onChange={handleOnChange}
+                  className={`w-full rounded-xl px-4 py-3 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`} />
+              </div>
+            </div>
+
+            <p className={`mt-3 text-xs font-medium ${styles.installmentSummary}`}>
+              {installments}x de {formatCurrencyDisplay(installmentValue.toFixed(2))}
+              {interestRate > 0 && ` • Total com juros: ${formatCurrencyDisplay(totalWithInterest.toFixed(2))}`}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

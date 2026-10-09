@@ -5,7 +5,8 @@ import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfir
 import { FinancialSummary } from './components/FinancialSummay/FinancialSummary';
 import { WalletCard } from './components/WalletCard/WalletCard';
 import WalletFormModal from './components/WalletFormModal/WalletFormModal';
-import { WalletsHeader } from './components/WalletsHeader/WalletsHeader';
+import WalletsHeader from './components/WalletsHeader/WalletsHeader';
+import { WalletDetails } from './components/WalletDetails/WalletDetails';
 import useWallets from './hooks/useWallets';
 import type { WalletFilter } from './types/wallet';
 
@@ -13,6 +14,7 @@ import styles from './Wallets.module.css';
 
 export default function WalletsPage() {
   const [wallet, setWallet] = useState<WalletResponse | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
   const [walletDeleted, setWalletDeleted] = useState<WalletResponse | null>(null);
   const [currentFilter, setCurrentFilter] = useState<WalletFilter>('all');
   
@@ -43,6 +45,10 @@ export default function WalletsPage() {
     setWalletDeleted(null);
     setIsFormModalOpen(true);
   };
+
+  const openDetails = (selected: WalletResponse) => {
+    setSelectedWallet(selected);
+  };
   
   const {
     wallets,
@@ -68,6 +74,14 @@ export default function WalletsPage() {
 
   return (
     <div className={`min-h-screen relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)] ${styles.fadeInUp}`}>
+      {selectedWallet ? (
+        <WalletDetails
+          wallet={selectedWallet}
+          wallets={wallets}
+          onBack={() => setSelectedWallet(null)}
+        />
+      ) : (
+        <>
       <WalletsHeader 
         currentFilter={currentFilter} 
         setFilter={setCurrentFilter}
@@ -85,6 +99,7 @@ export default function WalletsPage() {
                 wallet={wallet} 
                 onEdit={openEdit}
                 onDelete={openDelete}
+                onSelect={openDetails}
                 isPreview={isFormModalOpen}
               />
             ))}
@@ -121,6 +136,8 @@ export default function WalletsPage() {
         onClose={() => setWalletDeleted(null)}
         onConfirm={handleDeleteWallet}
       />
+        </>
+      )}
     </div>
   );
 }

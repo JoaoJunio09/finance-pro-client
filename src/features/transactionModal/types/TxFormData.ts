@@ -11,6 +11,8 @@ export interface TxFormData {
 	time: string;
 	type: TransactionType;
 	status: TransactionStatus;
+	installments: number;
+	interestRate: number;
 	category?: CategoryResponse;
 	wallet?: WalletResponse;
 }

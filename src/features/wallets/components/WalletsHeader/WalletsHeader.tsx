@@ -4,17 +4,21 @@ import { Wallet, Landmark, CreditCard, ShieldCheck, TrendingUp, Banknote, Plus }
 import styles from './WalletsHeader.module.css';
 import type { WalletFilter } from '../../types/wallet';
 
-interface Props {
+interface WalletsHeaderProps {
   currentFilter: WalletFilter;
   setFilter: (filter: WalletFilter) => void;
   onAddWallet: () => void;
 }
 
-export const WalletsHeader: React.FC<Props> = ({ currentFilter, setFilter, onAddWallet }) => {
+function WalletsHeader({
+  currentFilter,
+  setFilter,
+  onAddWallet
+}: WalletsHeaderProps) {
   const filters: { id: WalletFilter; label: string; icon: React.ElementType }[] = [
     { id: 'all', label: 'Todas', icon: Wallet },
-    { id: 'accounts', label: 'Contas', icon: Landmark },
-    { id: 'credit_cards', label: 'Cartões', icon: CreditCard },
+    { id: 'accounts', label: 'Contas Poupança', icon: Landmark },
+    { id: 'credit_cards', label: 'Cartões de Crédito', icon: CreditCard },
     { id: 'reserves', label: 'Reservas', icon: ShieldCheck },
     { id: 'investments', label: 'Investimentos', icon: TrendingUp },
     { id: 'physical', label: 'Dinheiro Físico', icon: Banknote },
@@ -36,7 +40,7 @@ export const WalletsHeader: React.FC<Props> = ({ currentFilter, setFilter, onAdd
     window.addEventListener('resize', updateRects);
     const timeout = setTimeout(updateRects, 150);
     return () => { window.removeEventListener('resize', updateRects); clearTimeout(timeout); };
-  }, [currentFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentFilter]);
 
   return (
     <div className={`w-full relative shadow-md overflow-hidden ${styles.headerContainer}`}>
@@ -102,3 +106,5 @@ export const WalletsHeader: React.FC<Props> = ({ currentFilter, setFilter, onAdd
     </div>
   );
 };
+
+export default WalletsHeader;
