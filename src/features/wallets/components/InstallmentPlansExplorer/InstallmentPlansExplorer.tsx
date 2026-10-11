@@ -3,11 +3,8 @@ import {
   ChevronRight,
   CircleDollarSign,
   Clock3,
-  CreditCard,
-  Layers3,
   PackageOpen,
   ReceiptText,
-  TimerReset,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { BackButton } from '../../../../components/ui/BackButton/BackButton';
@@ -108,9 +105,9 @@ export function InstallmentPlansExplorer({
 
         <div className={styles.detailHero}>
           <div className={styles.detailHeading}>
-            <span className={styles.eyebrow}><ReceiptText size={14} aria-hidden="true" /> Parcelamento selecionado</span>
+            <span className={styles.eyebrow}><ReceiptText size={14} aria-hidden="true" /> Detalhes do parcelamento</span>
             <h2>{selectedPlan.description}</h2>
-            <p>Começou em {formatDateLabel(selectedPlan.startDate)} e segue organizado parcela por parcela.</p>
+            <p>Iniciado em {formatDateLabel(selectedPlan.startDate)}.</p>
           </div>
           <div className={styles.detailReference}>
             <WalletVisual size="compact" wallet={wallet} />
@@ -124,7 +121,7 @@ export function InstallmentPlansExplorer({
           <div className={styles.metric}><span>Valor original</span><strong>{formatCurrencyLabel(selectedPlan.value)}</strong></div>
           <div className={styles.metric}><span>Total parcelado</span><strong>{formatCurrencyLabel(totalValue)}</strong></div>
           <div className={styles.metric}><span>Juros</span><strong>{selectedPlan.fees}%</strong></div>
-          <div className={styles.metric}><span>Seu progresso</span><strong>{paidInstallments}/{installments.length} pagas</strong></div>
+          <div className={styles.metric}><span>Progresso</span><strong>{paidInstallments}/{installments.length} pagas</strong></div>
         </div>
 
         <div className={styles.detailGrid}>
@@ -185,26 +182,23 @@ export function InstallmentPlansExplorer({
     <section className={styles.screen} aria-label="Parcelamentos do cartão">
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}><Layers3 size={14} aria-hidden="true" /> Compras em movimento</span>
-          <h2>Seus parcelamentos, sem complicação</h2>
-          <p>Cada compra tem sua própria história. Abra uma delas para enxergar o que já passou, o ciclo atual e o que vem depois.</p>
+          <h2>Parcelamentos</h2>
+          <p>Compras parceladas vinculadas a este cartão.</p>
+          <div className={styles.heroSummary}>
+            <span><strong>{activePlans}</strong> ativos</span>
+            <span><strong>{formatCurrencyLabel(totalOpenAmount)}</strong> em aberto</span>
+          </div>
         </div>
         <WalletVisual size="compact" wallet={wallet} />
       </div>
 
-      <div className={styles.overviewGrid}>
-        <div className={styles.overviewCard}><span className={styles.overviewIcon}><Layers3 size={19} /></span><div><p>Planos ativos</p><strong>{activePlans}</strong></div></div>
-        <div className={styles.overviewCard}><span className={styles.overviewIcon}><TimerReset size={19} /></span><div><p>Valor ainda em aberto</p><strong>{formatCurrencyLabel(totalOpenAmount)}</strong></div></div>
-        <div className={styles.overviewCard}><span className={styles.overviewIcon}><CreditCard size={19} /></span><div><p>Cartão acompanhado</p><strong>{wallet.name}</strong></div></div>
-      </div>
-
       <div className={styles.listHeading}>
-        <div><span className={styles.eyebrow}>Uma compra por vez</span><h3>Todos os parcelamentos</h3></div>
+        <h3>Todos os parcelamentos</h3>
         <span>{orderedPlans.length} {orderedPlans.length === 1 ? 'parcelamento' : 'parcelamentos'}</span>
       </div>
 
       {isLoading ? (
-        <p className={styles.empty} role="status">Organizando seus parcelamentos…</p>
+        <p className={styles.empty} role="status">Carregando parcelamentos…</p>
       ) : isError ? (
         <div className={styles.empty} role="alert">
           <p>Não foi possível buscar os parcelamentos deste cartão.</p>

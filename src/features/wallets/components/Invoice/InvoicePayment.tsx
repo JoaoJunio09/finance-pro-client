@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { InvoiceDetails } from '../../../../models/invoice/InvoiceDetails';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-import { formatInvoiceDate, formatInvoiceMonth } from '../../../../utils/invoices';
+import { formatInvoiceDate, formatInvoiceMonth, getInvoiceVisualStatus } from '../../../../utils/invoices';
 import { InvoiceInstallments } from './InvoiceInstallments';
 import styles from './Invoice.module.css';
 
@@ -16,6 +16,7 @@ interface Props {
 
 export function InvoicePayment({ details, wallets, installmentId, busy, onConfirm }: Props) {
   const [paymentWalletId, setPaymentWalletId] = useState('');
+  const isExpired = getInvoiceVisualStatus(details) === 'EXPIRED';
   const selectedWallet = wallets.find(wallet => wallet.id === paymentWalletId);
   const installments = details.installments.filter(item =>
     !item.paid && (!installmentId || item.id === installmentId));
@@ -23,6 +24,12 @@ export function InvoicePayment({ details, wallets, installmentId, busy, onConfir
   const insufficientBalance = selectedWallet && selectedWallet.balance < amount;
   const canPay = Boolean(selectedWallet) && !insufficientBalance && amount > 0
     && details.status !== 'PAID' && Boolean(details.closingDate && details.expirationDate);
+  const paymentTitle = installmentId
+    ? 'Registrar parcela paga'
+    : isExpired ? 'Pagar fatura vencida' : 'Registrar fatura paga';
+  const confirmationLabel = installmentId
+    ? 'Confirmar parcela paga'
+    : isExpired ? 'Confirmar pagamento da fatura vencida' : 'Confirmar fatura paga';
 
   return (
     <form className={`${styles.screen} ${styles.form}`} onSubmit={event => {
@@ -32,7 +39,7 @@ export function InvoicePayment({ details, wallets, installmentId, busy, onConfir
       <div className={styles.header}>
         <div>
           <span className={styles.eyebrow}>Um registro rápido, sem repetir o banco</span>
-          <h2>{installmentId ? 'Registrar parcela paga' : 'Registrar fatura paga'}</h2>
+          <h2>{paymentTitle}</h2>
           <p>{formatInvoiceMonth(details.closingDate)} · Vencimento em {formatInvoiceDate(details.expirationDate)}</p>
         </div>
       </div>
@@ -65,7 +72,7 @@ export function InvoicePayment({ details, wallets, installmentId, busy, onConfir
         <strong>{formatCurrencyLabel(amount)}</strong>
       </div>
       <button type="submit" className={styles.primary} disabled={!canPay || busy}>
-        {busy ? 'Registrando…' : installmentId ? 'Confirmar parcela paga' : 'Confirmar fatura paga'}
+        {busy ? 'Registrando…' : confirmationLabel}
       </button>
       <p className={styles.muted} role="status">
         {selectedWallet && !insufficientBalance

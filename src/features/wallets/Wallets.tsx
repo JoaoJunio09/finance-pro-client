@@ -91,61 +91,57 @@ export default function WalletsPage() {
         />
       ) : (
         <>
-      <WalletsHeader 
-        currentFilter={currentFilter} 
-        setFilter={setCurrentFilter}
-        onAddWallet={openAdd}
-      />
+          <WalletsHeader
+            currentFilter={currentFilter}
+            setFilter={setCurrentFilter}
+            onAddWallet={openAdd}
+          />
 
-      <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12">        
-        <FinancialSummary wallets={wallets} />
+          <main className={styles.content}>
+            <FinancialSummary wallets={wallets} />
 
-        {filteredWallets.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {filteredWallets.map(wallet => (
-              <WalletCard 
-                key={wallet.id} 
-                wallet={wallet} 
-                onEdit={openEdit}
-                onDelete={openDelete}
-                onSelect={openDetails}
-                onHistory={openHistory}
-                isPreview={isFormModalOpen}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-[var(--text-muted)] bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-3xl shadow-sm">
-            <WalletIcon size={40} className="mb-4 opacity-50" />
-            <span className="text-base font-semibold text-[var(--text-main)] mb-1">
-              Nenhuma carteira encontrada
-            </span>
-            <span className="text-sm">
-              Tente alterar o filtro ou adicione uma nova carteira.
-            </span>
-          </div>
-        )}
-      </main>
+            {filteredWallets.length > 0 ? (
+              <div className={styles.walletGrid}>
+                {filteredWallets.map(wallet => (
+                  <WalletCard
+                    key={wallet.id}
+                    wallet={wallet}
+                    onEdit={openEdit}
+                    onDelete={openDelete}
+                    onSelect={openDetails}
+                    onHistory={openHistory}
+                    isPreview={isFormModalOpen}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <WalletIcon size={32} aria-hidden="true" />
+                <span>Nenhuma carteira encontrada</span>
+                <small>Tente alterar o filtro ou adicione uma nova carteira.</small>
+              </div>
+            )}
+          </main>
 
-      <WalletFormModal
-        isOpen={isFormModalOpen} 
-        onClose={onClose}
-        onSave={saveOrUpdate}
-        onEdit={openEdit}
-        onDelete={openDelete}
-        form={form}
-        handleOnChange={handleOnChange}
-        selectColor={selectColor}
-        banks={banks}
-        onBankChange={onBankChange}
-      />
-      
-      <DeleteConfirmModal
-        isOpen={!!walletDeleted}
-        wallet={walletDeleted}
-        onClose={() => setWalletDeleted(null)}
-        onConfirm={handleDeleteWallet}
-      />
+          <WalletFormModal
+            isOpen={isFormModalOpen}
+            onClose={onClose}
+            onSave={saveOrUpdate}
+            onEdit={openEdit}
+            onDelete={openDelete}
+            form={form}
+            handleOnChange={handleOnChange}
+            selectColor={selectColor}
+            banks={banks}
+            onBankChange={onBankChange}
+          />
+
+          <DeleteConfirmModal
+            isOpen={!!walletDeleted}
+            wallet={walletDeleted}
+            onClose={() => setWalletDeleted(null)}
+            onConfirm={handleDeleteWallet}
+          />
         </>
       )}
     </div>

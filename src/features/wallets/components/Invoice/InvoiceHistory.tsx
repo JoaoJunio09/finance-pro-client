@@ -9,11 +9,12 @@ import styles from './Invoice.module.css';
 interface Props {
   invoices: InvoiceResponse[];
   onSelect: (invoiceId: string) => void;
+  onPay: (invoiceId: string) => void;
 }
 
 type Filter = 'ALL' | 'OPEN' | 'PAID' | 'EXPIRED';
 
-export function InvoiceHistory({ invoices, onSelect }: Props) {
+export function InvoiceHistory({ invoices, onSelect, onPay }: Props) {
   const [filter, setFilter] = useState<Filter>('ALL');
   const [year, setYear] = useState('');
   const sorted = sortInvoices(invoices);
@@ -58,21 +59,39 @@ export function InvoiceHistory({ invoices, onSelect }: Props) {
         </label>
       </div>
       <div className={styles.list}>
-        {filtered.map(invoice => (
-          <button key={invoice.id} type="button" className={styles.historyItem}
-            onClick={() => onSelect(invoice.id)} aria-label={`Ver fatura de ${formatInvoiceMonth(invoice.closingDate)}`}>
-            <div>
-              <strong>{formatInvoiceMonth(invoice.closingDate)}</strong>
-              <small>Limite do ciclo: {invoice.limit == null ? 'Não informado' : formatCurrencyLabel(invoice.limit)}</small>
-            </div>
-            <div>
-              <small>Fechamento: {formatInvoiceDate(invoice.closingDate)}</small>
-              <small>Vencimento: {formatInvoiceDate(invoice.expirationDate)}</small>
-            </div>
-            <InvoiceStatusBadge invoice={invoice} />
-            <ChevronRight size={18} aria-hidden="true" />
-          </button>
-        ))}
+        {filtered.map(invoice => {
+          const isExpired = getInvoiceVisualStatus(invoice) === 'EXPIRED';
+
+          return (
+            <article key={invoice.id} className={styles.historyItem}>
+              <button
+                type="button"
+                className={styles.historyDetails}
+                onClick={() => onSelect(invoice.id)}
+                aria-label={`Ver fatura de ${formatInvoiceMonth(invoice.closingDate)}`}
+              >
+                <div>
+                  <strong>{formatInvoiceMonth(invoice.closingDate)}</strong>
+                  <small>Limite do ciclo: {invoice.limit == null ? 'Não informado' : formatCurrencyLabel(invoice.limit)}</small>
+                </div>
+                <div>
+                  <small>Fechamento: {formatInvoiceDate(invoice.closingDate)}</small>
+                  <small>Vencimento: {formatInvoiceDate(invoice.expirationDate)}</small>
+                </div>
+              </button>
+              <InvoiceStatusBadge invoice={invoice} />
+              {isExpired ? (
+                <button type="button" className={`${styles.primary} ${styles.historyPay}`} onClick={() => onPay(invoice.id)}>
+                  Pagar fatura
+                </button>
+              ) : (
+                <button type="button" className={styles.historyOpen} onClick={() => onSelect(invoice.id)}>
+                  Ver detalhes <ChevronRight size={18} aria-hidden="true" />
+                </button>
+              )}
+            </article>
+          );
+        })}
       </div>
       {filtered.length === 0 && (
         <div className={styles.empty}>

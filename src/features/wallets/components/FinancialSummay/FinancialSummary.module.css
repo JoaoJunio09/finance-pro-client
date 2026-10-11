@@ -1,15 +1,122 @@
-.summaryCard {
-  background-color: var(--bg-surface);
-  border-color: var(--border-color);
+.summary {
+  display: grid;
+  grid-template-columns: minmax(200px, .75fr) minmax(0, 2fr);
+  align-items: stretch;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  background: var(--bg-surface);
+  box-shadow: 0 10px 30px rgba(12, 8, 22, .07);
 }
-.summaryCard:hover {
-  border-color: var(--border-hover);
+
+.total {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 1.15rem 1.25rem;
+  padding-left: 1.5rem;
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg-surface));
 }
-.iconWrapper {
-  background-color: var(--bg-elevated);
+
+.total::before {
+  position: absolute;
+  inset: 1rem auto 1rem 0;
+  width: 4px;
+  border-radius: 0 999px 999px 0;
+  background: var(--accent);
+  content: '';
+}
+
+.total span,
+.summaryItem span {
+  color: var(--text-muted);
+  font-size: .7rem;
+  font-weight: 650;
+}
+
+.total strong {
+  margin-top: .25rem;
   color: var(--text-main);
+  font-family: var(--font-metric);
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
 }
-.iconWrapperPrimary {
-  background-color: var(--accent-muted);
+
+.breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  min-width: 0;
+  padding: 1rem 1.15rem;
+  transition: background 160ms ease;
+}
+
+.summaryItem + .summaryItem {
+  border-left: 1px solid var(--border-color);
+}
+
+.summaryItem svg {
+  box-sizing: content-box;
+  flex: 0 0 auto;
+  border-radius: .65rem;
+  padding: .5rem;
   color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.summaryItem:hover {
+  background: var(--bg-elevated);
+}
+
+.summaryItem > div {
+  min-width: 0;
+}
+
+.summaryItem strong {
+  display: block;
+  overflow: hidden;
+  margin-top: .18rem;
+  color: var(--text-main);
+  font-size: .82rem;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .total {
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+@media (max-width: 520px) {
+  .breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryItem + .summaryItem {
+    border-top: 1px solid var(--border-color);
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summaryItem {
+    transition: none;
+  }
 }

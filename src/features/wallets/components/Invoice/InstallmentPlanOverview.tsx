@@ -1,4 +1,4 @@
-import { ChevronRight, PackageOpen, Sparkles } from 'lucide-react';
+import { ChevronRight, PackageOpen } from 'lucide-react';
 import type { InstallmentPlanResponse } from '../../../../models/installmentPlan/InstallmentPlanResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 import { formatDateLabel } from '../../../../utils/FormatDate';
@@ -25,9 +25,8 @@ export function InstallmentPlanOverview({ plans, isLoading, onSelect }: Props) {
     <section className={styles.planOverview} aria-labelledby="installment-plans-title">
       <div className={styles.planOverviewHeading}>
         <div>
-          <span className={styles.eyebrow}><Sparkles size={14} aria-hidden="true" /> Sua vida em parcelas</span>
-          <h2 id="installment-plans-title">Todos os parcelamentos</h2>
-          <p>Abra uma compra para acompanhar cada parcela, do começo ao fim.</p>
+          <h2 id="installment-plans-title">Parcelamentos</h2>
+          <p>Acompanhe todas as parcelas de cada compra.</p>
         </div>
         <button type="button" className={styles.secondary} onClick={() => onSelect()}>
           Ver visão completa <ChevronRight size={16} aria-hidden="true" />
@@ -38,7 +37,7 @@ export function InstallmentPlanOverview({ plans, isLoading, onSelect }: Props) {
         <p className={styles.planLoading} role="status">Organizando seus parcelamentos…</p>
       ) : orderedPlans.length ? (
         <div className={styles.planPreviewGrid}>
-          {orderedPlans.map((plan, index) => {
+          {orderedPlans.map(plan => {
             const paid = plan.installments.filter(installment => installment.isPaid).length;
             const total = plan.installments.reduce((sum, installment) => sum + installment.value, 0);
             const progress = plan.installments.length ? (paid / plan.installments.length) * 100 : 0;
@@ -48,7 +47,6 @@ export function InstallmentPlanOverview({ plans, isLoading, onSelect }: Props) {
                 key={plan.id}
                 type="button"
                 className={styles.planPreview}
-                data-accent={index % 4}
                 onClick={() => onSelect(plan.id)}
               >
                 <span className={styles.planPreviewIcon}><PackageOpen size={20} aria-hidden="true" /></span>

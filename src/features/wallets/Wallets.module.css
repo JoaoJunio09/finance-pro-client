@@ -2,7 +2,111 @@
   animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
+.content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 6rem;
+}
+
+.walletGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.walletGrid > * {
+  opacity: 0;
+  animation: walletCardEnter .35s cubic-bezier(.2, 0, 0, 1) forwards;
+}
+
+.walletGrid > :nth-child(2) {
+  animation-delay: 45ms;
+}
+
+.walletGrid > :nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.walletGrid > :nth-child(n + 4) {
+  animation-delay: 120ms;
+}
+
+.emptyState {
+  display: grid;
+  justify-items: center;
+  gap: .35rem;
+  border: 1px dashed var(--border-color);
+  border-radius: 1.25rem;
+  padding: 4rem 1.5rem;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  text-align: center;
+}
+
+.emptyState svg {
+  margin-bottom: .45rem;
+  color: var(--accent);
+}
+
+.emptyState span {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.emptyState small {
+  font-size: .8rem;
+}
+
 @keyframes fadeInUp { 
   from { opacity: 0; transform: translateY(8px); } 
   to { opacity: 1; transform: translateY(0); } 
+}
+
+@keyframes walletCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .walletGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .content {
+    padding-inline: 2rem;
+    padding-bottom: 3rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .walletGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeInUp,
+  .walletGrid > * {
+    opacity: 1;
+    animation: none;
+  }
 }

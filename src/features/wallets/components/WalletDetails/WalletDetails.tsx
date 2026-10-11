@@ -78,6 +78,12 @@ export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'd
     setView('payment');
   }
 
+  function startInvoicePayment(invoiceId: string) {
+    setSelectedInvoiceId(invoiceId);
+    setInstallmentId(undefined);
+    setView('payment');
+  }
+
   function showInstallmentPlans(planId?: string) {
     setSelectedPlanId(planId ?? null);
     setView('plans');
@@ -130,7 +136,11 @@ export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'd
               <button type="button" className={styles.secondary} onClick={() => void walletQuery.refetch()}>Tentar novamente</button>
             </div>
           ) : view === 'history' ? (
-            <InvoiceHistory invoices={invoices} onSelect={selectInvoice} />
+            <InvoiceHistory
+              invoices={invoices}
+              onSelect={selectInvoice}
+              onPay={startInvoicePayment}
+            />
           ) : !invoice ? (
             <div className={styles.empty}>
               <ReceiptText size={28} aria-hidden="true" />

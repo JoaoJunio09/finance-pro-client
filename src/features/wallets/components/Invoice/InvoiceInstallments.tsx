@@ -71,6 +71,7 @@ export function InvoiceInstallments({ installments, expired = false, onPay, filt
         <ul className={styles.installmentList} aria-label="Parcelas da fatura">
           {visibleInstallments.map((installment, index) => {
             const isExpired = !installment.paid && expired;
+            const hasPaymentAction = !installment.paid && Boolean(onPay);
             return (
               <li
                 key={installment.id}
@@ -84,17 +85,20 @@ export function InvoiceInstallments({ installments, expired = false, onPay, filt
                   <h3>{installment.description || 'Compra parcelada'}</h3>
                   <small>Parcela de {String(installment.month).padStart(2, '0')}/{installment.year}</small>
                 </div>
-                <div className={styles.installmentAmount}>
-                  <strong>{formatCurrencyLabel(installment.value)}</strong>
+                <div className={`${styles.installmentControls} ${hasPaymentAction ? styles.installmentControlsWithAction : ''}`}>
+                  <div className={styles.installmentAmount}>
+                    <small>Valor da parcela</small>
+                    <strong>{formatCurrencyLabel(installment.value)}</strong>
+                  </div>
                   <span className={`${styles.status} ${installment.paid ? styles.paid : isExpired ? styles.expired : styles.paying}`}>
                     {installment.paid ? 'Paga' : isExpired ? 'Vencida' : 'Pendente'}
                   </span>
+                  {hasPaymentAction && onPay && (
+                    <button type="button" className={styles.quickPay} onClick={() => onPay(installment.id)}>
+                      Registrar pagamento
+                    </button>
+                  )}
                 </div>
-                {!installment.paid && onPay && (
-                  <button type="button" className={styles.quickPay} onClick={() => onPay(installment.id)}>
-                    Registrar pagamento
-                  </button>
-                )}
               </li>
             );
           })}
