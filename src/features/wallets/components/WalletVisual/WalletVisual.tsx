@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import type { HTMLAttributes, ReactNode } from 'react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
+import type { InvoiceResponse } from '../../../../models/invoice/InvoiceResponse';
+import { getCurrentInvoice } from '../../../../utils/invoices';
 import { formatActivityCurrency } from '../../../activities/utils/activityFormatters';
 
 import styles from './WalletVisual.module.css';
@@ -19,6 +21,7 @@ type WalletVisualSize = 'default' | 'large' | 'compact';
 interface WalletVisualProps extends HTMLAttributes<HTMLDivElement> {
   wallet: WalletResponse;
   size?: WalletVisualSize;
+  invoice?: InvoiceResponse;
   children?: ReactNode;
 }
 
@@ -33,25 +36,28 @@ const walletPresentation = {
 } as const;
 
 function formatCardDigits(cardDigits: string) {
-  const digits = cardDigits.replace(/\D/g, '');
+  const digits = (cardDigits ?? '').replace(/\D/g, '');
 
   if (!digits) return '••••  ••••  ••••  ••••';
 
   return `••••  ••••  ••••  ${digits.slice(-4).padStart(4, '•')}`;
 }
 
-function formatCardDate(date: string) {
+function formatCardDate(date: string | null | undefined) {
   if (!date) return '—';
 
   const [, month, day] = date.split('-');
   return `${day}/${month}`;
 }
 
-export function WalletVisual({ wallet, size = 'default', className, children, style, ...props }: WalletVisualProps) {
+export function WalletVisual({ wallet, invoice, size = 'default', className, children, style, ...props }: WalletVisualProps) {
   const presentation = walletPresentation[wallet.type];
   const Icon = presentation.icon;
   const isCreditCard = wallet.type === 'CREDIT_CARD';
   const isCompact = size === 'compact';
+  const selectedInvoice = invoice ?? getCurrentInvoice(wallet.invoices ?? []);
+  const amount = isCreditCard ? selectedInvoice?.limit : wallet.balance;
+  const amountLabel = amount == null ? '—' : formatActivityCurrency(amount);
   const creditCardStyle = isCreditCard && wallet.bank?.gradient
     ? { ...style, background: wallet.bank.gradient }
     : style;
@@ -85,8 +91,8 @@ export function WalletVisual({ wallet, size = 'default', className, children, st
       {!isCompact && (
         <div className={styles.bottomRow}>
           <div>
-            <p className={styles.balanceLabel}>{isCreditCard ? 'Limite disponível' : 'Saldo disponível'}</p>
-            <strong>{formatActivityCurrency(wallet.balance)}</strong>
+            <p className={styles.balanceLabel}>{isCreditCard ? 'Limite da fatura' : 'Saldo disponível'}</p>
+            <strong>{amountLabel}</strong>
           </div>
 
           {isCreditCard ? (
@@ -97,17 +103,17 @@ export function WalletVisual({ wallet, size = 'default', className, children, st
         </div>
       )}
 
-      {isCompact && <p className={styles.compactBalance}>{formatActivityCurrency(wallet.balance)}</p>}
+      {isCompact && <p className={styles.compactBalance}>{amountLabel}</p>}
 
       {isCreditCard && (
         <div className={styles.cardDates}>
           <div className={styles.cardDate}>
             <span><CalendarDays aria-hidden="true" size={13} /> Fechamento</span>
-            <strong>{formatCardDate(wallet.closingDate)}</strong>
+            <strong>{formatCardDate(selectedInvoice?.closingDate)}</strong>
           </div>
           <div className={styles.cardDate}>
             <span><CalendarDays aria-hidden="true" size={13} /> Vencimento</span>
-            <strong>{formatCardDate(wallet.expirationDate)}</strong>
+            <strong>{formatCardDate(selectedInvoice?.expirationDate)}</strong>
           </div>
         </div>
       )}

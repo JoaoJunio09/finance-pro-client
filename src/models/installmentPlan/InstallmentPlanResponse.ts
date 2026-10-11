@@ -1,6 +1,6 @@
 import type { InstallmentPlanStatus } from "../../types/InstallmentPlanStatus";
 import type { InstallmentResponse } from "../installment/InstallmentResponse";
-import type { WalletResponse } from "../wallet/WalletResponse";
+import type { InvoiceResponse } from "../invoice/InvoiceResponse";
 
 export interface InstallmentPlanResponse {
 	id: string;
@@ -11,6 +11,6 @@ export interface InstallmentPlanResponse {
 	startDate: string;
 	endDate: string;
 	status: InstallmentPlanStatus;
-	wallet: WalletResponse;
+	invoice: InvoiceResponse;
 	installments: InstallmentResponse[];
 }

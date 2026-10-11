@@ -1,5 +1,6 @@
 import type { WalletResponse } from '../../../../../models/wallet/WalletResponse';
 import { formatCurrencyLabel } from '../../../../../utils/FormatCurrency';
+import { getCurrentInvoice } from '../../../../../utils/invoices';
 import WalletBrandMark, { type WalletIconType } from '../WalletBrand/WalletBrand';
 
 import styles from './../Wallets.module.css';
@@ -20,6 +21,9 @@ interface WalletCardProps {
 }
 
 export function WalletCard({ wallet, showBalance }: WalletCardProps) {
+  const amount = wallet.type === 'CREDIT_CARD'
+    ? getCurrentInvoice(wallet.invoices ?? [])?.limit
+    : wallet.balance;
   // const isTextDark = Boolean(wallet.textDark);
   const isTextDark = false;
 
@@ -51,7 +55,7 @@ export function WalletCard({ wallet, showBalance }: WalletCardProps) {
           {wallet.name}
         </p>
         <p className="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight">
-          {showBalance ? formatCurrencyLabel(wallet.balance) : 'R$ •••••'}
+          {showBalance ? (amount == null ? '—' : formatCurrencyLabel(amount)) : 'R$ •••••'}
         </p>
       </div>
     </div>

@@ -16,6 +16,7 @@ import { formatCurrencyInput, formatCurrencyToAPI } from "../../../utils/FormatC
 import type { TxFormData } from "../types/TxFormData";
 import useInstallmentPlanService from "../../../hooks/useInstallmentPlanService";
 import type { InstallmentPlanRequest } from "../../../models/installmentPlan/InstallmentPlanRequest";
+import { getPurchaseInvoices } from "../../../utils/invoices";
 
 function useTransactionModal(
 	transaction: TransactionResponse | null,
@@ -65,6 +66,7 @@ function useTransactionModal(
 			account?.id
 		],
 		queryFn: () => walletService.getAll({ accountId: account?.id }),
+		enabled: Boolean(account?.id),
 		retry: 3
 	});
 
@@ -99,7 +101,23 @@ function useTransactionModal(
 	const installmentMutationCreate = useMutation({
 		mutationFn: (data: InstallmentPlanRequest) => installmentPlanService.create(data),
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['invoice'] });
+			queryClient.invalidateQueries({ queryKey: ['wallet'] });
+			queryClient.invalidateQueries({ queryKey: ['wallets'] });
+			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+			showToast({
+				title: 'Parcelamento adicionado',
+				message: 'A compra foi vinculada à fatura selecionada.',
+				type: 'success'
+			});
 			onClose();
+		},
+		onError: () => {
+			showToast({
+				title: 'Não foi possível registrar a compra',
+				message: 'Confira a fatura antes de tentar novamente.',
+				type: 'error'
+			});
 		}
 	});
 
@@ -135,11 +153,16 @@ function useTransactionModal(
 	}
 
 	function changeCustomSelectWallet(wallet: WalletResponse) {
-		setForm((prev) => ({...prev, wallet: wallet }));
+		setForm((prev) => ({
+			...prev,
+			wallet,
+			invoiceId: getPurchaseInvoices(wallet.invoices ?? [])[0]?.id
+		}));
 	}
 
 	function saveOrUpdate() {
 		if (!account?.id || !form.category || !form.wallet) return;
+		if (txMutationSave.isPending || txMutationUpdate.isPending || installmentMutationCreate.isPending) return;
 
 		let isUpdate = transaction?.id;
 
@@ -160,14 +183,30 @@ function useTransactionModal(
 		}
 		else {
 			if (form.wallet.type === 'CREDIT_CARD') {
+				const currentWallet = queryWallets.data?.find(item => item.id === form.wallet?.id) ?? form.wallet;
+				const invoice = getPurchaseInvoices(currentWallet.invoices ?? [])
+					.find(item => item.id === form.invoiceId);
+				if (!invoice || form.type !== 'DEBIT') {
+					showToast({
+						title: 'Confira a fatura',
+						message: 'Selecione uma fatura aberta para registrar uma compra como despesa.',
+						type: 'warning'
+					});
+					return;
+				}
+				if (!Number.isInteger(Number(form.installments)) || Number(form.installments) < 1
+					|| !Number.isFinite(Number(form.interestRate)) || Number(form.interestRate) < 0
+					|| !Number.isFinite(Number(form.amount)) || Number(form.amount) <= 0) {
+					showToast({ title: 'Valores inválidos', message: 'Revise o valor, as parcelas e os juros.', type: 'warning' });
+					return;
+				}
 				const installmentPlan: InstallmentPlanRequest = {
-					id: form.id,
 					description: form.description,
 					value: Number(form.amount),
 					times: Number(form.installments),
 					fees: Number(form.interestRate),
 					status: 'PAYING',
-					walletId: form.wallet.id
+					invoiceId: invoice.id
 				} 
 
 				installmentMutationCreate.mutate(installmentPlan);
@@ -227,7 +266,7 @@ function useTransactionModal(
 		changeCustomSelectCategory,
 		changeCustomSelectWallet,
 		saveOrUpdate,
-		isSaving: txMutationSave.isPending || txMutationUpdate.isPending
+		isSaving: txMutationSave.isPending || txMutationUpdate.isPending || installmentMutationCreate.isPending
 	}
 }
 

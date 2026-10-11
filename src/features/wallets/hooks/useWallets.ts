@@ -23,7 +23,7 @@ function useWallets(
 		description: '',
 		balance: '',
 		type: 'CHECKING',
-		closingDate: '',
+		invoices: [],
 		color: AVAILABLE_COLORS[0].value,
 		cardDigits: '1234',
 		goalId: '',
@@ -42,6 +42,7 @@ function useWallets(
 			account?.id
 		],
 		queryFn: () => walletService.getAll({ accountId: account?.id }),
+		enabled: Boolean(account?.id),
 		retry: 3
 	});
 
@@ -130,8 +131,7 @@ function useWallets(
 			description: form.description,
 			cardDigits: form.cardDigits ?? null,
 			type: form.type,
-			closingDate: form.closingDate,
-			daysUntilExpiration: Number(form.daysUntilExpiration),
+
 			color: form.color ?? form.bank?.gradient,
 			accountId: account?.id ?? '',
 			bankId: form.bank?.id ?? null
@@ -156,9 +156,7 @@ function useWallets(
 			description: '',
 			balance: '',
 			type: 'CHECKING',
-			closingDate: '',
-			daysUntilExpiration: 0,
-			expirationDate: '',
+			invoices: [],
 			color: '',
 			cardDigits: '1234',
 			goalId: '',
@@ -180,9 +178,7 @@ function useWallets(
 			balance: wallet.balance.toString(),
 			cardDigits: wallet.cardDigits,
 			type: wallet.type,
-			closingDate: wallet.closingDate,
-			expirationDate: wallet.expirationDate,
-			daysUntilExpiration: wallet.daysUntilExpiration,
+			invoices: wallet.invoices ?? [],
 			color: wallet.color,
 			bank: wallet.bank,
 			accountId: account?.id ?? ''

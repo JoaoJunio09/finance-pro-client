@@ -5,167 +5,112 @@ import {
   Clock3,
   CreditCard,
   Layers3,
+  PackageOpen,
   ReceiptText,
-  TimerReset
+  TimerReset,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BackButton } from '../../../../components/ui/BackButton/BackButton';
+import type { InstallmentResponse } from '../../../../models/installment/InstallmentResponse';
+import type { InstallmentPlanResponse } from '../../../../models/installmentPlan/InstallmentPlanResponse';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 import { formatDateLabel } from '../../../../utils/FormatDate';
 import { WalletVisual } from '../WalletVisual/WalletVisual';
-
 import styles from './InstallmentPlansExplorer.module.css';
 
-type PlanStatus = 'PAYING' | 'PAID' | 'EXPIRED';
 type InstallmentState = 'PAID' | 'CURRENT' | 'UPCOMING' | 'EXPIRED';
-
-interface MockInstallment {
-  number: number;
-  value: number;
-  month: number;
-  year: number;
-  state: InstallmentState;
-}
-
-interface MockInstallmentPlan {
-  id: string;
-  description: string;
-  totalValue: number;
-  value: number;
-  times: number;
-  fees: number;
-  startDate: string;
-  endDate: string;
-  status: PlanStatus;
-  category: string;
-  installments: MockInstallment[];
-}
-
-const mockInstallmentPlans: MockInstallmentPlan[] = [
-  {
-    id: 'mock-plan-cellphone',
-    description: 'Celular Galaxy S25',
-    totalValue: 3_588,
-    value: 2_990,
-    times: 12,
-    fees: 20,
-    startDate: '2026-01-10',
-    endDate: '2026-12-10',
-    status: 'PAYING',
-    category: 'Eletrônicos',
-    installments: Array.from({ length: 12 }, (_, index) => ({
-      number: index + 1,
-      value: 299,
-      month: index + 1,
-      year: 2026,
-      state: index < 9 ? 'PAID' : index === 9 ? 'CURRENT' : 'UPCOMING'
-    }))
-  },
-  {
-    id: 'mock-plan-course',
-    description: 'Curso de especialização',
-    totalValue: 1_200,
-    value: 1_200,
-    times: 6,
-    fees: 0,
-    startDate: '2026-06-05',
-    endDate: '2026-11-05',
-    status: 'PAYING',
-    category: 'Educação',
-    installments: Array.from({ length: 6 }, (_, index) => ({
-      number: index + 1,
-      value: 200,
-      month: index + 6,
-      year: 2026,
-      state: index < 4 ? 'PAID' : index === 4 ? 'CURRENT' : 'UPCOMING'
-    }))
-  },
-  {
-    id: 'mock-plan-furniture',
-    description: 'Móveis para escritório',
-    totalValue: 1_890,
-    value: 1_750,
-    times: 5,
-    fees: 8,
-    startDate: '2026-05-12',
-    endDate: '2026-09-12',
-    status: 'EXPIRED',
-    category: 'Casa',
-    installments: Array.from({ length: 5 }, (_, index) => ({
-      number: index + 1,
-      value: 378,
-      month: index + 5,
-      year: 2026,
-      state: index < 4 ? 'PAID' : 'EXPIRED'
-    }))
-  },
-  {
-    id: 'mock-plan-headphones',
-    description: 'Fone sem fio',
-    totalValue: 899.4,
-    value: 899.4,
-    times: 3,
-    fees: 0,
-    startDate: '2026-02-15',
-    endDate: '2026-04-15',
-    status: 'PAID',
-    category: 'Eletrônicos',
-    installments: Array.from({ length: 3 }, (_, index) => ({
-      number: index + 1,
-      value: 299.8,
-      month: index + 2,
-      year: 2026,
-      state: 'PAID'
-    }))
-  }
-];
-
-const planStatus = {
-  PAYING: { label: 'Em andamento', className: styles.statusPaying },
-  PAID: { label: 'Quitado', className: styles.statusPaid },
-  EXPIRED: { label: 'Parcela vencida', className: styles.statusExpired }
-};
-
-const installmentState = {
-  PAID: { label: 'Paga', className: styles.installmentPaid },
-  CURRENT: { label: 'Mês atual', className: styles.installmentCurrent },
-  UPCOMING: { label: 'Próxima', className: styles.installmentUpcoming },
-  EXPIRED: { label: 'Vencida', className: styles.installmentExpired }
-};
 
 interface Props {
   wallet: WalletResponse;
-  onBack: () => void;
+  plans: InstallmentPlanResponse[];
+  cycleDate: string | null;
+  initialPlanId?: string | null;
+  isLoading: boolean;
+  isError: boolean;
+  onRetry: () => void;
 }
 
-export function InstallmentPlansExplorer({ wallet, onBack }: Props) {
-  const walletName = wallet.name;
-  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
-  const selectedPlan = useMemo(
-    () => mockInstallmentPlans.find(plan => plan.id === selectedPlanId) ?? null,
-    [selectedPlanId]
-  );
+const planStatus = {
+  PAYING: { label: 'Em andamento', className: styles.statusPaying },
+  INVOICED: { label: 'Na fatura', className: styles.statusPaying },
+  PAID: { label: 'Quitado', className: styles.statusPaid },
+  EXPIRED: { label: 'Parcela vencida', className: styles.statusExpired },
+} as const;
 
-  const activePlans = mockInstallmentPlans.filter(plan => plan.status === 'PAYING').length;
-  const totalOpenAmount = mockInstallmentPlans
-    .flatMap(plan => plan.installments)
-    .filter(installment => installment.state === 'CURRENT' || installment.state === 'EXPIRED')
-    .reduce((total, installment) => total + installment.value, 0);
+const installmentState = {
+  PAID: { label: 'Paga', className: styles.installmentPaid },
+  CURRENT: { label: 'Neste ciclo', className: styles.installmentCurrent },
+  UPCOMING: { label: 'Próxima', className: styles.installmentUpcoming },
+  EXPIRED: { label: 'Vencida', className: styles.installmentExpired },
+} as const;
+
+function getPlanTotal(plan: InstallmentPlanResponse) {
+  return plan.installments.reduce((total, installment) => total + installment.value, 0);
+}
+
+function getCycleIndex(cycleDate: string | null) {
+  if (!cycleDate) {
+    const today = new Date();
+    return today.getFullYear() * 12 + today.getMonth() + 1;
+  }
+
+  const [year, month] = cycleDate.split('-').map(Number);
+  return year * 12 + month;
+}
+
+function getInstallmentState(installment: InstallmentResponse, cycleDate: string | null): InstallmentState {
+  if (installment.isPaid) return 'PAID';
+
+  const installmentIndex = installment.year * 12 + installment.month;
+  const cycleIndex = getCycleIndex(cycleDate);
+
+  if (installmentIndex < cycleIndex) return 'EXPIRED';
+  if (installmentIndex === cycleIndex) return 'CURRENT';
+  return 'UPCOMING';
+}
+
+function sortInstallments(installments: InstallmentResponse[]) {
+  return [...installments].sort((first, second) =>
+    first.year - second.year || first.month - second.month);
+}
+
+export function InstallmentPlansExplorer({
+  wallet,
+  plans,
+  cycleDate,
+  initialPlanId = null,
+  isLoading,
+  isError,
+  onRetry,
+}: Props) {
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(initialPlanId);
+  const orderedPlans = useMemo(
+    () => [...plans].sort((first, second) =>
+      first.description.localeCompare(second.description, 'pt-BR', { sensitivity: 'base' })),
+    [plans]
+  );
+  const selectedPlan = orderedPlans.find(plan => plan.id === selectedPlanId) ?? null;
+
+  useEffect(() => {
+    setSelectedPlanId(initialPlanId);
+  }, [initialPlanId]);
 
   if (selectedPlan) {
-    const paidInstallments = selectedPlan.installments.filter(item => item.state === 'PAID').length;
-    const pendingInstallments = selectedPlan.installments.filter(item => item.state !== 'PAID').length;
+    const installments = sortInstallments(selectedPlan.installments);
+    const paidInstallments = installments.filter(item => item.isPaid).length;
+    const pendingInstallments = installments.length - paidInstallments;
+    const totalValue = getPlanTotal(selectedPlan);
 
     return (
-      <div className={styles.screen}>
+      <section className={styles.screen} aria-label={`Detalhes do parcelamento ${selectedPlan.description}`}>
         <BackButton label="Voltar aos parcelamentos" onClick={() => setSelectedPlanId(null)} />
 
         <div className={styles.detailHero}>
           <div className={styles.detailHeading}>
-            <span className={styles.eyebrow}><ReceiptText size={14} /> Parcelamento selecionado</span>
+            <span className={styles.eyebrow}><ReceiptText size={14} aria-hidden="true" /> Parcelamento selecionado</span>
             <h2>{selectedPlan.description}</h2>
-            <p>{selectedPlan.category} · iniciado em {formatDateLabel(selectedPlan.startDate)}</p>
+            <p>Começou em {formatDateLabel(selectedPlan.startDate)} e segue organizado parcela por parcela.</p>
           </div>
           <div className={styles.detailReference}>
             <WalletVisual size="compact" wallet={wallet} />
@@ -176,42 +121,30 @@ export function InstallmentPlansExplorer({ wallet, onBack }: Props) {
         </div>
 
         <div className={styles.metrics}>
-          <div className={styles.metric}>
-            <span>Valor original</span>
-            <strong>{formatCurrencyLabel(selectedPlan.value)}</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>Total com juros</span>
-            <strong>{formatCurrencyLabel(selectedPlan.totalValue)}</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>Juros</span>
-            <strong>{selectedPlan.fees}%</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>Parcelas</span>
-            <strong>{paidInstallments}/{selectedPlan.times} pagas</strong>
-          </div>
+          <div className={styles.metric}><span>Valor original</span><strong>{formatCurrencyLabel(selectedPlan.value)}</strong></div>
+          <div className={styles.metric}><span>Total parcelado</span><strong>{formatCurrencyLabel(totalValue)}</strong></div>
+          <div className={styles.metric}><span>Juros</span><strong>{selectedPlan.fees}%</strong></div>
+          <div className={styles.metric}><span>Seu progresso</span><strong>{paidInstallments}/{installments.length} pagas</strong></div>
         </div>
 
         <div className={styles.detailGrid}>
           <section className={styles.timelineCard}>
             <div className={styles.sectionHeading}>
               <div>
-                <span className={styles.eyebrow}>Cronograma</span>
+                <span className={styles.eyebrow}>Linha do tempo</span>
                 <h3>Todas as parcelas</h3>
               </div>
               <span className={styles.counter}>{pendingInstallments} em aberto</span>
             </div>
 
             <div className={styles.installmentGrid}>
-              {selectedPlan.installments.map(installment => {
-                const state = installmentState[installment.state];
+              {installments.map((installment, index) => {
+                const state = installmentState[getInstallmentState(installment, cycleDate)];
                 return (
-                  <article className={`${styles.installmentCard} ${state.className}`} key={installment.number}>
+                  <article className={`${styles.installmentCard} ${state.className}`} key={installment.id}>
                     <div className={styles.installmentTop}>
-                      <span>Parcela {String(installment.number).padStart(2, '0')}</span>
-                      {installment.state === 'PAID' ? <CheckCircle2 size={17} /> : <Clock3 size={17} />}
+                      <span>Parcela {String(index + 1).padStart(2, '0')}</span>
+                      {installment.isPaid ? <CheckCircle2 size={17} aria-hidden="true" /> : <Clock3 size={17} aria-hidden="true" />}
                     </div>
                     <strong>{formatCurrencyLabel(installment.value)}</strong>
                     <p>{String(installment.month).padStart(2, '0')}/{installment.year}</p>
@@ -223,84 +156,96 @@ export function InstallmentPlansExplorer({ wallet, onBack }: Props) {
           </section>
 
           <aside className={styles.summaryCard}>
-            <span className={styles.eyebrow}><CircleDollarSign size={14} /> Resumo do plano</span>
-            <div className={styles.summaryValue}>{selectedPlan.times}x de {formatCurrencyLabel(selectedPlan.totalValue / selectedPlan.times)}</div>
-            <div className={styles.progressTrack}>
-              <span style={{ width: `${(paidInstallments / selectedPlan.times) * 100}%` }} />
+            <span className={styles.eyebrow}><CircleDollarSign size={14} aria-hidden="true" /> Resumo da compra</span>
+            <div className={styles.summaryValue}>
+              {installments.length}x de {formatCurrencyLabel(installments.length ? totalValue / installments.length : 0)}
             </div>
-            <p>{paidInstallments} parcelas confirmadas de {selectedPlan.times} no total.</p>
+            <div className={styles.progressTrack} aria-label={`${paidInstallments} de ${installments.length} parcelas pagas`}>
+              <span style={{ width: `${installments.length ? (paidInstallments / installments.length) * 100 : 0}%` }} />
+            </div>
+            <p>{paidInstallments} parcelas confirmadas de {installments.length} no total.</p>
             <div className={styles.summaryRows}>
               <div><span>Início</span><strong>{formatDateLabel(selectedPlan.startDate)}</strong></div>
               <div><span>Término previsto</span><strong>{formatDateLabel(selectedPlan.endDate)}</strong></div>
-              <div><span>Carteira</span><strong>{walletName}</strong></div>
+              <div><span>Cartão</span><strong>{wallet.name}</strong></div>
             </div>
           </aside>
         </div>
-      </div>
+      </section>
     );
   }
 
-  return (
-    <div className={styles.screen}>
-      <BackButton label="Voltar aos detalhes do cartão" onClick={onBack} />
+  const activePlans = orderedPlans.filter(plan => plan.status !== 'PAID').length;
+  const totalOpenAmount = orderedPlans
+    .flatMap(plan => plan.installments)
+    .filter(installment => !installment.isPaid)
+    .reduce((total, installment) => total + installment.value, 0);
 
+  return (
+    <section className={styles.screen} aria-label="Parcelamentos do cartão">
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}><Layers3 size={14} /> Visão de parcelamentos</span>
-          <h2>Compras parceladas do seu cartão</h2>
-          <p>Acompanhe cada compra, o progresso de pagamento e as parcelas que chegam nas próximas faturas.</p>
+          <span className={styles.eyebrow}><Layers3 size={14} aria-hidden="true" /> Compras em movimento</span>
+          <h2>Seus parcelamentos, sem complicação</h2>
+          <p>Cada compra tem sua própria história. Abra uma delas para enxergar o que já passou, o ciclo atual e o que vem depois.</p>
         </div>
         <WalletVisual size="compact" wallet={wallet} />
       </div>
 
       <div className={styles.overviewGrid}>
-        <div className={styles.overviewCard}>
-          <span className={styles.overviewIcon}><Layers3 size={19} /></span>
-          <div><p>Planos ativos</p><strong>{activePlans}</strong></div>
-        </div>
-        <div className={styles.overviewCard}>
-          <span className={styles.overviewIcon}><TimerReset size={19} /></span>
-          <div><p>Próximas cobranças</p><strong>{formatCurrencyLabel(totalOpenAmount)}</strong></div>
-        </div>
-        <div className={styles.overviewCard}>
-          <span className={styles.overviewIcon}><CreditCard size={19} /></span>
-          <div><p>Carteira vinculada</p><strong>{walletName}</strong></div>
-        </div>
+        <div className={styles.overviewCard}><span className={styles.overviewIcon}><Layers3 size={19} /></span><div><p>Planos ativos</p><strong>{activePlans}</strong></div></div>
+        <div className={styles.overviewCard}><span className={styles.overviewIcon}><TimerReset size={19} /></span><div><p>Valor ainda em aberto</p><strong>{formatCurrencyLabel(totalOpenAmount)}</strong></div></div>
+        <div className={styles.overviewCard}><span className={styles.overviewIcon}><CreditCard size={19} /></span><div><p>Cartão acompanhado</p><strong>{wallet.name}</strong></div></div>
       </div>
 
       <div className={styles.listHeading}>
-        <div><span className={styles.eyebrow}>Organização por compra</span><h3>Seus parcelamentos</h3></div>
-        <span>{mockInstallmentPlans.length} registros demonstrativos</span>
+        <div><span className={styles.eyebrow}>Uma compra por vez</span><h3>Todos os parcelamentos</h3></div>
+        <span>{orderedPlans.length} {orderedPlans.length === 1 ? 'parcelamento' : 'parcelamentos'}</span>
       </div>
 
-      <div className={styles.planList}>
-        {mockInstallmentPlans.map((plan, index) => {
-          const paid = plan.installments.filter(item => item.state === 'PAID').length;
-          const currentInstallment = plan.installments.find(item => item.state === 'CURRENT' || item.state === 'EXPIRED');
-          return (
-            <button
-              className={styles.planCard}
-              key={plan.id}
-              onClick={() => setSelectedPlanId(plan.id)}
-              style={{ animationDelay: `${index * 70}ms` }}
-            >
-              <div className={styles.planIdentity}>
-                <span className={styles.planIcon}><ReceiptText size={21} /></span>
-                <div><h4>{plan.description}</h4><p>{plan.category} · {plan.times} parcelas · termina em {formatDateLabel(plan.endDate)}</p></div>
-              </div>
-              <div className={styles.planProgress}>
-                <div className={styles.planProgressLabel}><span>{paid} de {plan.times} pagas</span><strong>{formatCurrencyLabel(plan.totalValue / plan.times)}</strong></div>
-                <div className={styles.progressTrack}><span style={{ width: `${(paid / plan.times) * 100}%` }} /></div>
-                <small>{currentInstallment ? `Próxima: ${String(currentInstallment.month).padStart(2, '0')}/${currentInstallment.year}` : 'Plano concluído'}</small>
-              </div>
-              <div className={styles.planAction}>
-                <span className={`${styles.status} ${planStatus[plan.status].className}`}>{planStatus[plan.status].label}</span>
-                <ChevronRight size={20} />
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+      {isLoading ? (
+        <p className={styles.empty} role="status">Organizando seus parcelamentos…</p>
+      ) : isError ? (
+        <div className={styles.empty} role="alert">
+          <p>Não foi possível buscar os parcelamentos deste cartão.</p>
+          <button type="button" onClick={onRetry}>Tentar novamente</button>
+        </div>
+      ) : orderedPlans.length ? (
+        <div className={styles.planList}>
+          {orderedPlans.map((plan, index) => {
+            const installments = sortInstallments(plan.installments);
+            const paid = installments.filter(item => item.isPaid).length;
+            const nextInstallment = installments.find(item => !item.isPaid);
+            const total = getPlanTotal(plan);
+
+            return (
+              <button
+                className={styles.planCard}
+                key={plan.id}
+                type="button"
+                onClick={() => setSelectedPlanId(plan.id)}
+                style={{ animationDelay: `${index * 70}ms` }}
+              >
+                <div className={styles.planIdentity}>
+                  <span className={styles.planIcon}><PackageOpen size={21} aria-hidden="true" /></span>
+                  <div><h4>{plan.description}</h4><p>{installments.length} parcelas · termina em {formatDateLabel(plan.endDate)}</p></div>
+                </div>
+                <div className={styles.planProgress}>
+                  <div className={styles.planProgressLabel}><span>{paid} de {installments.length} pagas</span><strong>{formatCurrencyLabel(total)}</strong></div>
+                  <div className={styles.progressTrack}><span style={{ width: `${installments.length ? (paid / installments.length) * 100 : 0}%` }} /></div>
+                  <small>{nextInstallment ? `Próxima referência: ${String(nextInstallment.month).padStart(2, '0')}/${nextInstallment.year}` : 'Tudo quitado por aqui'}</small>
+                </div>
+                <div className={styles.planAction}>
+                  <span className={`${styles.status} ${planStatus[plan.status].className}`}>{planStatus[plan.status].label}</span>
+                  <ChevronRight size={20} aria-hidden="true" />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={styles.empty}><PackageOpen size={26} aria-hidden="true" /><p>Nenhum parcelamento encontrado neste cartão.</p></div>
+      )}
+    </section>
   );
 }

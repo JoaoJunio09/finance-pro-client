@@ -7,5 +7,5 @@ export interface InstallmentPlanRequest {
 	times: number;
 	fees: number;
 	status: InstallmentPlanStatus;
-	walletId: string;
+	invoiceId: string;
 }

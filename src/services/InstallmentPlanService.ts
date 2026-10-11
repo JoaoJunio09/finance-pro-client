@@ -12,17 +12,7 @@ class InstallmentPlanService {
 		this.accessToken = accessToken;
 	}
 
-	public async getAll() {
-		
-	}
-
-	public async getById(id: string) {
-		
-	}
-
 	public async create(installmentPlan: InstallmentPlanRequest) {
-		console.log('vai adicionar parcelamento')
-		console.log(installmentPlan);
 		try {
 			const response = await api.post<InstallmentPlanResponse>(this.BASE_URL, installmentPlan, {
 				headers: {
@@ -34,13 +24,26 @@ class InstallmentPlanService {
 			return response.data
 		}
 		catch (err: any) {
-			console.log(err)
 			if (err?.response?.status === 500) {
 				throw new InternalServerError('Erro ao registrar Parcelamento');
 			}
 
 			throw err;
 		}
+	}
+
+	public async getAllByWallet(walletId: string, signal?: AbortSignal) {
+		const response = await api.get<InstallmentPlanResponse[]>(
+			`${this.BASE_URL}/wallet/${walletId}`,
+			{
+				headers: {
+					'Authorization': `Bearer ${this.accessToken}`
+				},
+				signal
+			}
+		);
+
+		return response.data;
 	}
 }
 

@@ -1,222 +1,179 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, CreditCard, Layers3, ReceiptText, WalletCards } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { History, ReceiptText } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { BackButton } from '../../../../components/ui/BackButton/BackButton';
-import showToast from '../../../../components/ui/Toast/Toast';
+import useInvoiceService from '../../../../hooks/useInvoiceService';
+import useInstallmentPlanService from '../../../../hooks/useInstallmentPlanService';
 import useWalletService from '../../../../hooks/useWalletService';
+import type { InstallmentPlanResponse } from '../../../../models/installmentPlan/InstallmentPlanResponse';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
-import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-import { formatDateLabel } from '../../../../utils/FormatDate';
+import { getCurrentInvoice } from '../../../../utils/invoices';
+import { useInvoicePayment } from '../../hooks/useInvoicePayment';
 import { InstallmentPlansExplorer } from '../InstallmentPlansExplorer/InstallmentPlansExplorer';
+import { InvoiceHistory } from '../Invoice/InvoiceHistory';
+import { InvoicePanel } from '../Invoice/InvoicePanel';
+import { InvoicePayment } from '../Invoice/InvoicePayment';
 import { WalletVisual } from '../WalletVisual/WalletVisual';
+import styles from '../Invoice/Invoice.module.css';
+
+type View = 'details' | 'history' | 'payment' | 'plans';
 
 interface Props {
   wallet: WalletResponse;
   wallets: WalletResponse[];
+  initialView?: 'details' | 'history';
   onBack: () => void;
 }
 
-const billStatus = {
-  PAID: { label: 'Fatura paga', className: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' },
-  PENDING: { label: 'Fatura pendente', className: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' },
-  DUE_SOON: { label: 'Vencendo em breve', className: 'bg-orange-500/15 text-orange-700 dark:text-orange-300' },
-  EXPIRED: { label: 'Fatura vencida', className: 'bg-red-500/15 text-red-700 dark:text-red-300' }
-};
-
-export function WalletDetails({ wallet, wallets, onBack }: Props) {
+export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'details', onBack }: Props) {
   const walletService = useWalletService();
-  const queryClient = useQueryClient();
-  const [isPaymentView, setIsPaymentView] = useState(false);
-  const [isInstallmentExplorerOpen, setIsInstallmentExplorerOpen] = useState(false);
-  const paymentWallets = useMemo(
-    () => wallets.filter(item => item.id !== wallet.id && item.type !== 'CREDIT_CARD'),
-    [wallets, wallet.id]
-  );
-  const [paymentWalletId, setPaymentWalletId] = useState('');
+  const invoiceService = useInvoiceService();
+  const installmentPlanService = useInstallmentPlanService();
+  const [view, setView] = useState<View>(initialView);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const [installmentId, setInstallmentId] = useState<string>();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const walletQuery = useQuery({
+    queryKey: ['wallet', initialWallet.id],
+    queryFn: () => walletService.getById(initialWallet.id),
+    initialData: wallets.find(item => item.id === initialWallet.id) ?? initialWallet,
+    retry: 1,
+  });
+  const wallet = walletQuery.data;
+  const invoices = wallet.invoices ?? [];
   const isCreditCard = wallet.type === 'CREDIT_CARD';
-
-  const billQuery = useQuery({
-    queryKey: ['credit-card-bill', wallet.id],
-    queryFn: () => walletService.getCreditCardBill(wallet.id),
-    enabled: isCreditCard
+  const invoice = invoices.find(item => item.id === selectedInvoiceId) ?? getCurrentInvoice(invoices);
+  const invoiceQuery = useQuery({
+    queryKey: ['invoice', wallet.id, invoice?.id],
+    queryFn: ({ signal }) => invoiceService.getDetails(invoice!.id, signal),
+    enabled: isCreditCard && Boolean(invoice) && view !== 'history',
+    retry: 1,
   });
-
-  const refreshBill = () => {
-    queryClient.invalidateQueries({ queryKey: ['credit-card-bill', wallet.id] });
-    queryClient.invalidateQueries({ queryKey: ['wallets'] });
-  };
-
-  const payInstallment = useMutation({
-    mutationFn: (installmentId: string) => walletService.payCreditCardInstallment(wallet.id, installmentId, paymentWalletId),
-    onSuccess: () => {
-      showToast({ title: 'Parcela paga', message: 'O valor foi debitado da carteira selecionada.', type: 'success' });
-      refreshBill();
-    }
+  const installmentPlansQuery = useQuery<InstallmentPlanResponse[]>({
+    queryKey: ['installment-plans', wallet.id],
+    queryFn: ({ signal }) => installmentPlanService.getAllByWallet(wallet.id, signal),
+    enabled: isCreditCard && (view === 'details' || view === 'plans'),
+    retry: 1,
   });
+  const payment = useInvoicePayment(wallet.id, () => setView('details'));
+  const details = invoiceQuery.data;
+  const displayInvoice = invoice && details?.invoiceId === invoice.id
+    ? { ...invoice, status: details.status, closingDate: details.closingDate, expirationDate: details.expirationDate }
+    : invoice;
+  const paymentWallets = wallets.filter(item => item.id !== wallet.id && item.type !== 'CREDIT_CARD');
 
-  const payBill = useMutation({
-    mutationFn: () => walletService.payCreditCardBill(wallet.id, paymentWalletId),
-    onSuccess: () => {
-      showToast({ title: 'Fatura paga', message: 'Todas as parcelas pendentes do ciclo foram quitadas.', type: 'success' });
-      setIsPaymentView(false);
-      refreshBill();
-    }
-  });
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [view, invoice?.id]);
 
-  const bill = billQuery.data;
-  const status = bill ? billStatus[bill.status] : null;
-  const canPay = Boolean(paymentWalletId) && (bill?.pendingAmount ?? 0) > 0;
-
-  if (isCreditCard && isInstallmentExplorerOpen) {
-    return (
-      <main className="relative z-10 mx-auto max-w-[1400px] min-w-0 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-12">
-        <section className="min-w-0 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-5 shadow-sm sm:p-7">
-          <div className="mb-5 flex items-center gap-3 border-b border-[var(--border-light)] pb-5">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--accent-muted)] text-[var(--accent)]">
-                <CreditCard size={20} />
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">{wallet.bank?.name ?? 'Cartão de crédito'}</p>
-                <h1 className="font-bold text-[var(--text-main)]">{wallet.name}</h1>
-              </div>
-            </div>
-          </div>
-          <InstallmentPlansExplorer
-            wallet={wallet}
-            onBack={() => setIsInstallmentExplorerOpen(false)}
-          />
-        </section>
-      </main>
-    );
+  function selectInvoice(id: string) {
+    setSelectedInvoiceId(id);
+    setView('details');
   }
+
+  function startPayment(id?: string) {
+    setSelectedInvoiceId(invoice?.id ?? null);
+    setInstallmentId(id);
+    setView('payment');
+  }
+
+  function showInstallmentPlans(planId?: string) {
+    setSelectedPlanId(planId ?? null);
+    setView('plans');
+  }
+
+  const compact = view !== 'details';
+  const showHeaderWallet = view !== 'plans';
+  const backLabel = view === 'payment' || view === 'plans'
+    ? 'Voltar à fatura'
+    : view === 'details' && selectedInvoiceId ? 'Voltar ao histórico' : 'Todas as carteiras';
+  const goBack = () => {
+    if (view === 'payment' || view === 'plans') setView('details');
+    else if (view === 'details' && selectedInvoiceId) setView('history');
+    else onBack();
+  };
 
   return (
     <main className="relative z-10 mx-auto max-w-[1400px] min-w-0 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-12">
-      <BackButton className="mb-6" label="Todas as carteiras" onClick={onBack} />
-
+      <BackButton className="mb-6" label={backLabel} onClick={goBack} disabled={payment.isPending} />
       <section className="min-w-0 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-5 shadow-sm sm:p-7">
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-center">
-          <div>
-            <p className="text-sm font-medium text-[var(--text-muted)]">Detalhes da carteira</p>
-            <h1 className="mt-1 text-2xl font-bold text-[var(--text-main)]">{wallet.name}</h1>
-            <p className="mt-1 text-sm text-[var(--text-muted)]">{wallet.bank?.name ?? wallet.description}</p>
-          </div>
-          <WalletVisual size="large" wallet={wallet} />
-        </div>
-
-        {isCreditCard && (
-          <button
-            onClick={() => setIsInstallmentExplorerOpen(true)}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-elevated)] px-4 py-3 text-sm font-bold text-[var(--text-main)] transition-all hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent)] hover:shadow-sm"
-          >
-            <Layers3 size={18} /> Visualizar parcelamentos
-          </button>
-        )}
-
-        {!isCreditCard && (
-          <div className="mt-8 rounded-2xl border border-[var(--border-light)] bg-[var(--bg-elevated)] p-6 text-sm text-[var(--text-muted)]">
-            Esta carteira não é um cartão de crédito. Acompanhe o saldo e as movimentações normalmente pela listagem de transações.
-          </div>
-        )}
-
-        {isCreditCard && billQuery.isLoading && <p className="mt-8 text-sm text-[var(--text-muted)]">Carregando fatura…</p>}
-
-        {isCreditCard && billQuery.isError && (
-          <div className="mt-8 flex items-center gap-3 rounded-2xl bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-300">
-            <AlertTriangle size={20} /> Não foi possível carregar a fatura deste cartão.
-          </div>
-        )}
-
-        {isCreditCard && bill && !isPaymentView && (
-          <div className="mt-8 space-y-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-2xl border border-[var(--border-light)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Status</p>
-                <span className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-bold ${status?.className}`}>{status?.label}</span>
+        <div className={`grid min-w-0 grid-cols-1 gap-6 sm:items-center ${showHeaderWallet ? (compact ? 'sm:grid-cols-[minmax(0,1fr)_220px]' : 'xl:grid-cols-[minmax(0,1fr)_380px]') : ''}`}>
+          <div className="min-w-0">
+            <p className={styles.eyebrow}>{isCreditCard ? 'Seu cartão' : 'Detalhes da carteira'}</p>
+            <h1 ref={headingRef} tabIndex={-1} className="mt-2 break-words text-2xl font-bold text-[var(--text-main)] outline-none">{wallet.name}</h1>
+            <p className={styles.muted}>{wallet.bank?.name ?? wallet.description}</p>
+            {isCreditCard && view !== 'payment' && (
+              <div className={`${styles.filters} mt-5`} aria-label="Navegação das faturas">
+                <button type="button" className={styles.filter} aria-pressed={view !== 'history'}
+                  onClick={() => { setSelectedInvoiceId(null); setView('details'); }}>
+                  <ReceiptText size={16} aria-hidden="true" /> Fatura do cartão
+                </button>
+                <button type="button" className={styles.filter} aria-pressed={view === 'history'}
+                  onClick={() => setView('history')}>
+                  <History size={16} aria-hidden="true" /> Histórico de faturas
+                </button>
               </div>
-              <div className="rounded-2xl border border-[var(--border-light)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Fechamento</p>
-                <p className="mt-3 font-bold text-[var(--text-main)]">{formatDateLabel(bill.closingDate)}</p>
-              </div>
-              <div className="rounded-2xl border border-[var(--border-light)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Vencimento</p>
-                <p className="mt-3 font-bold text-[var(--text-main)]">{formatDateLabel(bill.expirationDate)}</p>
-              </div>
-              <div className="rounded-2xl border border-[var(--border-light)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">A pagar</p>
-                <p className="mt-3 font-bold text-[var(--text-main)]">{formatCurrencyLabel(bill.pendingAmount)}</p>
-              </div>
-            </div>
-
-            {bill.status === 'EXPIRED' && <p className="rounded-xl bg-red-500/10 p-3 text-sm font-medium text-red-700 dark:text-red-300">Esta fatura venceu. Quite-a para avançar o ciclo do cartão.</p>}
-            {bill.status === 'DUE_SOON' && <p className="rounded-xl bg-orange-500/10 p-3 text-sm font-medium text-orange-700 dark:text-orange-300">A fatura vence em breve. Revise as parcelas antes de pagar.</p>}
-
-            <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border-light)] p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="font-bold text-[var(--text-main)]">Fatura do ciclo</h2>
-                <p className="mt-1 text-sm text-[var(--text-muted)]">{bill.installments.length} parcela(s) vinculada(s) ao fechamento atual.</p>
-              </div>
-              <button onClick={() => setIsPaymentView(true)} disabled={bill.pendingAmount === 0} className="rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50">
-                Pagar fatura
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {bill.installments.map(installment => (
-                <div key={installment.id} className="flex flex-col gap-3 rounded-2xl border border-[var(--border-light)] p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-xl bg-[var(--bg-elevated)] p-2 text-[var(--accent)]"><ReceiptText size={20} /></div>
-                    <div>
-                      <p className="font-semibold text-[var(--text-main)]">{installment.description}</p>
-                      <p className="text-sm text-[var(--text-muted)]">Parcela de {String(installment.month).padStart(2, '0')}/{installment.year}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 sm:text-right">
-                    <div><p className="font-bold text-[var(--text-main)]">{formatCurrencyLabel(installment.value)}</p><p className={`text-xs font-semibold ${installment.paid ? 'text-emerald-600' : 'text-amber-600'}`}>{installment.paid ? 'Paga' : 'Pendente'}</p></div>
-                    {!installment.paid && (
-                      <button disabled={!paymentWalletId || payInstallment.isPending} onClick={() => payInstallment.mutate(installment.id)} className="rounded-lg border border-[var(--accent)] px-3 py-2 text-xs font-bold text-[var(--accent)] disabled:opacity-50">
-                        Pagar parcela
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {bill.installments.length === 0 && <p className="rounded-2xl bg-[var(--bg-elevated)] p-5 text-sm text-[var(--text-muted)]">Não há parcelas neste ciclo de fechamento.</p>}
-            </div>
-
-            {bill.pendingAmount > 0 && (
-              <label className="block text-sm font-semibold text-[var(--text-main)]">
-                Carteira para pagar uma parcela
-                <select value={paymentWalletId} onChange={event => setPaymentWalletId(event.target.value)} className="mt-2 w-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-3 text-sm font-normal">
-                  <option value="">Selecione a carteira de origem</option>
-                  {paymentWallets.map(paymentWallet => <option key={paymentWallet.id} value={paymentWallet.id}>{paymentWallet.name} · {formatCurrencyLabel(paymentWallet.balance)}</option>)}
-                </select>
-              </label>
             )}
           </div>
-        )}
-
-        {isCreditCard && bill && isPaymentView && (
-          <div className="mt-8 space-y-6">
-            <BackButton label="Voltar aos detalhes da fatura" onClick={() => setIsPaymentView(false)} />
-            <div className="rounded-2xl border border-[var(--border-light)] p-5">
-              <div className="flex items-center gap-3"><CreditCard className="text-[var(--accent)]" /><div><h2 className="font-bold text-[var(--text-main)]">Confirmar pagamento da fatura</h2><p className="text-sm text-[var(--text-muted)]">Todas as parcelas pendentes ou vencidas deste ciclo serão quitadas.</p></div></div>
-              <div className="mt-5 space-y-2 border-y border-[var(--border-light)] py-4 text-sm">
-                <div className="flex justify-between"><span className="text-[var(--text-muted)]">Total do ciclo</span><strong>{formatCurrencyLabel(bill.totalAmount)}</strong></div>
-                <div className="flex justify-between"><span className="text-[var(--text-muted)]">Já pago</span><strong>{formatCurrencyLabel(bill.paidAmount)}</strong></div>
-                <div className="flex justify-between text-base"><span className="font-semibold text-[var(--text-main)]">Total a debitar</span><strong className="text-[var(--accent)]">{formatCurrencyLabel(bill.pendingAmount)}</strong></div>
-              </div>
-              <label className="mt-5 block text-sm font-semibold text-[var(--text-main)]">Debitar da carteira
-                <select value={paymentWalletId} onChange={event => setPaymentWalletId(event.target.value)} className="mt-2 w-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-3 text-sm font-normal">
-                  <option value="">Selecione a carteira de origem</option>
-                  {paymentWallets.map(paymentWallet => <option key={paymentWallet.id} value={paymentWallet.id}>{paymentWallet.name} · {formatCurrencyLabel(paymentWallet.balance)}</option>)}
-                </select>
-              </label>
-              <button disabled={!canPay || payBill.isPending} onClick={() => payBill.mutate()} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-3.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"><WalletCards size={18} /> Confirmar pagamento da fatura</button>
+          {showHeaderWallet && (
+            <WalletVisual size={compact ? 'compact' : 'large'} wallet={wallet}
+              invoice={view === 'history' ? getCurrentInvoice(invoices) : displayInvoice} />
+          )}
+        </div>
+        <div className="mt-8 border-t border-[var(--border-color)] pt-6" key={`${view}-${invoice?.id ?? 'empty'}`}>
+          {!isCreditCard ? (
+            <p className={styles.notice}>Acompanhe o saldo e as movimentações desta carteira pela listagem de transações.</p>
+          ) : walletQuery.isError ? (
+            <div className={styles.empty} role="alert">
+              <p>Não foi possível atualizar os dados do cartão.</p>
+              <button type="button" className={styles.secondary} onClick={() => void walletQuery.refetch()}>Tentar novamente</button>
             </div>
-          </div>
-        )}
+          ) : view === 'history' ? (
+            <InvoiceHistory invoices={invoices} onSelect={selectInvoice} />
+          ) : !invoice ? (
+            <div className={styles.empty}>
+              <ReceiptText size={28} aria-hidden="true" />
+              <p>Este cartão ainda não possui faturas.</p>
+              <p>A API precisa disponibilizar uma fatura para registrar compras parceladas neste cartão.</p>
+            </div>
+          ) : invoiceQuery.isPending ? (
+            <p className={styles.empty} role="status">Carregando fatura…</p>
+          ) : invoiceQuery.isError ? (
+            <div className={styles.empty} role="alert">
+              <p>Não foi possível carregar esta fatura. Seus dados não foram alterados.</p>
+              <button type="button" className={styles.secondary} onClick={() => void invoiceQuery.refetch()}>Tentar novamente</button>
+            </div>
+          ) : details && (
+            view === 'payment' ? (
+              <InvoicePayment details={details} wallets={paymentWallets} installmentId={installmentId}
+                busy={payment.isPending} onConfirm={paymentWalletId => payment.mutate({
+                  invoiceId: details.invoiceId,
+                  paymentWalletId,
+                  installmentId,
+                })} />
+            ) : view === 'plans' ? (
+              <InstallmentPlansExplorer
+                wallet={wallet}
+                plans={installmentPlansQuery.data ?? []}
+                cycleDate={details.closingDate}
+                initialPlanId={selectedPlanId}
+                isLoading={installmentPlansQuery.isPending}
+                isError={installmentPlansQuery.isError}
+                onRetry={() => void installmentPlansQuery.refetch()}
+              />
+            ) : (
+              <InvoicePanel
+                invoice={invoice}
+                details={details}
+                plans={installmentPlansQuery.data ?? []}
+                plansLoading={installmentPlansQuery.isPending}
+                onPay={startPayment}
+                onPlans={showInstallmentPlans}
+              />
+            )
+          )}
+        </div>
       </section>
     </main>
   );

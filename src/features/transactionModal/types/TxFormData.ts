@@ -15,4 +15,5 @@ export interface TxFormData {
 	interestRate: number;
 	category?: CategoryResponse;
 	wallet?: WalletResponse;
+	invoiceId?: string;
 }

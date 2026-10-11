@@ -15,6 +15,7 @@ import styles from './Wallets.module.css';
 export default function WalletsPage() {
   const [wallet, setWallet] = useState<WalletResponse | null>(null);
   const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
+  const [detailView, setDetailView] = useState<'details' | 'history'>('details');
   const [walletDeleted, setWalletDeleted] = useState<WalletResponse | null>(null);
   const [currentFilter, setCurrentFilter] = useState<WalletFilter>('all');
   
@@ -47,6 +48,12 @@ export default function WalletsPage() {
   };
 
   const openDetails = (selected: WalletResponse) => {
+    setDetailView('details');
+    setSelectedWallet(selected);
+  };
+
+  const openHistory = (selected: WalletResponse) => {
+    setDetailView('history');
     setSelectedWallet(selected);
   };
   
@@ -76,8 +83,10 @@ export default function WalletsPage() {
     <div className={`min-h-screen relative selection:bg-[var(--accent-muted)] selection:text-[var(--accent)] ${styles.fadeInUp}`}>
       {selectedWallet ? (
         <WalletDetails
+          key={selectedWallet.id}
           wallet={selectedWallet}
           wallets={wallets}
+          initialView={detailView}
           onBack={() => setSelectedWallet(null)}
         />
       ) : (
@@ -100,6 +109,7 @@ export default function WalletsPage() {
                 onEdit={openEdit}
                 onDelete={openDelete}
                 onSelect={openDetails}
+                onHistory={openHistory}
                 isPreview={isFormModalOpen}
               />
             ))}

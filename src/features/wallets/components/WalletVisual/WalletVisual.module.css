@@ -163,6 +163,7 @@
 
 .bottomRow {
   align-items: end;
+  flex-wrap: wrap;
 }
 
 .bottomRow strong {

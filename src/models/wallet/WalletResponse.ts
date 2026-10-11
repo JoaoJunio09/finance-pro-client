@@ -1,5 +1,6 @@
 import type { WalletType } from "../../types/WalletType";
 import type { BankResponse } from "../bank/BankResponse";
+import type { InvoiceResponse } from "../invoice/InvoiceResponse";
 
 export interface WalletResponse {
 	id: string,
@@ -7,9 +8,7 @@ export interface WalletResponse {
 	description: string,
 	cardDigits: string,
 	type: WalletType,
-	closingDate: string;
-	expirationDate: string;
-	daysUntilExpiration: number;
+	invoices: InvoiceResponse[];
 	color: string,
 	balance: number,
 	bank?: BankResponse

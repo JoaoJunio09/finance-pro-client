@@ -1,4 +1,4 @@
-import { Edit2, MoreVertical, Trash2 } from 'lucide-react';
+import { Edit2, History, MoreVertical, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import { WalletVisual } from '../WalletVisual/WalletVisual';
@@ -10,10 +10,11 @@ interface Props {
   onEdit: (wallet: WalletResponse) => void;
   onDelete: (wallet: WalletResponse) => void;
   onSelect?: (wallet: WalletResponse) => void;
+  onHistory?: (wallet: WalletResponse) => void;
   isPreview: boolean;
 }
 
-export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect, isPreview = false }) => {
+export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect, onHistory, isPreview = false }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
@@ -33,7 +34,10 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect
       className={styles.card}
       onClick={selectWallet}
       onKeyDown={(event) => {
-        if (!isPreview && (event.key === 'Enter' || event.key === ' ')) selectWallet();
+        if (event.target === event.currentTarget && !isPreview && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          selectWallet();
+        }
       }}
       role="button"
       tabIndex={0}
@@ -53,6 +57,11 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect
 
           {showMenu && (
             <div className={styles.menuDropdown}>
+              {wallet.type === 'CREDIT_CARD' && onHistory && (
+                <button onClick={() => onHistory(wallet)} type="button">
+                  <History aria-hidden="true" size={14} /> Histórico de faturas
+                </button>
+              )}
               <button onClick={() => onEdit(wallet)} type="button">
                 <Edit2 aria-hidden="true" size={14} /> Editar
               </button>

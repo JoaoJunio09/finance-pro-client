@@ -3,7 +3,6 @@ import type { ParamsWalletAPI } from "../models/wallet/ParamsWalletAPI";
 import type { WalletRequest } from "../models/wallet/WalletRequest";
 import type { WalletResponse } from "../models/wallet/WalletResponse";
 import type { WalletSummaryResponse } from "../models/wallet/WalletSummary";
-import type { CreditCardBill } from "../models/wallet/CreditCardBill";
 import api from "./api";
 
 class WalletService {
@@ -139,31 +138,6 @@ class WalletService {
 		}
 	}
 
-	public async getCreditCardBill(id: string) {
-		const response = await api.get<CreditCardBill>(`${this.BASE_URL}/${id}/credit-card-bill`, {
-			headers: { 'Authorization': `Bearer ${this.accessToken}` }
-		});
-
-		return response.data;
-	}
-
-	public async payCreditCardBill(id: string, paymentWalletId: string) {
-		const response = await api.patch<CreditCardBill>(`${this.BASE_URL}/${id}/credit-card-bill`, { paymentWalletId }, {
-			headers: { 'Authorization': `Bearer ${this.accessToken}` }
-		});
-
-		return response.data;
-	}
-
-	public async payCreditCardInstallment(id: string, installmentId: string, paymentWalletId: string) {
-		const response = await api.patch<CreditCardBill>(
-			`${this.BASE_URL}/${id}/credit-card-bill/installments/${installmentId}`,
-			{ paymentWalletId },
-			{ headers: { 'Authorization': `Bearer ${this.accessToken}` } }
-		);
-
-		return response.data;
-	}
 }
 
 export default WalletService;

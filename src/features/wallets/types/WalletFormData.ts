@@ -1,3 +1,4 @@
+import type { InvoiceResponse } from "../../../models/invoice/InvoiceResponse";
 import type { BankResponse } from "../../../models/bank/BankResponse";
 import type { WalletType } from "../../../types/WalletType";
 
@@ -8,9 +9,7 @@ export interface WalletFormData {
 	balance: string;
 	cardDigits?: string;
 	type: WalletType;
-	closingDate: string;
-	daysUntilExpiration?: number;
-	expirationDate?: string;
+	invoices: InvoiceResponse[];
 	color?: string;
 	goalId?: string;
 	bank?: BankResponse;

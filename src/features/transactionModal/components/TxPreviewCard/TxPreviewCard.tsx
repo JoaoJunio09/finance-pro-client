@@ -2,6 +2,7 @@ import { Activity, Calendar, CheckCircle2, Eye, Wallet } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import SpinnerLoading from '../../../../components/ui/SpinnerLoading/SpinnerLoading';
 import type { TxFormData } from '../../types/TxFormData';
+import { getPurchaseInvoices } from '../../../../utils/invoices';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
 import styles from './TxPreviewCard.module.css';
@@ -36,7 +37,9 @@ export function TransactionPreviewCard({
   const previewDate = new Date(`${form?.date}T12:00:00`);
   const previewDateLabel = previewDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 
-  const isFormValid = numericAmount > 0 && form && form.description && form.date && form.time && form.category && form.wallet;
+  const validInvoice = isEditing || form?.wallet?.type !== 'CREDIT_CARD'
+    || (form.type === 'DEBIT' && getPurchaseInvoices(form.wallet.invoices ?? []).some(invoice => invoice.id === form.invoiceId));
+  const isFormValid = numericAmount > 0 && form && form.description && form.date && form.time && form.category && form.wallet && validInvoice;
   return (
     <div className={`w-full lg:w-[380px] border-t lg:border-t-0 lg:border-l p-6 sm:p-8 flex flex-col ${styles.panel}`}>
       <h3 className={`text-sm font-bold mb-6 flex items-center gap-2 ${styles.panelTitle}`}>

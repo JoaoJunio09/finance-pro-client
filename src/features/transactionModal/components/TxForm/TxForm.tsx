@@ -6,6 +6,7 @@ import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { TransactionStatus } from '../../../../types/TransactionStatus';
 import type { TransactionType } from '../../../../types/TransactionType';
 import { formatCurrencyDisplay } from '../../../../utils/FormatCurrency';
+import { formatInvoiceMonth, getPurchaseInvoices } from '../../../../utils/invoices';
 import type { TxFormData } from '../../types/TxFormData';
 import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
 
@@ -47,6 +48,7 @@ export function TransactionForm({
   const isIncome = type === 'CREDIT';
   const numericAmount = amountStr ? Number(amountStr) : 0;
   const isCreditCard = wallet?.type === 'CREDIT_CARD';
+  const purchaseInvoices = getPurchaseInvoices(wallet?.invoices ?? []);
   const installments = Math.max(form?.installments ?? 1, 1);
   const interestRate = Math.max(form?.interestRate ?? 0, 0);
   const totalWithInterest = numericAmount * (1 + interestRate / 100);
@@ -205,14 +207,35 @@ export function TransactionForm({
           </div>
         </div>
 
-        {isCreditCard && (
+        {isCreditCard && !isEditing && (
           <div className={`rounded-xl border p-4 ${styles.installmentSection}`}>
             <div>
               <h3 className={`text-sm font-bold ${styles.installmentTitle}`}>Compra parcelada</h3>
               <p className={`mt-1 text-xs ${styles.installmentDescription}`}>
-                Informe a quantidade de parcelas e os juros mensais, se houver.
+                Escolha a fatura, a quantidade de parcelas e os juros totais da compra, se houver.
               </p>
             </div>
+
+            <label className={`mt-4 flex flex-col gap-2 text-xs font-semibold ${styles.fieldLabel}`}>
+              Fatura de destino
+              <select name="invoiceId" value={form?.invoiceId ?? ''} onChange={handleOnChange}
+                className={`w-full min-w-0 rounded-xl border px-4 py-3 text-sm ${styles.textInput}`}>
+                <option value="">Selecione uma fatura aberta</option>
+                {purchaseInvoices.map(invoice => (
+                  <option key={invoice.id} value={invoice.id}>{formatInvoiceMonth(invoice.closingDate)}</option>
+                ))}
+              </select>
+            </label>
+            {!purchaseInvoices.length && (
+              <p className={`mt-2 text-xs ${styles.installmentDescription}`} role="status">
+                Este cartão não possui uma fatura aberta para novas compras. A fatura precisa estar disponível no servidor.
+              </p>
+            )}
+            {isIncome && (
+              <p className={`mt-2 text-xs ${styles.installmentDescription}`} role="status">
+                Compras parceladas são despesas. Selecione Despesa para continuar.
+              </p>
+            )}
 
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-2">
@@ -222,7 +245,7 @@ export function TransactionForm({
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Juros ao mês (%)</label>
+                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Juros totais (%)</label>
                 <input name="interestRate" type="number" min="0" step="0.01" value={interestRate} onChange={handleOnChange}
                   className={`w-full rounded-xl px-4 py-3 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`} />
               </div>
