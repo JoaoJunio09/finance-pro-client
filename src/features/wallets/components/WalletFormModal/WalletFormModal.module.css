@@ -24,6 +24,44 @@
   box-shadow: 0 0 0 1px var(--accent); 
 }
 
+.invoiceSection {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border-color));
+  border-radius: 1rem;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg-surface));
+}
+
+.invoiceSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.invoiceSectionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: .75rem;
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.invoiceSection h3 {
+  color: var(--text-main);
+  font-size: .875rem;
+  font-weight: 750;
+}
+
+.invoiceSection p {
+  margin-top: .15rem;
+  color: var(--text-muted);
+  font-size: .75rem;
+}
+
 /* Painel de Pré-visualização (Lado Direito) */
 .panel { 
   background: linear-gradient(to bottom right, var(--bg-elevated), var(--bg-surface)); 

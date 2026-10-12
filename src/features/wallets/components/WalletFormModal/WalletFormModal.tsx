@@ -1,4 +1,4 @@
-import { Eye, X } from 'lucide-react';
+import { CalendarDays, Eye, X } from 'lucide-react';
 import React from 'react';
 import { createPortal } from 'react-dom';
 import CustomSelect from '../../../../components/shared/CustomSelect/CustomSelect';
@@ -56,6 +56,11 @@ function WalletFormModal({
 }: WalletFormModalProps) {
   if (!isOpen) return null;
 
+  const isCreditCard = form.type === 'CREDIT_CARD';
+  const hasRequiredCreditCardData = Boolean(
+    Number(form.creditLimit) > 0 && form.closingDate && form.expirationDate
+  );
+
   const previewWallet: WalletResponse = {
     id: 'preview',
     name: form.name || 'Nova Carteira',
@@ -83,7 +88,7 @@ function WalletFormModal({
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">
             <div className={`flex items-center justify-between pb-4 border-b shrink-0 ${styles.header}`}>
               <h2 className={`text-xl font-bold tracking-tight ${styles.title}`}>
-                {false ? 'Editar carteira' : 'Nova carteira'}
+                {form.id ? 'Editar carteira' : 'Nova carteira'}
               </h2>
               <button onClick={onClose} className={`p-2 rounded-full transition-colors focus:outline-none ${styles.closeBtn}`} type="button">
                 <X size={20} />
@@ -129,18 +134,68 @@ function WalletFormModal({
                 </select>
               </div>
 
-              {form.type === 'CREDIT_CARD' && (
-                <p className="rounded-xl border border-[var(--border-color)] p-3 text-sm text-[var(--text-muted)]">
-                  Limite, fechamento e vencimento pertencem às faturas.
-                  Consulte essas informações nos detalhes do cartão.
-                </p>
+              {isCreditCard && (
+                <section className={styles.invoiceSection} aria-labelledby="invoice-details-title">
+                  <div className={styles.invoiceSectionHeader}>
+                    <span className={styles.invoiceSectionIcon} aria-hidden="true">
+                      <CalendarDays size={18} />
+                    </span>
+                    <div>
+                      <h3 id="invoice-details-title">Dados da fatura</h3>
+                      <p>Defina o limite e o ciclo inicial deste cartão.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="flex flex-col gap-2 sm:col-span-3">
+                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Limite do cartão (R$)</label>
+                      <input
+                        type="number"
+                        id="creditLimit"
+                        name="creditLimit"
+                        value={form.creditLimit}
+                        onChange={handleOnChange}
+                        min="0.01"
+                        step="0.01"
+                        required
+                        placeholder="Ex: 5000,00"
+                        className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2 sm:col-span-1">
+                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Fechamento</label>
+                      <input
+                        type="date"
+                        id="closingDate"
+                        name="closingDate"
+                        value={form.closingDate}
+                        onChange={handleOnChange}
+                        required
+                        className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2 sm:col-span-2">
+                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Vencimento</label>
+                      <input
+                        type="date"
+                        id="expirationDate"
+                        name="expirationDate"
+                        value={form.expirationDate}
+                        onChange={handleOnChange}
+                        min={form.closingDate || undefined}
+                        required
+                        className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                      />
+                    </div>
+                  </div>
+                </section>
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="flex flex-col gap-2">
+                {!isCreditCard && <div className="flex flex-col gap-2">
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
                     {form.id ? (
-                      'Saldol'
+                      'Saldo'
                     ) : (
                       'Saldo Inicial (R$)'
                     )}
@@ -150,7 +205,7 @@ function WalletFormModal({
                     step="0.01"
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                   />
-                </div>
+                </div>}
                 <div className={`flex flex-col gap-2 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}`}>
                   <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
                     Dígitos do Cartão
@@ -225,13 +280,13 @@ function WalletFormModal({
               
               <button 
                 onClick={onSave}
-                disabled={!form.name}
+                disabled={!form.name || (isCreditCard && !hasRequiredCreditCardData)}
                 className={`flex flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
                   ${styles.submitBtn}
-                  ${!form.name ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
+                  ${!form.name || (isCreditCard && !hasRequiredCreditCardData) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
                 `}
               >
-                {false ? 'Salvar carteira' : 'Adicionar carteira'}
+                {form.id ? 'Salvar alterações' : 'Adicionar carteira'}
               </button>
             </div>
           </div>

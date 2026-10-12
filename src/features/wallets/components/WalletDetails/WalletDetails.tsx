@@ -1,22 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
 import { History, ReceiptText } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { BackButton } from '../../../../components/ui/BackButton/BackButton';
-import useInvoiceService from '../../../../hooks/useInvoiceService';
-import useInstallmentPlanService from '../../../../hooks/useInstallmentPlanService';
-import useWalletService from '../../../../hooks/useWalletService';
-import type { InstallmentPlanResponse } from '../../../../models/installmentPlan/InstallmentPlanResponse';
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import { getCurrentInvoice } from '../../../../utils/invoices';
-import { useInvoicePayment } from '../../hooks/useInvoicePayment';
+import useWalletDetails from '../../hooks/useWalletDetails';
 import { InstallmentPlansExplorer } from '../InstallmentPlansExplorer/InstallmentPlansExplorer';
+import styles from '../Invoice/Invoice.module.css';
 import { InvoiceHistory } from '../Invoice/InvoiceHistory';
 import { InvoicePanel } from '../Invoice/InvoicePanel';
 import { InvoicePayment } from '../Invoice/InvoicePayment';
 import { WalletVisual } from '../WalletVisual/WalletVisual';
-import styles from '../Invoice/Invoice.module.css';
-
-type View = 'details' | 'history' | 'payment' | 'plans';
 
 interface Props {
   wallet: WalletResponse;
@@ -25,69 +18,44 @@ interface Props {
   onBack: () => void;
 }
 
-export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'details', onBack }: Props) {
-  const walletService = useWalletService();
-  const invoiceService = useInvoiceService();
-  const installmentPlanService = useInstallmentPlanService();
-  const [view, setView] = useState<View>(initialView);
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
-  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
-  const [installmentId, setInstallmentId] = useState<string>();
+export function WalletDetails({
+  wallet: initialWallet,
+  wallets,
+  initialView = 'details',
+  onBack
+}: Props) {
+   const {
+    setView,
+    selectedInvoiceId,
+		setSelectedInvoiceId,
+		view,
+		selectedPlanId,
+		installmentId,
+		wallet,
+		invoices,
+		isCreditCard,
+		invoice,
+		installmentPlans,
+		payment,
+		details,
+		displayInvoice,
+		paymentWallets,
+		selectInvoice,
+		startPayment,
+		startInvoicePayment,
+		showInstallmentPlans,
+    walletRefetch,
+		invoiceRefetch,
+    installmentPlansRefetch,
+		isError,
+		isPending
+  } = useWalletDetails(initialWallet, wallets, initialView);
+
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const walletQuery = useQuery({
-    queryKey: ['wallet', initialWallet.id],
-    queryFn: () => walletService.getById(initialWallet.id),
-    initialData: wallets.find(item => item.id === initialWallet.id) ?? initialWallet,
-    retry: 1,
-  });
-  const wallet = walletQuery.data;
-  const invoices = wallet.invoices ?? [];
-  const isCreditCard = wallet.type === 'CREDIT_CARD';
-  const invoice = invoices.find(item => item.id === selectedInvoiceId) ?? getCurrentInvoice(invoices);
-  const invoiceQuery = useQuery({
-    queryKey: ['invoice', wallet.id, invoice?.id],
-    queryFn: ({ signal }) => invoiceService.getDetails(invoice!.id, signal),
-    enabled: isCreditCard && Boolean(invoice) && view !== 'history',
-    retry: 1,
-  });
-  const installmentPlansQuery = useQuery<InstallmentPlanResponse[]>({
-    queryKey: ['installment-plans', wallet.id],
-    queryFn: ({ signal }) => installmentPlanService.getAllByWallet(wallet.id, signal),
-    enabled: isCreditCard && (view === 'details' || view === 'plans'),
-    retry: 1,
-  });
-  const payment = useInvoicePayment(wallet.id, () => setView('details'));
-  const details = invoiceQuery.data;
-  const displayInvoice = invoice && details?.invoiceId === invoice.id
-    ? { ...invoice, status: details.status, closingDate: details.closingDate, expirationDate: details.expirationDate }
-    : invoice;
-  const paymentWallets = wallets.filter(item => item.id !== wallet.id && item.type !== 'CREDIT_CARD');
 
   useEffect(() => {
     headingRef.current?.focus();
   }, [view, invoice?.id]);
-
-  function selectInvoice(id: string) {
-    setSelectedInvoiceId(id);
-    setView('details');
-  }
-
-  function startPayment(id?: string) {
-    setSelectedInvoiceId(invoice?.id ?? null);
-    setInstallmentId(id);
-    setView('payment');
-  }
-
-  function startInvoicePayment(invoiceId: string) {
-    setSelectedInvoiceId(invoiceId);
-    setInstallmentId(undefined);
-    setView('payment');
-  }
-
-  function showInstallmentPlans(planId?: string) {
-    setSelectedPlanId(planId ?? null);
-    setView('plans');
-  }
 
   const compact = view !== 'details';
   const showHeaderWallet = view !== 'plans';
@@ -130,10 +98,10 @@ export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'd
         <div className="mt-8 border-t border-[var(--border-color)] pt-6" key={`${view}-${invoice?.id ?? 'empty'}`}>
           {!isCreditCard ? (
             <p className={styles.notice}>Acompanhe o saldo e as movimentações desta carteira pela listagem de transações.</p>
-          ) : walletQuery.isError ? (
+          ) : isError ? (
             <div className={styles.empty} role="alert">
               <p>Não foi possível atualizar os dados do cartão.</p>
-              <button type="button" className={styles.secondary} onClick={() => void walletQuery.refetch()}>Tentar novamente</button>
+              <button type="button" className={styles.secondary} onClick={() => walletRefetch}>Tentar novamente</button>
             </div>
           ) : view === 'history' ? (
             <InvoiceHistory
@@ -147,37 +115,42 @@ export function WalletDetails({ wallet: initialWallet, wallets, initialView = 'd
               <p>Este cartão ainda não possui faturas.</p>
               <p>A API precisa disponibilizar uma fatura para registrar compras parceladas neste cartão.</p>
             </div>
-          ) : invoiceQuery.isPending ? (
+          ) : isPending ? (
             <p className={styles.empty} role="status">Carregando fatura…</p>
-          ) : invoiceQuery.isError ? (
+          ) : isPending ? (
             <div className={styles.empty} role="alert">
               <p>Não foi possível carregar esta fatura. Seus dados não foram alterados.</p>
-              <button type="button" className={styles.secondary} onClick={() => void invoiceQuery.refetch()}>Tentar novamente</button>
+              <button type="button" className={styles.secondary} onClick={() => invoiceRefetch}>Tentar novamente</button>
             </div>
           ) : details && (
             view === 'payment' ? (
-              <InvoicePayment details={details} wallets={paymentWallets} installmentId={installmentId}
-                busy={payment.isPending} onConfirm={paymentWalletId => payment.mutate({
+              <InvoicePayment
+                details={details}
+                wallets={paymentWallets}
+                installmentId={installmentId}
+                busy={payment.isPending}
+                onConfirm={paymentWalletId => payment.mutate({
                   invoiceId: details.invoiceId,
                   paymentWalletId,
                   installmentId,
-                })} />
+                })}
+              />
             ) : view === 'plans' ? (
               <InstallmentPlansExplorer
                 wallet={wallet}
-                plans={installmentPlansQuery.data ?? []}
+                plans={installmentPlans}
                 cycleDate={details.closingDate}
                 initialPlanId={selectedPlanId}
-                isLoading={installmentPlansQuery.isPending}
-                isError={installmentPlansQuery.isError}
-                onRetry={() => void installmentPlansQuery.refetch()}
+                isLoading={isPending}
+                isError={isError}
+                onRetry={() => installmentPlansRefetch}
               />
             ) : (
               <InvoicePanel
                 invoice={invoice}
                 details={details}
-                plans={installmentPlansQuery.data ?? []}
-                plansLoading={installmentPlansQuery.isPending}
+                plans={installmentPlans}
+                plansLoading={isPending}
                 onPay={startPayment}
                 onPlans={showInstallmentPlans}
               />

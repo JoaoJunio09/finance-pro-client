@@ -14,4 +14,8 @@ export interface WalletFormData {
 	goalId?: string;
 	bank?: BankResponse;
 	accountId: string;
+	invoiceId?: string;
+	creditLimit: string;
+	closingDate: string;
+	expirationDate: string;
 }

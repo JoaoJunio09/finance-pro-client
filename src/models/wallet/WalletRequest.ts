@@ -10,5 +10,9 @@ export interface WalletRequest {
 	color?: string
 	goalId?: string,
 	bankId?: string | null,
-	accountId: string
+	accountId: string,
+	invoiceId?: string | null,
+	creditLimit?: number | null,
+	closingDate?: string | null,
+	expirationDate?: string | null
 }

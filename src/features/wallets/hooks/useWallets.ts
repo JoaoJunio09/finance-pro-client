@@ -8,6 +8,7 @@ import type { BankResponse } from "../../../models/bank/BankResponse";
 import type { WalletRequest } from "../../../models/wallet/WalletRequest";
 import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 import { formatCurrencyToAPI } from "../../../utils/FormatCurrency";
+import { getCurrentInvoice } from "../../../utils/invoices";
 import { AVAILABLE_COLORS } from "../components/WalletFormModal/WalletFormModal";
 import type { WalletFormData } from "../types/WalletFormData";
 
@@ -28,7 +29,11 @@ function useWallets(
 		cardDigits: '1234',
 		goalId: '',
 		accountId: account?.id ?? '',
-		bank: undefined
+		bank: undefined,
+		invoiceId: '',
+		creditLimit: '',
+		closingDate: '',
+		expirationDate: ''
 	});
 
 	const queryClient = useQueryClient();
@@ -131,10 +136,15 @@ function useWallets(
 			description: form.description,
 			cardDigits: form.cardDigits ?? null,
 			type: form.type,
-
 			color: form.color ?? form.bank?.gradient,
 			accountId: account?.id ?? '',
-			bankId: form.bank?.id ?? null
+			bankId: form.bank?.id ?? null,
+			invoiceId: form.invoiceId || null,
+			creditLimit: form.type === 'CREDIT_CARD'
+				? formatCurrencyToAPI(form.creditLimit)
+				: null,
+			closingDate: form.type === 'CREDIT_CARD' ? form.closingDate : null,
+			expirationDate: form.type === 'CREDIT_CARD' ? form.expirationDate : null
 		}
 
 		if (isUpdate) {
@@ -161,7 +171,11 @@ function useWallets(
 			cardDigits: '1234',
 			goalId: '',
 			accountId: account?.id ?? '',
-			bank: undefined
+			bank: undefined,
+			invoiceId: '',
+			creditLimit: '',
+			closingDate: '',
+			expirationDate: ''
 		});
 	}
 
@@ -170,6 +184,8 @@ function useWallets(
 			clearForm();
 			return;
 		}
+
+		const invoice = getCurrentInvoice(wallet.invoices ?? []);
 
 		setForm({
 			id: wallet.id,
@@ -181,7 +197,11 @@ function useWallets(
 			invoices: wallet.invoices ?? [],
 			color: wallet.color,
 			bank: wallet.bank,
-			accountId: account?.id ?? ''
+			accountId: account?.id ?? '',
+			invoiceId: invoice?.id ?? '',
+			creditLimit: invoice?.limit?.toString() ?? '',
+			closingDate: invoice?.closingDate ?? '',
+			expirationDate: invoice?.expirationDate ?? ''
 		});
 	}, [wallet]);
 

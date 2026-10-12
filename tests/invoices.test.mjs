@@ -157,14 +157,20 @@ test('installment plans are fetched by wallet with the authenticated contract', 
 test('history renders all months and a real empty state', () => {
   const { InvoiceHistory } = loadTs('src/features/wallets/components/Invoice/InvoiceHistory.tsx');
   const html = renderToStaticMarkup(createElement(InvoiceHistory, {
-    invoices: [invoice('a', '2026-10-20'), invoice('b', '2025-12-20', 'PAID')],
+    invoices: [
+      invoice('a', '2026-10-20'),
+      invoice('b', '2025-12-20', 'PAID'),
+      invoice('overdue', '2026-09-20', 'EXPIRED'),
+    ],
     onSelect: () => {},
+    onPay: () => {},
   }));
   assert.match(html, /outubro de 2026/);
   assert.match(html, /dezembro de 2025/);
   assert.match(html, /Limite do ciclo/);
+  assert.match(html, /Pagar fatura/);
   assert.match(renderToStaticMarkup(createElement(InvoiceHistory, {
-    invoices: [], onSelect: () => {},
+    invoices: [], onSelect: () => {}, onPay: () => {},
   })), /ainda não possui faturas/);
 });
 
