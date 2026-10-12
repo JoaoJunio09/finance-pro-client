@@ -1,0 +1,1 @@
+export type InvoiceHistoryFilter = 'ALL' | 'OPEN' | 'PAID' | 'EXPIRED';

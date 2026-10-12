@@ -4,10 +4,10 @@ import type { InvoiceDetails } from '../../../../models/invoice/InvoiceDetails';
 import type { InvoiceResponse } from '../../../../models/invoice/InvoiceResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
 import { formatInvoiceDate, formatInvoiceMonth, getInvoiceVisualStatus } from '../../../../utils/invoices';
-import { InvoiceInstallments } from './InvoiceInstallments';
-import { InvoiceStatusBadge } from './InvoiceStatusBadge';
 import { InstallmentPlanOverview } from './InstallmentPlanOverview';
 import styles from './Invoice.module.css';
+import { InvoiceInstallments } from './InvoiceInstallments';
+import { InvoiceStatusBadge } from './InvoiceStatusBadge';
 
 interface Props {
   invoice: InvoiceResponse;
@@ -61,9 +61,17 @@ export function InvoicePanel({ details, plans, plansLoading, onPay, onPlans }: P
           )}
         </div>
       </div>
-      <InvoiceInstallments installments={details.installments} expired={status === 'EXPIRED'}
-        onPay={canPay ? onPay : undefined} filterable />
-      <InstallmentPlanOverview plans={plans} isLoading={plansLoading} onSelect={onPlans} />
+      <InvoiceInstallments
+        installments={details.installments}
+        expired={status === 'EXPIRED'}
+        onPay={canPay ? onPay : undefined}
+        filterable
+      />
+      <InstallmentPlanOverview
+        plans={plans}
+        isLoading={plansLoading}
+        onSelect={onPlans}
+      />
     </section>
   );
 }

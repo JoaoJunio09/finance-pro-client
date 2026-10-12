@@ -70,7 +70,7 @@ export function WalletDetails({
 
   return (
     <main className="relative z-10 mx-auto max-w-[1400px] min-w-0 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-12">
-      <BackButton className="mb-6" label={backLabel} onClick={goBack} disabled={payment.isPending} />
+      <BackButton className="mb-6" label={backLabel} onClick={goBack} disabled={isPending} />
       <section className="min-w-0 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-5 shadow-sm sm:p-7">
         <div className={`grid min-w-0 grid-cols-1 gap-6 sm:items-center ${showHeaderWallet ? (compact ? 'sm:grid-cols-[minmax(0,1fr)_220px]' : 'xl:grid-cols-[minmax(0,1fr)_380px]') : ''}`}>
           <div className="min-w-0">
@@ -91,8 +91,11 @@ export function WalletDetails({
             )}
           </div>
           {showHeaderWallet && (
-            <WalletVisual size={compact ? 'compact' : 'large'} wallet={wallet}
-              invoice={view === 'history' ? getCurrentInvoice(invoices) : displayInvoice} />
+            <WalletVisual
+              size={compact ? 'compact' : 'large'}
+              wallet={wallet}
+              invoice={view === 'history' ? getCurrentInvoice(invoices) : displayInvoice}
+            />
           )}
         </div>
         <div className="mt-8 border-t border-[var(--border-color)] pt-6" key={`${view}-${invoice?.id ?? 'empty'}`}>
@@ -128,7 +131,7 @@ export function WalletDetails({
                 details={details}
                 wallets={paymentWallets}
                 installmentId={installmentId}
-                busy={payment.isPending}
+                busy={isPending}
                 onConfirm={paymentWalletId => payment.mutate({
                   invoiceId: details.invoiceId,
                   paymentWalletId,

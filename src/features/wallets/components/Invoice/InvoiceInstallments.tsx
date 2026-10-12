@@ -19,7 +19,12 @@ const filters: { value: InstallmentFilter; label: string }[] = [
   { value: 'ALL', label: 'Todas' },
 ];
 
-export function InvoiceInstallments({ installments, expired = false, onPay, filterable = false }: Props) {
+export function InvoiceInstallments({
+  installments,
+  expired = false,
+  onPay,
+  filterable = false
+}: Props) {
   const [filter, setFilter] = useState<InstallmentFilter>('PENDING');
   const orderedInstallments = useMemo(
     () => [...installments].sort((first, second) =>

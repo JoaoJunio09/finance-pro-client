@@ -1,51 +1,44 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import showToast from '../../../components/ui/Toast/Toast';
-import useInvoiceService from '../../../hooks/useInvoiceService';
+import { useState } from "react";
+import { getInvoiceVisualStatus } from "../../../utils/invoices";
+import type { InvoiceDetails } from "../../../models/invoice/InvoiceDetails";
+import type { WalletResponse } from "../../../models/wallet/WalletResponse";
 
-interface InvoicePayment {
-  invoiceId: string;
-  paymentWalletId: string;
-  installmentId?: string;
+function useInvoicePayment(
+	details: InvoiceDetails,
+	wallets: WalletResponse[],
+	installmentId?: string
+) {
+	const [paymentWalletId, setPaymentWalletId] = useState('');
+
+	const isExpired = getInvoiceVisualStatus(details) === 'EXPIRED';
+	const selectedWallet = wallets.find(wallet => wallet.id === paymentWalletId);
+
+	const installments = details.installments.filter(item =>
+		!item.paid && (!installmentId || item.id === installmentId));
+	const amount = installmentId ? (installments[0]?.value ?? 0) : details.pendingAmount;
+	const insufficientBalance = selectedWallet && selectedWallet.balance < amount;
+	
+	const canPay = Boolean(selectedWallet) && !insufficientBalance && amount > 0
+		&& details.status !== 'PAID' && Boolean(details.closingDate && details.expirationDate);
+
+	const paymentTitle = installmentId
+		? 'Registrar parcela paga'
+		: isExpired ? 'Pagar fatura vencida' : 'Registrar fatura paga';
+	const confirmationLabel = installmentId
+		? 'Confirmar parcela paga'
+		: isExpired ? 'Confirmar pagamento da fatura vencida' : 'Confirmar fatura paga';
+
+	return {
+		paymentWalletId,
+		setPaymentWalletId,
+		selectedWallet,
+		installments,
+		amount,
+		insufficientBalance,
+		canPay,
+		paymentTitle,
+		confirmationLabel
+	}
 }
 
-export function useInvoicePayment(walletId: string, onPaid: () => void) {
-  const service = useInvoiceService();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ invoiceId, paymentWalletId, installmentId }: InvoicePayment) =>
-      installmentId
-        ? service.payInstallment(invoiceId, installmentId, paymentWalletId)
-        : service.payInvoice(invoiceId, paymentWalletId),
-    retry: false,
-    onSuccess: (details, variables) => {
-      queryClient.setQueryData(['invoice', walletId, variables.invoiceId], details);
-      showToast({
-        title: 'Tudo certo por aqui',
-        message: variables.installmentId
-          ? 'A parcela foi marcada como paga e o saldo da carteira foi ajustado.'
-          : 'A fatura foi marcada como paga. O próximo ciclo já pode ser acompanhado no histórico.',
-        type: 'success',
-      });
-      onPaid();
-    },
-    onError: () => {
-      showToast({
-        title: 'O registro não foi concluído',
-        message: 'Confira a fatura e o saldo atualizado antes de tentar de novo.',
-        type: 'error',
-      });
-    },
-    onSettled: async () => {
-      // Refresh even after a lost response: the server may have processed the debit.
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['invoice', walletId] }),
-        queryClient.invalidateQueries({ queryKey: ['installment-plans', walletId] }),
-        queryClient.invalidateQueries({ queryKey: ['wallet', walletId] }),
-        queryClient.invalidateQueries({ queryKey: ['wallets'] }),
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] }),
-        queryClient.invalidateQueries({ queryKey: ['transactions'] }),
-      ]);
-    },
-  });
-}
+export default useInvoicePayment;

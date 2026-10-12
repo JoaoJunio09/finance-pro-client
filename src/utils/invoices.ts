@@ -35,6 +35,7 @@ export function getPurchaseInvoices(invoices: InvoiceResponse[] = [], today = ne
     .reverse();
 }
 
+// 
 export function getInvoiceVisualStatus(invoice: InvoiceDates, today = new Date()): InvoiceVisualStatus {
   if (invoice.status === 'PAID') return 'PAID';
   const currentDate = localDateKey(today);
@@ -50,6 +51,7 @@ export function getInvoiceVisualStatus(invoice: InvoiceDates, today = new Date()
   return daysLeft <= 5 ? 'DUE_SOON' : 'PAYING';
 }
 
+// formata para mês e ano, ex: 10/26
 export function formatInvoiceMonth(date: string | null | undefined): string {
   if (!date) return 'Ciclo não informado';
   const [year, month] = date.split('-').map(Number);
@@ -59,6 +61,7 @@ export function formatInvoiceMonth(date: string | null | undefined): string {
   });
 }
 
+// formata data da fatura, ex: 11/10/2026
 export function formatInvoiceDate(date: string | null | undefined): string {
   if (!date) return 'Não informado';
   return date.split('-').reverse().join('/');

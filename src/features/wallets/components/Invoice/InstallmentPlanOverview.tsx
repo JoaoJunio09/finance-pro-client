@@ -17,7 +17,11 @@ const planStatusLabels = {
   EXPIRED: 'Com atraso',
 } as const;
 
-export function InstallmentPlanOverview({ plans, isLoading, onSelect }: Props) {
+export function InstallmentPlanOverview({
+  plans,
+  isLoading,
+  onSelect
+}: Props) {
   const orderedPlans = [...plans].sort((first, second) =>
     first.description.localeCompare(second.description, 'pt-BR', { sensitivity: 'base' }));
 

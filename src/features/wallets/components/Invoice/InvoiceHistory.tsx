@@ -1,10 +1,10 @@
 import { ChevronRight, ReceiptText } from 'lucide-react';
-import { useState } from 'react';
 import type { InvoiceResponse } from '../../../../models/invoice/InvoiceResponse';
 import { formatCurrencyLabel } from '../../../../utils/FormatCurrency';
-import { formatInvoiceDate, formatInvoiceMonth, getInvoiceVisualStatus, sortInvoices } from '../../../../utils/invoices';
-import { InvoiceStatusBadge } from './InvoiceStatusBadge';
+import { formatInvoiceDate, formatInvoiceMonth, getInvoiceVisualStatus } from '../../../../utils/invoices';
+import useInvoiceHistory from '../../hooks/useInvoiceHistory';
 import styles from './Invoice.module.css';
+import { InvoiceStatusBadge } from './InvoiceStatusBadge';
 
 interface Props {
   invoices: InvoiceResponse[];
@@ -12,24 +12,20 @@ interface Props {
   onPay: (invoiceId: string) => void;
 }
 
-type Filter = 'ALL' | 'OPEN' | 'PAID' | 'EXPIRED';
+// A API não retornar o histórico de faturas montado, quem está fazendo isso atualmente é o front-end.
+// O histórico de faturas está sendo montado com base na coleção que vem junto com WalletResponse,
+// então o front-end está montando em ordem (sorted) e organizando com base no status da Fatura.
 
 export function InvoiceHistory({ invoices, onSelect, onPay }: Props) {
-  const [filter, setFilter] = useState<Filter>('ALL');
-  const [year, setYear] = useState('');
-  const sorted = sortInvoices(invoices);
-  const years = [...new Set(sorted.map(invoice => invoice.closingDate?.slice(0, 4)).filter(Boolean))];
-  const filtered = sorted.filter(invoice => {
-    const status = getInvoiceVisualStatus(invoice);
-    return (!year || invoice.closingDate?.startsWith(year))
-      && (filter === 'ALL' || (filter === 'OPEN' ? status !== 'PAID' : status === filter));
-  });
-  const filters: { value: Filter; label: string }[] = [
-    { value: 'ALL', label: 'Todas' },
-    { value: 'OPEN', label: 'Em aberto' },
-    { value: 'PAID', label: 'Pagas' },
-    { value: 'EXPIRED', label: 'Vencidas' },
-  ];
+  const {
+    filter,
+		setFilter,
+		year,
+		setYear,
+		years,
+		filtered,
+    filters
+  } = useInvoiceHistory(invoices);
 
   return (
     <section className={styles.screen} aria-label="Histórico de faturas">
