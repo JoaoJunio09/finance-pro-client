@@ -1,8 +1,8 @@
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { DashboardActivityResponse } from "../../../../models/account/DashboardActivityResponse";
-import WeeklyFlowChart from "./WeeklyFlowChart";
+import type { DashboardResponse } from "../../../../models/account/DashboardResponse";
 import styles from "./DashboardActivity.module.css";
+import WeeklyFlowChart from "./WeeklyFlowChart";
 
 const currency = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -14,7 +14,7 @@ const dateFormat = new Intl.DateTimeFormat("pt-BR", {
 });
 
 interface DashboardActivityProps {
-  activity?: DashboardActivityResponse;
+  activity?: DashboardResponse;
   isLoading: boolean;
   isError: boolean;
   showBalance: boolean;

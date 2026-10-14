@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { DashboardActivityResponse } from "../../../../models/account/DashboardActivityResponse";
+import type { DashboardResponse } from "../../../../models/account/DashboardResponse";
 import styles from "./DashboardActivity.module.css";
 
 const currency = new Intl.NumberFormat("pt-BR", {
@@ -30,7 +30,7 @@ export default function WeeklyFlowChart({
   activity,
   showBalance,
 }: {
-  activity: DashboardActivityResponse;
+  activity: DashboardResponse;
   showBalance: boolean;
 }) {
   const reducedMotion = useReducedMotion();
