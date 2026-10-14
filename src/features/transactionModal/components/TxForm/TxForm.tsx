@@ -8,7 +8,7 @@ import type { TransactionType } from '../../../../types/TransactionType';
 import { formatCurrencyDisplay } from '../../../../utils/FormatCurrency';
 import { formatInvoiceMonth, getPurchaseInvoices } from '../../../../utils/invoices';
 import type { TxFormData } from '../../types/TxFormData';
-import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 
 import styles from './TxForm.module.css';
 
@@ -63,7 +63,7 @@ export function TransactionForm({
     </div>
   );
 
-  const renderWallet = (wallet: WalletResponse) => <TxWalletBrandMark bank={wallet.bank} size="md" />;
+  const renderWallet = (wallet: WalletResponse) => <WalletBrand wallet={wallet} size="md" />;
 
   return (
     <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">

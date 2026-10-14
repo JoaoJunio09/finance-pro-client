@@ -3,7 +3,7 @@ import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
 import { formatCurrency, getDaysDifference } from '../../utils/recurrenceUtils';
 import styles from './UpcomingHighlights.module.css';
-import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 
 interface UpcomingHighlightsProps {
   items: RecurrenceResponse[];
@@ -79,9 +79,9 @@ export const UpcomingHighlights = ({
                 </span>
 
                 {item.wallet.bank ? (
-                  <BankBrandMark bank={item.wallet.bank} size='sm' />
+                  <WalletBrand wallet={item.wallet} size='sm' />
                 ) : (
-                  <BankBrandMark wallet={item.wallet} size='sm' />
+                  <WalletBrand wallet={item.wallet} size='sm' />
                 )}
               </div>
 

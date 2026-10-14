@@ -13,6 +13,7 @@ import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { InvoiceResponse } from '../../../../models/invoice/InvoiceResponse';
 import { getCurrentInvoice } from '../../../../utils/invoices';
 import { formatActivityCurrency } from '../../../activities/utils/activityFormatters';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 
 import styles from './WalletVisual.module.css';
 
@@ -58,15 +59,21 @@ export function WalletVisual({ wallet, invoice, size = 'default', className, chi
   const selectedInvoice = invoice ?? getCurrentInvoice(wallet.invoices ?? []);
   const amount = isCreditCard ? selectedInvoice?.limit : wallet.balance;
   const amountLabel = amount == null ? '—' : formatActivityCurrency(amount);
-  const creditCardStyle = isCreditCard && wallet.bank?.gradient
-    ? { ...style, background: wallet.bank.gradient }
+  const usesInstitutionBrand = Boolean(wallet.bank)
+    && wallet.type !== 'PHYSICAL'
+    && wallet.type !== 'OTHER';
+  const walletBackground = usesInstitutionBrand
+    ? wallet.bank?.gradient || wallet.color
+    : wallet.color;
+  const walletStyle = walletBackground
+    ? { ...style, background: walletBackground }
     : style;
 
   return (
     <div
       {...props}
       className={[styles.walletVisual, styles[size], presentation.className, className].filter(Boolean).join(' ')}
-      style={creditCardStyle}
+      style={walletStyle}
     >
       <div className={styles.texture} aria-hidden="true" />
       {wallet.type === 'PHYSICAL' && <div className={styles.walletFold} aria-hidden="true" />}
@@ -98,7 +105,7 @@ export function WalletVisual({ wallet, invoice, size = 'default', className, chi
           {isCreditCard ? (
             <span className={styles.cardDigits}>{formatCardDigits(wallet.cardDigits)}</span>
           ) : (
-            <p className={styles.institution}>{wallet.bank?.name ?? 'Capto'}</p>
+            <p className={styles.institution}><WalletBrand wallet={wallet} size="sm" /></p>
           )}
         </div>
       )}

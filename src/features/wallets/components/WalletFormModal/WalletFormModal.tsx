@@ -1,45 +1,49 @@
-import { CalendarDays, Eye, X } from 'lucide-react';
-import React from 'react';
-import { createPortal } from 'react-dom';
-import CustomSelect from '../../../../components/shared/CustomSelect/CustomSelect';
-import type { BankResponse } from '../../../../models/bank/BankResponse';
-import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
-import type { WalletType } from '../../../../types/WalletType';
-import BankkBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
-import type { WalletFormData } from '../../types/WalletFormData';
-import { WalletCard } from '../WalletCard/WalletCard';
+import { CalendarDays, Eye, X } from "lucide-react";
+import React from "react";
+import { createPortal } from "react-dom";
+import CustomSelect from "../../../../components/shared/CustomSelect/CustomSelect";
+import type { BankResponse } from "../../../../models/bank/BankResponse";
+import type { WalletResponse } from "../../../../models/wallet/WalletResponse";
+import type { WalletType } from "../../../../types/WalletType";
+import BankBrand from "../../../../components/shared/BankBrand/BankBrand";
+import type { WalletFormData } from "../../types/WalletFormData";
+import { WalletCard } from "../WalletCard/WalletCard";
+import useDialogFocus from "../../../../hooks/useDialogFocus";
 
-import styles from './WalletFormModal.module.css';
+import styles from "./WalletFormModal.module.css";
 
 export const AVAILABLE_COLORS = [
-  { id: 'purple', value: '#7C3AED' },
-  { id: 'indigo', value: '#4F46E5' },
-  { id: 'blue', value: '#2563EB' },
-  { id: 'cyan', value: '#0891B2' },
-  { id: 'teal', value: '#0D9488' },
-  { id: 'emerald', value: '#10B981' },
-  { id: 'green', value: '#059669' },
-  { id: 'lime', value: '#65A30D' },
-  { id: 'yellow', value: '#FACC15' },
-  { id: 'amber', value: '#D97706' },
-  { id: 'orange', value: '#EA580C' },
-  { id: 'red', value: '#DC2626' },
-  { id: 'rose', value: '#E11D48' },
-  { id: 'pink', value: '#DB2777' },
-  { id: 'neutral', value: '#3F3F46' },
+  { id: "purple", value: "#7C3AED" },
+  { id: "indigo", value: "#4F46E5" },
+  { id: "blue", value: "#2563EB" },
+  { id: "cyan", value: "#0891B2" },
+  { id: "teal", value: "#0D9488" },
+  { id: "emerald", value: "#10B981" },
+  { id: "green", value: "#059669" },
+  { id: "lime", value: "#65A30D" },
+  { id: "yellow", value: "#FACC15" },
+  { id: "amber", value: "#D97706" },
+  { id: "orange", value: "#EA580C" },
+  { id: "red", value: "#DC2626" },
+  { id: "rose", value: "#E11D48" },
+  { id: "pink", value: "#DB2777" },
+  { id: "neutral", value: "#3F3F46" },
 ];
 
 interface WalletFormModalProps {
-  handleOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  isOpen: boolean
+  handleOnChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
   onEdit: (wallet: WalletResponse) => void;
   onDelete: (wallet: WalletResponse) => void;
-  form: WalletFormData,
-  selectColor: (color: string) => void,
+  form: WalletFormData;
+  selectColor: (color: string) => void;
   banks: BankResponse[];
   onBankChange: (bank: BankResponse) => void;
+  isSaving?: boolean;
 }
 
 function WalletFormModal({
@@ -52,61 +56,112 @@ function WalletFormModal({
   form,
   selectColor,
   banks,
-  onBankChange
+  onBankChange,
+  isSaving = false,
 }: WalletFormModalProps) {
+  const dialogRef = useDialogFocus(isOpen, onClose);
   if (!isOpen) return null;
 
-  const isCreditCard = form.type === 'CREDIT_CARD';
+  const isCreditCard = form.type === "CREDIT_CARD";
   const hasRequiredCreditCardData = Boolean(
     Number(form.creditLimit) > 0 && form.closingDate && form.expirationDate
   );
 
+  const previewInvoice = isCreditCard
+    ? {
+        id: form.invoiceId || "preview-invoice",
+        limit: Number(form.creditLimit) || 0,
+        status: "PAYING" as const,
+        closingDate: form.closingDate || null,
+        expirationDate: form.expirationDate || null,
+        daysUntilExpiration: null,
+      }
+    : undefined;
+
   const previewWallet: WalletResponse = {
-    id: 'preview',
-    name: form.name || 'Nova Carteira',
+    id: "preview",
+    name: form.name || "Nova Carteira",
     description: form.description,
     bank: form.bank || undefined,
-    type: (form.type as WalletType) || 'checking',
+    type: (form.type as WalletType) || "checking",
     invoices: form.invoices,
     balance: Number(form.balance) || 0,
-    cardDigits: '',
-    color: form.color as any || 'purple'
+    cardDigits: "",
+    color: form.bank?.gradient || form.color || AVAILABLE_COLORS[0].value,
   };
 
   if (!isOpen) return null;
 
-  const renderBank = (bank: BankResponse) => <BankkBrandMark bank={bank} size="md" />;
+  const renderBank = (bank: BankResponse) => (
+    <BankBrand bank={bank} size="md" />
+  );
 
   return createPortal(
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
-      <div className={`absolute inset-0 ${styles.modalBackdrop}`} onClick={onClose} />
-      
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="wallet-form-title"
+    >
+      <div
+        className={`absolute inset-0 ${styles.modalBackdrop}`}
+        onClick={onClose}
+      />
+
       <div className="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-[1.5rem] shadow-2xl w-full max-w-[880px] max-h-[90dvh] lg:h-[600px] overflow-hidden flex flex-col lg:flex-row relative z-10 animate-scale-in">
         <div className="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-[1.5rem] shadow-2xl w-full max-w-[880px] max-h-[95vh] lg:h-[600px] overflow-hidden flex flex-col lg:flex-row relative z-10 animate-scale-in">
-          
           {/* Lado Esquerdo: Formulário (Ocupa o espaço restante e rola) */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 flex flex-col gap-6 scrollbar-hide">
-            <div className={`flex items-center justify-between pb-4 border-b shrink-0 ${styles.header}`}>
-              <h2 className={`text-xl font-bold tracking-tight ${styles.title}`}>
-                {form.id ? 'Editar carteira' : 'Nova carteira'}
+            <div
+              className={`flex items-center justify-between pb-4 border-b shrink-0 ${styles.header}`}
+            >
+              <h2
+                id="wallet-form-title"
+                className={`text-xl font-bold tracking-tight ${styles.title}`}
+              >
+                {form.id ? "Editar carteira" : "Nova carteira"}
               </h2>
-              <button onClick={onClose} className={`p-2 rounded-full transition-colors focus:outline-none ${styles.closeBtn}`} type="button">
+              <button
+                onClick={onClose}
+                aria-label="Fechar formulário de carteira"
+                className={`p-2 rounded-full transition-colors focus:outline-none ${styles.closeBtn}`}
+                type="button"
+              >
                 <X size={20} />
               </button>
             </div>
 
             <form className="flex flex-col gap-5 pb-2">
               <div className="flex flex-col gap-2">
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Nome da Carteira</label>
-                <input 
-                  type="text" id='name' name="name" value={form.name} onChange={handleOnChange}
+                <label
+                  className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                >
+                  Nome da Carteira
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={form.name}
+                  onChange={handleOnChange}
                   placeholder="Ex: Reserva de Emergência"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
               </div>
 
-              <div className={`flex flex-col gap-2 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}`}>
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Banco/Instituição</label>
+              <div
+                className={`flex flex-col gap-2 ${
+                  form.type === "OTHER" || form.type === "PHYSICAL"
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }`}
+              >
+                <label
+                  className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                >
+                  Banco/Instituição
+                </label>
                 <CustomSelect
                   options={banks}
                   value={form.bank}
@@ -119,9 +174,16 @@ function WalletFormModal({
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Tipo</label>
-                <select 
-                  id='type' name="type" value={form.type} onChange={handleOnChange}
+                <label
+                  className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                >
+                  Tipo
+                </label>
+                <select
+                  id="type"
+                  name="type"
+                  value={form.type}
+                  onChange={handleOnChange}
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none appearance-none ${styles.textInput}`}
                 >
                   <option value="CHECKING">Conta Corrente</option>
@@ -135,9 +197,15 @@ function WalletFormModal({
               </div>
 
               {isCreditCard && (
-                <section className={styles.invoiceSection} aria-labelledby="invoice-details-title">
+                <section
+                  className={styles.invoiceSection}
+                  aria-labelledby="invoice-details-title"
+                >
                   <div className={styles.invoiceSectionHeader}>
-                    <span className={styles.invoiceSectionIcon} aria-hidden="true">
+                    <span
+                      className={styles.invoiceSectionIcon}
+                      aria-hidden="true"
+                    >
                       <CalendarDays size={18} />
                     </span>
                     <div>
@@ -148,7 +216,11 @@ function WalletFormModal({
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="flex flex-col gap-2 sm:col-span-3">
-                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Limite do cartão (R$)</label>
+                      <label
+                        className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                      >
+                        Limite do cartão (R$)
+                      </label>
                       <input
                         type="number"
                         id="creditLimit"
@@ -163,7 +235,11 @@ function WalletFormModal({
                       />
                     </div>
                     <div className="flex flex-col gap-2 sm:col-span-1">
-                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Fechamento</label>
+                      <label
+                        className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                      >
+                        Fechamento
+                      </label>
                       <input
                         type="date"
                         id="closingDate"
@@ -175,7 +251,11 @@ function WalletFormModal({
                       />
                     </div>
                     <div className="flex flex-col gap-2 sm:col-span-2">
-                      <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Vencimento</label>
+                      <label
+                        className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                      >
+                        Vencimento
+                      </label>
                       <input
                         type="date"
                         id="expirationDate"
@@ -192,47 +272,80 @@ function WalletFormModal({
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {!isCreditCard && <div className="flex flex-col gap-2">
-                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
-                    {form.id ? (
-                      'Saldo'
-                    ) : (
-                      'Saldo Inicial (R$)'
-                    )}
-                  </label>
-                  <input 
-                    type="number" id='balance' name="balance" value={form.balance} onChange={handleOnChange}
-                    step="0.01"
-                    className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
-                  />
-                </div>}
-                <div className={`flex flex-col gap-2 ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? 'pointer-events-none opacity-50' : ''}`}>
-                  <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>
+                {!isCreditCard && (
+                  <div className="flex flex-col gap-2">
+                    <label
+                      className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                    >
+                      {form.id ? "Saldo" : "Saldo Inicial (R$)"}
+                    </label>
+                    <input
+                      type="number"
+                      id="balance"
+                      name="balance"
+                      value={form.balance}
+                      onChange={handleOnChange}
+                      step="0.01"
+                      className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
+                    />
+                  </div>
+                )}
+                <div
+                  className={`flex flex-col gap-2 ${
+                    form.type === "OTHER" || form.type === "PHYSICAL"
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }`}
+                >
+                  <label
+                    className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                  >
                     Dígitos do Cartão
                   </label>
-                  <input 
-                    type="text" id='cardDigits' name="cardDigits" value={form.cardDigits} onChange={handleOnChange} placeholder='1234'
+                  <input
+                    type="text"
+                    id="cardDigits"
+                    name="cardDigits"
+                    value={form.cardDigits}
+                    onChange={handleOnChange}
+                    placeholder="1234"
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                   />
                 </div>
               </div>
 
-              <div className={`
+              <div
+                className={`
                 flex flex-col gap-2
-                ${form.type === 'OTHER' || form.type === 'PHYSICAL' ? '' : 'pointer-events-none opacity-50'}
-              `}>
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Cor / Tema</label>
+                ${
+                  form.type === "OTHER" || form.type === "PHYSICAL"
+                    ? ""
+                    : "pointer-events-none opacity-50"
+                }
+              `}
+              >
+                <label
+                  className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                >
+                  Cor / Tema
+                </label>
                 <div className="flex flex-wrap gap-2.5 mt-1">
                   {AVAILABLE_COLORS.map((color) => (
                     <button
-                      key={color.id} type="button"
+                      key={color.id}
+                      type="button"
                       onClick={() => selectColor(color.value)}
                       className={`
                         w-8 h-8 rounded-full border-2 transition-all
-                        ${form.color === color.value && (form.type === 'PHYSICAL' || form.type === 'OTHER') ? 'border-[var(--text-main)] scale-110 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}
+                        ${
+                          form.color === color.value &&
+                          (form.type === "PHYSICAL" || form.type === "OTHER")
+                            ? "border-[var(--text-main)] scale-110 shadow-md"
+                            : "border-transparent opacity-60 hover:opacity-100"
+                        }
                       `}
                       style={{
-                        background: color.value
+                        background: color.value,
                       }}
                       title={color.id}
                     />
@@ -241,9 +354,17 @@ function WalletFormModal({
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}>Descrição (Opcional)</label>
-                <input 
-                  type="text" id='description' name="description" value={form.description} onChange={handleOnChange}
+                <label
+                  className={`text-xs font-semibold ml-1 ${styles.fieldLabel}`}
+                >
+                  Descrição (Opcional)
+                </label>
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  value={form.description}
+                  onChange={handleOnChange}
                   placeholder="Ex: Conta para gastos diários"
                   className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all shadow-sm border focus:outline-none ${styles.textInput}`}
                 />
@@ -252,10 +373,14 @@ function WalletFormModal({
           </div>
 
           {/* Lado Direito: Preview & Actions (shrink-0 garante que o painel não achate) */}
-          <div className={`w-full lg:w-[380px] shrink-0 border-t lg:border-t-0 lg:border-l p-6 sm:p-8 flex flex-col ${styles.panel}`}>
-            
-            <h3 className={`text-sm font-bold mb-6 flex items-center gap-2 ${styles.panelTitle}`}>
-              <Eye size={18} className={styles.panelTitleIcon} /> Pré-visualização
+          <div
+            className={`w-full lg:w-[380px] shrink-0 border-t lg:border-t-0 lg:border-l p-6 sm:p-8 flex flex-col ${styles.panel}`}
+          >
+            <h3
+              className={`text-sm font-bold mb-6 flex items-center gap-2 ${styles.panelTitle}`}
+            >
+              <Eye size={18} className={styles.panelTitleIcon} />{" "}
+              Pré-visualização
             </h3>
 
             <div className="mt-auto mb-auto lg:mt-0 lg:mb-0 w-full flex justify-center">
@@ -265,37 +390,49 @@ function WalletFormModal({
                   onEdit={onEdit}
                   onDelete={onDelete}
                   isPreview={true}
+                  previewInvoice={previewInvoice}
                 />
               </div>
             </div>
 
             <div className="mt-8 lg:mt-auto pt-6 flex items-center gap-3">
-              <button 
-                onClick={onClose} 
-                className={`flex-1 py-3.5 rounded-xl text-sm font-semibold border transition-all focus:outline-none ${styles.cancelBtn}`} 
+              <button
+                onClick={onClose}
+                className={`flex-1 py-3.5 rounded-xl text-sm font-semibold border transition-all focus:outline-none ${styles.cancelBtn}`}
                 type="button"
               >
                 Cancelar
               </button>
-              
-              <button 
+
+              <button
                 onClick={onSave}
-                disabled={!form.name || (isCreditCard && !hasRequiredCreditCardData)}
+                disabled={
+                  isSaving ||
+                  !form.name ||
+                  (isCreditCard && !hasRequiredCreditCardData)
+                }
                 className={`flex flex-[2] items-center justify-center py-3.5 rounded-xl text-sm font-bold shadow-md transition-all focus:outline-none
                   ${styles.submitBtn}
-                  ${!form.name || (isCreditCard && !hasRequiredCreditCardData) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}
+                  ${
+                    !form.name || (isCreditCard && !hasRequiredCreditCardData)
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer active:scale-[0.98]"
+                  }
                 `}
               >
-                {form.id ? 'Salvar alterações' : 'Adicionar carteira'}
+                {isSaving
+                  ? "Salvando…"
+                  : form.id
+                  ? "Salvar alterações"
+                  : "Adicionar carteira"}
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>,
     document.body
   );
-};
+}
 
 export default WalletFormModal;

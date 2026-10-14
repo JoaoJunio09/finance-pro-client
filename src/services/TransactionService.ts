@@ -6,117 +6,135 @@ import type { TransactionResponse } from "../models/transaction/TransactionRespo
 import api from "./api";
 
 class TransactionService {
-	BASE_URL: string = '';
-	private accessToken: string = '';
+  BASE_URL: string = "";
+  private accessToken: string = "";
 
-	constructor(accessToken: string) {
-		this.BASE_URL = '/api/transactions/v1';
-		this.accessToken = accessToken;
-	}
+  constructor(accessToken: string) {
+    this.BASE_URL = "/api/transactions/v1";
+    this.accessToken = accessToken;
+  }
 
-	public async getAll(params: ParamsTransactionAPI) {
-		try {
-			const response = await api.get<TransactionResponse[]>(this.BASE_URL, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				},
-				params
-			});
+  public async getAll(params: ParamsTransactionAPI) {
+    try {
+      const response = await api.get<TransactionResponse[]>(this.BASE_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        params,
+      });
 
-			return response.data
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao carregar as todas as Transações');
-			}
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError(
+          "Erro ao carregar as todas as Transações"
+        );
+      }
 
-			throw err;
-		}
-	}
+      throw err;
+    }
+  }
 
-	public async getOverview(params: ParamsTransactionAPI) {
-		const URL = `${this.BASE_URL}/overview`;
-		try {
-			const response = await api.get<AllTransactionResponse>(URL, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				},
-				params
-			});
+  public async getOverview(params: ParamsTransactionAPI) {
+    const URL = `${this.BASE_URL}/overview`;
+    try {
+      const response = await api.get<AllTransactionResponse>(URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        params,
+      });
 
-			return response.data
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao carregar visão geral de Transações');
-			}
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError(
+          "Erro ao carregar visão geral de Transações"
+        );
+      }
 
-			throw err;
-		}
-	}
+      throw err;
+    }
+  }
 
-	public async create(transaction: TransactionRequest) {
-		try {
-			const response = await api.post<TransactionResponse>(this.BASE_URL, transaction, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				}
-			});
+  public async create(transaction: TransactionRequest) {
+    try {
+      const response = await api.post<TransactionResponse>(
+        this.BASE_URL,
+        transaction,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        }
+      );
 
-			return response.data
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao criar Transação');
-			}
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError("Erro ao criar Transação");
+      }
 
-			throw err;
-		}
-	}
+      throw err;
+    }
+  }
 
-	public async update(transaction: TransactionRequest) {
-		try {
-			const response = await api.put<TransactionResponse>(this.BASE_URL, transaction, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				}
-			});
+  public async update(transaction: TransactionRequest) {
+    try {
+      const response = await api.put<TransactionResponse>(
+        this.BASE_URL,
+        transaction,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        }
+      );
 
-			return response.data
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao atualizar Transação');
-			}
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError("Erro ao atualizar Transação");
+      }
 
-			throw err;
-		}
-	}
+      throw err;
+    }
+  }
 
-	public async delete(id: string) {
-		const URL = `${this.BASE_URL}/${id}`;
-		try {
-			const response = await api.delete<void>(URL, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.accessToken}`
-				}
-			});
+  public async conclude(id: string) {
+    const response = await api.patch<TransactionResponse>(
+      `${this.BASE_URL}/conclude/${id}`,
+      undefined,
+      {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      }
+    );
+    return response.data;
+  }
 
-			return response.data
-		}
-		catch (err: any) {
-			if (err?.response?.status === 500) {
-				throw new InternalServerError('Erro ao deletar Transação');
-			}
+  public async delete(id: string) {
+    const URL = `${this.BASE_URL}/${id}`;
+    try {
+      const response = await api.delete<void>(URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
 
-			throw err;
-		}
-	}
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError("Erro ao deletar Transação");
+      }
+
+      throw err;
+    }
+  }
 }
 
 export default TransactionService;

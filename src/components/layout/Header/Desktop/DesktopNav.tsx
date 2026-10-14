@@ -1,57 +1,81 @@
-import { Bell, Menu, Search, User } from 'lucide-react';
-import { useState } from 'react';
+import { BellRing } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import {
+  PRIMARY_DESTINATIONS,
+  isFinancialLifePath,
+} from "../../../../features/financialLife/navigation";
+import styles from "./DesktopNav.module.css";
 
-import styles from './DesktopNav.module.css';
-
-interface DesktopNavProps {
-  setIsOpenSidebar: () => void;
-}
-
-export function DesktopNav({
-  setIsOpenSidebar
-}: DesktopNavProps) {
-  const [searchValue, setSearchValue] = useState('');
+export default function DesktopNav() {
+  const { pathname } = useLocation();
   const [hasNotifications, setHasNotifications] = useState(true);
 
   return (
-    <div className="hidden lg:flex items-center justify-between w-full">
-      <button
-        onClick={() => setIsOpenSidebar()}
-        className={`p-2 -ml-2 rounded-lg transition-colors focus:outline-none focus:ring-2 ${styles.menuBtn}`}
-        aria-label="Abrir menu"
-        type="button"
+    <div className={`${styles.desktopRow} hidden lg:grid`}>
+      <Link
+        to="/dashboard"
+        className={styles.brandLink}
+        aria-label="Capto, início"
       >
-        <Menu size={20} />
-      </button>
-
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <Search size={15} className={`absolute left-3 top-1/2 -translate-y-1/2 ${styles.searchIcon}`} />
-          <input
-            type="text"
-            placeholder="Pesquisar..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className={`w-56 lg:w-72 rounded-xl pl-9 pr-4 py-1.5 text-sm transition-all shadow-sm border ${styles.searchInput}`}
-          />
-        </div>
-
+        <span className={styles.brandMark} aria-hidden="true">
+          c
+        </span>
+        <span className={styles.brandName}>
+          capto<span>.</span>
+        </span>
+      </Link>
+      <nav className={styles.navigation} aria-label="Navegação principal">
+        {PRIMARY_DESTINATIONS.map(
+          ({ title, path, icon: Icon, comingSoon, tone }) => {
+            const active =
+              path === "/vida-financeira"
+                ? isFinancialLifePath(pathname)
+                : pathname.startsWith(path);
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={`${styles.navLink} ${
+                  active ? styles.navLinkActive : ""
+                }`}
+                aria-current={active ? "page" : undefined}
+                data-tone={tone}
+              >
+                <span className={styles.navIcon}>
+                  <Icon size={19} aria-hidden="true" />
+                </span>
+                <span className={styles.navCopy}>
+                  <span>{title}</span>
+                  {comingSoon && (
+                    <small className={styles.comingSoon}>Em breve</small>
+                  )}
+                </span>
+              </Link>
+            );
+          }
+        )}
+      </nav>
+      <div className={styles.utilities}>
+        <Link
+          to="/opcoes"
+          className={styles.moreLink}
+          aria-current={pathname === "/opcoes" ? "page" : undefined}
+        >
+          Mais opções
+        </Link>
         <button
-          onClick={() => setHasNotifications(false)}
-          className={`relative flex shrink-0 items-center justify-center w-9 h-9 rounded-xl border transition-all shadow-sm ${styles.iconBtn}`}
+          className={styles.notificationButton}
           type="button"
+          onClick={() => setHasNotifications(false)}
           aria-label="Notificações"
         >
-          <Bell size={15} className={styles.iconMuted} />
-          {hasNotifications && <span className={`absolute top-2 right-2 w-1.5 h-1.5 rounded-full ring-2 ${styles.notificationDot}`}></span>}
-        </button>
-
-        <button className={`relative flex shrink-0 items-center justify-center w-9 h-9 rounded-xl text-white shadow-sm border overflow-hidden transition-opacity ${styles.avatarBtn}`} type="button" aria-label="Perfil">
-          <User size={15} />
+          <BellRing size={19} aria-hidden="true" />
+          {hasNotifications && (
+            <span className={styles.notificationDot} aria-hidden="true" />
+          )}
         </button>
       </div>
     </div>
   );
 }
-
-export default DesktopNav;

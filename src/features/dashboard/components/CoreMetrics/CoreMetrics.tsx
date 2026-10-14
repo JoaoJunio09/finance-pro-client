@@ -1,6 +1,7 @@
-import { ArrowDownRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
-import BalanceCard from './BalanceCard/BalanceCard';
-import MetricCard from './MetricCard/MetricCard';
+import { ArrowDownRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import BalanceCard from "./BalanceCard/BalanceCard";
+import MetricCard from "./MetricCard/MetricCard";
+import styles from "./CoreMetrics.module.css";
 
 interface CoreMetricsProps {
   totalBalance: number;
@@ -18,13 +19,33 @@ export function CoreMetrics({
   showBalance,
 }: CoreMetricsProps) {
   return (
-    <section className="flex flex-col gap-4 sm:gap-6">
-      <BalanceCard totalBalance={totalBalance} showBalance={showBalance} />
+    <section className={styles.overview} aria-label="Resumo financeiro">
+      <div className={styles.balance}>
+        <BalanceCard totalBalance={totalBalance} showBalance={showBalance} />
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        <MetricCard title="Receitas no período" amount={income} icon={ArrowUpRight} variant="income" showBalance={showBalance} />
-        <MetricCard title="Despesas no período" amount={expense} icon={ArrowDownRight} variant="expense" showBalance={showBalance} />
-        <MetricCard title="Disponível para Gastar" amount={availableToSpend} icon={CheckCircle2} variant="accent" showBalance={showBalance} />
+      <div className={styles.metrics}>
+        <MetricCard
+          title="Entrou"
+          amount={income}
+          icon={ArrowUpRight}
+          variant="income"
+          showBalance={showBalance}
+        />
+        <MetricCard
+          title="Saiu"
+          amount={expense}
+          icon={ArrowDownRight}
+          variant="expense"
+          showBalance={showBalance}
+        />
+        <MetricCard
+          title="Disponível para gastar"
+          amount={availableToSpend}
+          icon={CheckCircle2}
+          variant="accent"
+          showBalance={showBalance}
+        />
       </div>
     </section>
   );

@@ -1,12 +1,13 @@
-import { X } from 'lucide-react';
-import type { TransactionType } from '../../../../types/TransactionType';
-import QuickActionBtn from '../../../shared/QuickActions/QuickActionBtn';
-import { ACTIONS_DESKTOP } from '../config/actions';
-import { handleOnClickBtnAction } from '../utils/handleActionClick';
+import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { TransactionType } from "../../../../types/TransactionType";
+import QuickActionBtn from "../../../shared/QuickActions/QuickActionBtn";
+import { ACTIONS_DESKTOP } from "../config/actions";
+import { handleOnClickBtnAction } from "../utils/handleActionClick";
 
-import styles from './QuickActionsDesktop.module.css';
+import styles from "./QuickActionsDesktop.module.css";
 
-const CLOSED_POS = 'bottom-[45px] right-[60px] translate-x-1/2';
+const CLOSED_POS = "bottom-[45px] right-[60px] translate-x-1/2";
 
 interface QuickActionsDesktopProps {
   isOpen: boolean;
@@ -19,22 +20,39 @@ export function QuickActionsDesktop({
   isOpen,
   onToggle,
   handleOpenTxModal,
-  selectTxType
+  selectTxType,
 }: QuickActionsDesktopProps) {
+  const navigate = useNavigate();
   return (
     <div className="hidden lg:block">
       <div
-        className={`fixed inset-0 transition-all ease-in-out z-[60] ${styles.overlay} ${
-          isOpen ? 'duration-300 opacity-95 pointer-events-auto' : 'duration-500 delay-100 opacity-0 pointer-events-none'
+        className={`fixed inset-0 transition-all ease-in-out z-[60] ${
+          styles.overlay
+        } ${
+          isOpen
+            ? "duration-300 opacity-95 pointer-events-auto"
+            : "duration-500 delay-100 opacity-0 pointer-events-none"
         }`}
         onClick={onToggle}
       />
 
-      <div className="fixed inset-0 pointer-events-none z-[65]">
+      <div
+        className="fixed inset-0 pointer-events-none z-[65]"
+        inert={!isOpen}
+        aria-hidden={!isOpen}
+      >
         {ACTIONS_DESKTOP.map((action) => (
           <QuickActionBtn
             key={action.label}
-            onClick={() => handleOnClickBtnAction(action, selectTxType, handleOpenTxModal, onToggle)}
+            onClick={() =>
+              handleOnClickBtnAction(
+                action,
+                selectTxType,
+                handleOpenTxModal,
+                onToggle,
+                navigate
+              )
+            }
             icon={action.icon}
             label={action.label}
             colorVar={action.colorVar}
@@ -55,9 +73,14 @@ export function QuickActionsDesktop({
             isOpen ? styles.fabOpen : styles.fabClosed
           }`}
           type="button"
-          aria-label={isOpen ? 'Fechar ações rápidas' : 'Abrir ações rápidas'}
+          aria-label={isOpen ? "Fechar ações rápidas" : "Abrir ações rápidas"}
         >
-          <X size={28} className={`transition-transform duration-300 ${isOpen ? 'rotate-0' : 'rotate-45'}`} />
+          <X
+            size={28}
+            className={`transition-transform duration-300 ${
+              isOpen ? "rotate-0" : "rotate-45"
+            }`}
+          />
         </button>
       </div>
     </div>

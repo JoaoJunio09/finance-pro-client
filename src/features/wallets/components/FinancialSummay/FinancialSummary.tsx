@@ -1,53 +1,42 @@
-import { Landmark, ShieldCheck, TrendingUp, type LucideIcon } from 'lucide-react';
-import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
-import styles from './FinancialSummary.module.css';
+import { Landmark, ShieldCheck, TrendingUp } from "lucide-react";
+import type { WalletResponse } from "../../../../models/wallet/WalletResponse";
+import FinanceSummary from "../../../../components/shared/FinanceSummary/FinanceSummary";
 
-const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-}).format(value);
-
-interface SummaryItemProps {
-  label: string;
-  value: number;
-  icon: LucideIcon;
-}
-
-function SummaryItem({ label, value, icon: Icon }: SummaryItemProps) {
-  return (
-    <div className={styles.summaryItem}>
-      <Icon size={16} aria-hidden="true" />
-      <div>
-        <span>{label}</span>
-        <strong>{formatCurrency(value)}</strong>
-      </div>
-    </div>
-  );
-}
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
 
 export function FinancialSummary({ wallets }: { wallets: WalletResponse[] }) {
   const total = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
   const accounts = wallets
-    .filter(wallet => wallet.type === 'CHECKING' || wallet.type === 'SAVING')
+    .filter((wallet) => wallet.type === "CHECKING" || wallet.type === "SAVING")
     .reduce((sum, wallet) => sum + wallet.balance, 0);
   const investments = wallets
-    .filter(wallet => wallet.type === 'INVESTMENTS')
+    .filter((wallet) => wallet.type === "INVESTMENTS")
     .reduce((sum, wallet) => sum + wallet.balance, 0);
   const reserves = wallets
-    .filter(wallet => wallet.type === 'RESERVE')
+    .filter((wallet) => wallet.type === "RESERVE")
     .reduce((sum, wallet) => sum + wallet.balance, 0);
 
   return (
-    <section className={styles.summary} aria-label="Resumo das carteiras">
-      <div className={styles.total}>
-        <span>Saldo total</span>
-        <strong>{formatCurrency(total)}</strong>
-      </div>
-      <div className={styles.breakdown}>
-        <SummaryItem label="Contas" value={accounts} icon={Landmark} />
-        <SummaryItem label="Investimentos" value={investments} icon={TrendingUp} />
-        <SummaryItem label="Reservas" value={reserves} icon={ShieldCheck} />
-      </div>
-    </section>
+    <FinanceSummary
+      label="Resumo das carteiras"
+      primary={{ label: "Saldo total", value: formatCurrency(total) }}
+      items={[
+        { label: "Contas", value: formatCurrency(accounts), icon: Landmark },
+        {
+          label: "Investimentos",
+          value: formatCurrency(investments),
+          icon: TrendingUp,
+        },
+        {
+          label: "Reservas",
+          value: formatCurrency(reserves),
+          icon: ShieldCheck,
+        },
+      ]}
+    />
   );
 }

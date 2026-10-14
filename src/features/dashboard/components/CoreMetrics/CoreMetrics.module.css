@@ -1,0 +1,45 @@
+.overview {
+	display: grid;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+	gap: 16px;
+}
+
+.balance {
+	display: flex;
+	min-width: 0;
+}
+
+.balance > div {
+	min-height: 100%;
+}
+
+.metrics {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-content: stretch;
+	gap: 14px;
+}
+
+.metrics > :last-child {
+	grid-column: 1 / -1;
+}
+
+@media (max-width: 767px) {
+	.overview {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.metrics {
+		gap: 10px;
+	}
+}
+
+@media (max-width: 420px) {
+	.metrics {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.metrics > :last-child {
+		grid-column: auto;
+	}
+}

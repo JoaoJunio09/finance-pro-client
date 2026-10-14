@@ -1,60 +1,84 @@
-.section {
-	background: linear-gradient(to right, var(--accent-muted), transparent);
-	border-color: var(--border-light);
+.header {
+	display: flex;
+	min-width: 0;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 2px 2px 0;
 }
 
-.decorBlobTop,
-.decorBlobBottom {
-	background: var(--accent);
-	opacity: 0.1;
-}
+.heading { min-width: 0; }
 
 .eyebrow {
 	color: var(--accent);
-	background: color-mix(in srgb, var(--bg-surface) 60%, transparent);
-	border-color: var(--border-light);
+	font-size: 9px;
+	font-weight: 850;
+	letter-spacing: .16em;
 }
 
-.title {
+.heading h1 {
+	margin: 5px 0 0;
 	color: var(--text-main);
+	font-size: clamp(25px, 3vw, 34px);
+	font-weight: 850;
+	letter-spacing: -.055em;
+	line-height: 1.12;
 }
 
-.subtitle {
+.controls {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.date {
+	display: flex;
+	align-items: center;
+	gap: 9px;
 	color: var(--text-muted);
+	font-size: 11px;
+	font-weight: 650;
+	text-transform: capitalize;
 }
 
-.subHeaderBorder {
-	border-color: var(--border-light);
-}
-
-.pacingLabel {
+.dateIcon {
+	display: grid;
+	width: 35px;
+	height: 35px;
+	place-items: center;
+	border: 1px solid var(--border-light);
+	border-radius: 12px;
+	background: var(--bg-surface);
 	color: var(--accent);
-}
-
-.pacingValue {
-	color: var(--text-main);
-}
-
-.pacingIcon {
-	color: var(--accent);
-}
-
-.pacingMuted {
-	color: var(--text-muted);
-}
-
-.pacingMutedStrong {
-	color: var(--text-main);
-	font-weight: 600;
 }
 
 .toggleBtn {
+	display: grid;
+	width: 40px;
+	height: 40px;
+	place-items: center;
+	border: 1px solid var(--border-color);
+	border-radius: 13px;
 	background: var(--bg-surface);
-	border-color: var(--border-color);
 	color: var(--text-muted);
-	transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+	box-shadow: 0 4px 12px rgba(22, 18, 36, .05);
+	transition: border-color 150ms ease, color 150ms ease, transform 150ms ease;
 }
+
 .toggleBtn:hover {
+	transform: translateY(-1px);
+	border-color: var(--accent);
 	color: var(--accent);
-	border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+@media (max-width: 520px) {
+	.header { align-items: flex-start; }
+	.controls { gap: 8px; }
+	.date { gap: 6px; font-size: 9px; }
+	.dateIcon { width: 32px; height: 32px; }
+	.toggleBtn { width: 36px; height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.toggleBtn { transition: none; }
 }

@@ -1,55 +1,125 @@
-import { Download } from 'lucide-react';
+import { Download, FileSpreadsheet } from "lucide-react";
+import type { AnalyticsResponse } from "../../../../../models/account/AnalyticsResponse";
+import styles from "./ReportsSubpage.module.css";
 
-import styles from './ReportsSubpage.module.css';
-
-interface ReportOption {
-  title: string;
-  format: string;
-  description: string;
+function csvCell(value: string | number) {
+  let text =
+    typeof value === "number"
+      ? value.toLocaleString("pt-BR", {
+          useGrouping: false,
+          maximumFractionDigits: 2,
+        })
+      : value;
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(text)) text = "'" + text;
+  return '"' + text.replaceAll('"', '""') + '"';
 }
 
-// Mock fixo — sem dependência de dados externos, apenas catálogo estático de exportações disponíveis.
-const REPORT_OPTIONS: ReportOption[] = [
-  { title: 'Relatório Mensal Consolidado', format: 'PDF (Completo)', description: 'Demonstrativo completo de Entradas, Saídas e Score de Saúde.' },
-  { title: 'Extrato Analítico de Transações', format: 'CSV / Excel', description: 'Lista detalhada de movimentações prontas para importar no ERP.' },
-  { title: 'Relatório de Imposto de Renda', format: 'PDF Fiscal', description: 'Resumo com categorias adequadas para declaração anual.' },
-  { title: 'Diagnóstico de Despesas Fixas', format: 'PDF executivo', description: 'Gráficos e recomendações para corte inteligente de despesas.' },
-];
-
-interface ReportsSubpageProps {
-  onDownload: (reportTitle: string) => void;
+function downloadCsv(name: string, rows: (string | number)[][]) {
+  const content =
+    "\uFEFF" + rows.map((row) => row.map(csvCell).join(";")).join("\r\n");
+  const url = URL.createObjectURL(
+    new Blob([content], { type: "text/csv;charset=utf-8;" })
+  );
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = name;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
 }
 
-function ReportsSubpage({ onDownload }: ReportsSubpageProps) {
+export default function ReportsSubpage({
+  analytics,
+}: {
+  analytics?: AnalyticsResponse;
+}) {
+  const month = new Date().toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric",
+  });
+  const exportSummary = () => {
+    if (!analytics) return;
+    downloadCsv("capto-resumo.csv", [
+      ["Período", "Indicador", "Valor (R$)"],
+      [month, "Receitas", analytics.income],
+      [month, "Despesas", analytics.expense],
+      [month, "Compromissos", analytics.commitments],
+      [month, "Disponível para gastar", analytics.availableToSpend],
+    ]);
+  };
+  const exportTransactions = () => {
+    if (!analytics) return;
+    downloadCsv("capto-transacoes.csv", [
+      [
+        "Data",
+        "Descrição",
+        "Tipo",
+        "Status",
+        "Categoria",
+        "Carteira",
+        "Valor (R$)",
+      ],
+      ...analytics.transactions.map((transaction) => [
+        transaction.registeredAt,
+        transaction.description,
+        transaction.type === "CREDIT" ? "Receita" : "Despesa",
+        transaction.status,
+        transaction.category.name,
+        transaction.wallet.name,
+        transaction.amount,
+      ]),
+    ]);
+  };
+
   return (
-    <div className="flex flex-col gap-6 animate-fade-in-up">
-      <div className={`p-6 rounded-3xl flex flex-col gap-4 border ${styles.card}`}>
-        <h3 className={`text-base font-bold ${styles.cardTitle}`}>Central de Extratos e Exportações</h3>
-        <p className={`text-xs ${styles.cardSubtitle}`}>Baixe seus relatórios contábeis nos formatos oficiais de exportação.</p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          {REPORT_OPTIONS.map((report) => (
-            <div key={report.title} className={`p-5 rounded-2xl border flex flex-col justify-between gap-4 ${styles.reportCard}`}>
-              <div>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${styles.formatBadge}`}>
-                  {report.format}
-                </span>
-                <h4 className={`text-sm font-bold mt-2 ${styles.reportTitle}`}>{report.title}</h4>
-                <p className={`text-xs mt-1 ${styles.reportDescription}`}>{report.description}</p>
-              </div>
-              <button
-                onClick={() => onDownload(report.title)}
-                className={`w-full py-2 text-xs font-semibold rounded-xl border flex items-center justify-center gap-2 transition-all ${styles.downloadBtn}`}
-                type="button"
-              >
-                <Download size={14} /> Download Relatório
-              </button>
-            </div>
-          ))}
-        </div>
+    <section className={`rounded-3xl border p-6 ${styles.card}`}>
+      <h2 className={`text-lg font-bold ${styles.cardTitle}`}>
+        Seus registros de {month}
+      </h2>
+      <p className={`mt-2 text-sm ${styles.cardSubtitle}`}>
+        Baixe arquivos CSV para consultar em uma planilha.
+      </p>
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {[
+          {
+            title: "Resumo financeiro",
+            description: "Receitas, despesas, compromissos e valor disponível.",
+            onClick: exportSummary,
+          },
+          {
+            title: "Transações do mês",
+            description: "Movimentações com data, categoria, carteira e valor.",
+            onClick: exportTransactions,
+          },
+        ].map((report) => (
+          <article
+            key={report.title}
+            className={`flex flex-col gap-3 rounded-2xl border p-5 ${styles.reportCard}`}
+          >
+            <FileSpreadsheet
+              size={25}
+              className="text-[var(--accent)]"
+              aria-hidden="true"
+            />
+            <h3 className={`font-bold ${styles.reportTitle}`}>
+              {report.title}
+            </h3>
+            <p className={`flex-1 text-sm ${styles.reportDescription}`}>
+              {report.description}
+            </p>
+            <button
+              type="button"
+              disabled={!analytics}
+              onClick={report.onClick}
+              className={`mt-3 flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold disabled:opacity-50 ${styles.downloadBtn}`}
+            >
+              <Download size={16} aria-hidden="true" />
+              Baixar CSV
+            </button>
+          </article>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
-
-export default ReportsSubpage;

@@ -22,7 +22,7 @@ export function MetricCard({ title, amount, icon: Icon, variant, showBalance }: 
   const classes = variantClassMap[variant];
 
   return (
-    <div className={`rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-4 shadow-sm border interactive-card ${classes.card}`}>
+    <div className={`rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-4 shadow-sm border interactive-card ${classes.card} ${variant === 'income' ? styles.cardIncome : variant === 'expense' ? styles.cardExpense : styles.cardAccent}`}>
       <div className="flex justify-between items-start">
         <span className={`text-xs sm:text-sm font-medium ${variant === 'accent' ? styles.titleAccent : styles.titleDefault}`}>
           {title}

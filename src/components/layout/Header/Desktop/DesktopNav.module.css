@@ -1,57 +1,238 @@
-.menuBtn {
-	color: var(--text-muted);
-}
-.menuBtn:hover {
-	background: var(--bg-elevated);
-	color: var(--text-main);
-}
-.menuBtn:focus {
-	--tw-ring-color: var(--accent);
+.desktopRow {
+  width: 100%;
+  min-height: 86px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 26px;
 }
 
-.searchIcon {
-	color: var(--text-muted);
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding-right: 24px;
+  border-right: 1px solid var(--border-light);
 }
 
-.searchInput {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
-	color: var(--text-main);
-}
-.searchInput::placeholder {
-	color: var(--text-muted);
-}
-.searchInput:hover {
-	border-color: var(--border-hover);
-}
-.searchInput:focus {
-	outline: none;
-	border-color: var(--accent);
-	box-shadow: 0 0 0 1px var(--accent);
-}
-
-.iconBtn {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
-}
-.iconBtn:hover {
-	border-color: var(--border-hover);
-	background: var(--bg-elevated);
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px 14px 14px 5px;
+  background: linear-gradient(
+    145deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent) 65%, #f6a23a)
+  );
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: white;
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
 }
 
-.iconMuted {
-	color: var(--text-muted);
+.brandName {
+  color: var(--text-main);
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -0.055em;
+}
+
+.brandName span {
+  color: var(--accent);
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.comingSoon {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.navCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.navIcon {
+  display: grid;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--pillar-color);
+  background: color-mix(in srgb, var(--pillar-color) 9%, transparent);
+}
+
+.utilities {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.navLink,
+.moreLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 13px;
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: color 160ms ease, background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.navLink {
+  --pillar-color: var(--accent);
+  min-height: 60px;
+  padding-inline: 12px;
+}
+.navLink[data-tone="blue"] {
+  --pillar-color: #4d8fe6;
+}
+.navLink[data-tone="green"] {
+  --pillar-color: #27a77c;
+}
+.navLink::after {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--pillar-color);
+  opacity: 0;
+  transform: scaleX(0.5);
+  transition: opacity 180ms ease, transform 180ms ease;
+  content: "";
+}
+
+.navLink:hover,
+.moreLink:hover {
+  color: var(--text-main);
+  background: var(--bg-elevated);
+}
+
+.navLink:active,
+.moreLink:active {
+  transform: scale(0.97);
+}
+
+.navLinkActive {
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--pillar-color) 7%, transparent);
+}
+.navLinkActive::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.navLinkActive .navIcon {
+  color: white;
+  background: var(--pillar-color);
+}
+.navLink:focus-visible,
+.brandLink:focus-visible,
+.moreLink:focus-visible,
+.notificationButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.moreLink {
+  min-height: 40px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+}
+.moreLink[aria-current="page"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-muted);
+}
+
+.notificationButton {
+  position: relative;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  transition: color 160ms ease, background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.notificationButton:hover {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--accent);
 }
 
 .notificationDot {
-	background: var(--expense);
-	--tw-ring-color: var(--bg-surface);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--bg-surface);
+  border-radius: 50%;
+  background: var(--expense);
 }
 
-.avatarBtn {
-	background: linear-gradient(to top right, var(--accent), #9333EA);
-	border-color: var(--border-color);
+@media (prefers-reduced-motion: reduce) {
+  .navLink,
+  .moreLink,
+  .notificationButton {
+    transition: none;
+  }
+  .navLink::after {
+    transition: none;
+  }
 }
-.avatarBtn:hover {
-	opacity: 0.9;
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .desktopRow {
+    gap: 14px;
+    min-height: 80px;
+  }
+  .brandLink {
+    padding-right: 14px;
+  }
+  .navLink {
+    padding-inline: 9px;
+    font-size: 12px;
+  }
+  .utilities {
+    gap: 8px;
+  }
+  .navigation {
+    gap: 2px;
+  }
+  .navIcon {
+    width: 28px;
+    height: 32px;
+  }
+  .moreLink {
+    padding-inline: 10px;
+    font-size: 12px;
+  }
 }

@@ -3,6 +3,11 @@
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
+.creditCardPreview {
+  min-height: 250px;
+  aspect-ratio: auto;
+}
+
 .card:hover {
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 18px 30px rgba(10, 10, 16, 0.3);

@@ -1,11 +1,39 @@
 .cardDefault {
+	position: relative;
+	overflow: hidden;
 	background: var(--bg-surface);
 	border-color: var(--border-color);
+	transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
+.cardDefault::before,
+.cardAccent::before {
+	position: absolute;
+	top: 0;
+	left: 22px;
+	width: 42px;
+	height: 3px;
+	border-radius: 0 0 4px 4px;
+	background: var(--metric-color);
+	content: '';
+}
+
+.cardDefault:hover,
+.cardAccent:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(0,0,0,.1); }
+.cardIncome { --metric-color: var(--income); }
+.cardExpense { --metric-color: var(--expense); }
 .cardAccent {
+	--metric-color: var(--accent);
+	position: relative;
+	overflow: hidden;
+	transition: transform 180ms ease, box-shadow 180ms ease;
+	border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
 	background: var(--accent-muted);
-	border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cardDefault,
+	.cardAccent { transition: none; }
 }
 
 .titleDefault {

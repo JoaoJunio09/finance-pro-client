@@ -1,46 +1,144 @@
-.avatarBtn {
-	background: linear-gradient(to top right, var(--accent), #9333EA);
-	border-color: var(--border-color);
-}
-.avatarBtn:hover {
-	opacity: 0.9;
+.accountArea {
+  position: relative;
 }
 
-.searchIcon {
-	color: var(--text-muted);
+.accountButton,
+.notificationButton {
+  position: relative;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--border-light);
+  border-radius: 15px;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+  transition: color 160ms ease, border-color 160ms ease,
+    background-color 160ms ease, transform 160ms ease;
 }
 
-.searchInput {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
-	color: var(--text-main);
-}
-.searchInput::placeholder {
-	color: var(--text-muted);
-}
-.searchInput:hover {
-	border-color: var(--border-hover);
-}
-.searchInput:focus {
-	outline: none;
-	border-color: var(--accent);
-	box-shadow: 0 0 0 1px var(--accent);
+.accountButton:hover,
+.accountButtonActive,
+.notificationButton:hover {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--accent);
 }
 
-.iconBtn {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
-}
-.iconBtn:hover {
-	border-color: var(--border-hover);
-	background: var(--bg-elevated);
+.accountButton:active,
+.notificationButton:active {
+  transform: scale(0.95);
 }
 
-.iconMuted {
-	color: var(--text-muted);
+.notificationButton {
+  border-radius: 50%;
 }
 
 .notificationDot {
-	background: var(--expense);
-	--tw-ring-color: var(--bg-surface);
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--bg-surface);
+  border-radius: 50%;
+  background: var(--expense);
+}
+
+.accountMenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 80;
+  width: min(268px, calc(100vw - 28px));
+  padding: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 19px;
+  background: var(--bg-surface);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.22);
+  transform-origin: top left;
+  animation: account-menu-enter 170ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.menuHeading {
+  margin: 3px 9px 8px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.menuItem {
+  display: flex;
+  width: 100%;
+  min-height: 45px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 9px;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  text-align: left;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.menuItem:hover {
+  background: var(--bg-elevated);
+  color: var(--accent);
+}
+
+.menuIcon {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.menuArrow {
+  margin-left: auto;
+  color: var(--text-muted);
+}
+
+.logoutItem {
+  margin-top: 5px;
+  border-top: 1px solid var(--border-light);
+  border-radius: 0 0 12px 12px;
+  color: var(--expense);
+}
+
+.logoutItem .menuIcon {
+  background: var(--expense-muted);
+  color: var(--expense);
+}
+
+@keyframes account-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accountButton,
+  .notificationButton,
+  .menuItem {
+    transition: none;
+  }
+  .accountMenu {
+    animation: none;
+  }
 }

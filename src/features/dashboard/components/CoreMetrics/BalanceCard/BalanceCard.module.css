@@ -1,22 +1,28 @@
 .card {
-	background: linear-gradient(to bottom right, #4C1D95, #312E81);
-	border: 1px solid rgba(91, 33, 182, 0.5);
+	min-height: 100%;
+	background:
+		radial-gradient(ellipse at 100% 0%, rgba(203, 166, 255, .28), transparent 39%),
+		linear-gradient(132deg, #302056 0%, #49307e 56%, #6346a2 100%);
+	border: 1px solid rgba(255, 255, 255, .14);
+	box-shadow: 0 18px 40px rgba(53, 33, 95, .22);
 }
 
 .patternOverlay {
-	background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+	background-image:
+		linear-gradient(120deg, transparent 44%, rgba(255, 255, 255, .045) 44.2%, transparent 44.8%),
+		radial-gradient(circle at 88% 72%, transparent 0 54px, rgba(255, 255, 255, .08) 55px 56px, transparent 57px 74px, rgba(255, 255, 255, .05) 75px 76px, transparent 77px);
 }
 
 .badge {
-	color: rgba(255, 255, 255, 0.8);
-	background: rgba(255, 255, 255, 0.1);
-	border-color: rgba(255, 255, 255, 0.2);
+	color: rgba(255, 255, 255, .82);
+	background: rgba(255, 255, 255, .1);
+	border-color: rgba(255, 255, 255, .17);
 }
 
 .statusRow {
-	color: rgba(255, 255, 255, 0.9);
+	color: rgba(255, 255, 255, .73);
 }
 
 .statusIcon {
-	color: var(--income);
+	color: #8fe0b5;
 }

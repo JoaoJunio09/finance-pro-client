@@ -3,7 +3,7 @@ import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import SpinnerLoading from '../../../../components/ui/SpinnerLoading/SpinnerLoading';
 import type { TxFormData } from '../../types/TxFormData';
 import { getPurchaseInvoices } from '../../../../utils/invoices';
-import TxWalletBrandMark from '../TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 
 import styles from './TxPreviewCard.module.css';
 
@@ -84,7 +84,7 @@ export function TransactionPreviewCard({
             <span className={`flex items-center gap-1.5 ${styles.detailLabel}`}>
               <Wallet size={14} /> Carteira
             </span>
-            <TxWalletBrandMark wallet={form?.wallet} size="sm" />
+            <WalletBrand wallet={form?.wallet} size="sm" />
           </div>
 
           <div className="flex justify-between items-center text-xs font-medium mt-1">

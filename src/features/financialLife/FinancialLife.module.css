@@ -1,0 +1,139 @@
+.choiceScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: radial-gradient(
+      ellipse at 10% 0%,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      transparent 42%
+    ),
+    var(--bg-base);
+}
+.choiceContent {
+  width: min(1180px, 100%);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 65px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+.choiceContent > button {
+  align-self: flex-start;
+}
+.choiceHeading span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.choiceHeading h1 {
+  max-width: 800px;
+  margin: 12px 0 0;
+  color: var(--text-main);
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  outline: none;
+}
+.content {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: 20px 24px 30px;
+  min-width: 0;
+}
+.flowBack {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: 20px 24px 0;
+}
+.pageHeading {
+  margin-bottom: 25px;
+}
+.pageHeading h1 {
+  margin: 15px 0 8px;
+  font-size: clamp(26px, 3vw, 37px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  color: var(--text-main);
+}
+.pageHeading p {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0 25px;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+.tab[aria-current="page"] {
+  background: var(--accent-muted);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.placeholder {
+  max-width: 650px;
+  margin: 70px auto;
+  padding: 35px;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  background: var(--bg-surface);
+  text-align: center;
+}
+.placeholder svg {
+  margin-inline: auto;
+  color: var(--accent);
+}
+.placeholder h1 {
+  margin: 20px 0 10px;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+.placeholder p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.placeholder a {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--accent);
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .choiceContent {
+    padding: 24px 18px 36px;
+    justify-content: flex-start;
+    gap: 25px;
+  }
+  .choiceHeading {
+    margin-block: 10px;
+  }
+  .content {
+    padding-inline: 16px;
+  }
+  .flowBack {
+    padding-inline: 16px;
+  }
+}

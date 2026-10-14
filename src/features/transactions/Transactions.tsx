@@ -1,43 +1,65 @@
-import { FileText } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
-import type { TransactionType } from '../../types/TransactionType';
-import TransactionModal from '../transactionModal/TransactionModal';
-import styles from './Transactions.module.css';
-import { DeleteConfirmModal } from './components/DeleteConfirmModal/DeleteConfirmModal';
-import { EmptyState } from './components/EmptyState/EmptyState';
-import { FiltersDrawer } from './components/FiltersDrawer/FiltersDrawer';
-import { SummaryCards } from './components/SummaryCard/SummaryCard';
-import { TransactionDetailsDrawer } from './components/TransactionDetailsDrawer/TransactionDetailsDrawer';
-import { TransactionItemRow } from './components/TransactionItemRow/TransactionItemRow';
-import { TransactionsHeader } from './components/TransactionsHeader/TransactionsHeader';
-import { TransactionsToolbar } from './components/TransactionsToolbar/TransactionsToolbar';
-import useTransactions from './hooks/useTransactions';
-import type { ActiveTab } from './types/transaction';
+import { FileText } from "lucide-react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
+import type { TransactionResponse } from "../../models/transaction/TransactionResponse";
+import type { TransactionType } from "../../types/TransactionType";
+import TransactionModal from "../transactionModal/TransactionModal";
+import styles from "./Transactions.module.css";
+import { DeleteConfirmModal } from "./components/DeleteConfirmModal/DeleteConfirmModal";
+import { EmptyState } from "./components/EmptyState/EmptyState";
+import { FiltersDrawer } from "./components/FiltersDrawer/FiltersDrawer";
+import { SummaryCards } from "./components/SummaryCard/SummaryCard";
+import { TransactionDetailsDrawer } from "./components/TransactionDetailsDrawer/TransactionDetailsDrawer";
+import { TransactionItemRow } from "./components/TransactionItemRow/TransactionItemRow";
+import { TransactionsHeader } from "./components/TransactionsHeader/TransactionsHeader";
+import { TransactionsToolbar } from "./components/TransactionsToolbar/TransactionsToolbar";
+import useTransactions from "./hooks/useTransactions";
+import type { ActiveTab } from "./types/transaction";
+import pageStyles from "../../components/shared/FinancePage/FinancePage.module.css";
 
-export default function TransactionsPage() {  
-  const [activeTab, setActiveTab] = useState<ActiveTab>('all');
+export default function TransactionsPage({
+  viewNavigation,
+}: {
+  viewNavigation?: ReactNode;
+}) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<ActiveTab>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [txType, setTxType] = useState<TransactionType>('CREDIT');
- 
-  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
-  const [deletingTx, setDeletingTx] = useState<TransactionResponse | null>(null);
+  const [txType, setTxType] = useState<TransactionType>("CREDIT");
+
+  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(
+    null
+  );
+  const [deletingTx, setDeletingTx] = useState<TransactionResponse | null>(
+    null
+  );
 
   const onClose = () => {
     setDeletingTx(null);
     setSelectedTx(null);
     setIsModalOpen(false);
-  }
+  };
+
+  useEffect(() => {
+    const newTransaction = searchParams.get("nova");
+    if (newTransaction !== "receita" && newTransaction !== "despesa") return;
+    setSelectedTx(null);
+    setTxType(newTransaction === "receita" ? "CREDIT" : "DEBIT");
+    setIsModalOpen(true);
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("nova");
+    setSearchParams(nextParams, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const handleResetFilters = () => {
-    setSearch('');
-    setTxStatusFilter('all');
-    setTxStatusFilter('all');
-    setWalletFilter('all');
-    setCategoryFilter('all');
-    setSort('recent');
-    setActiveTab('all');
+    setSearch("");
+    setTxStatusFilter("all");
+    setTxTypeFilter("all");
+    setWalletFilter("all");
+    setCategoryFilter("all");
+    setSort("recent");
+    setActiveTab("all");
   };
 
   const handleEditTransaction = (transaction: TransactionResponse) => {
@@ -63,82 +85,104 @@ export default function TransactionsPage() {
     search,
     setSearch,
     txStatusFilter,
-		setTxStatusFilter,
-		txTypeFilter,
-		setTxTypeFilter,
-		walletFilter,
-		setWalletFilter,
-		categoryFilter,
-		setCategoryFilter,
+    setTxStatusFilter,
+    txTypeFilter,
+    setTxTypeFilter,
+    walletFilter,
+    setWalletFilter,
+    categoryFilter,
+    setCategoryFilter,
     sort,
     setSort,
-    deleteTransaction
+    deleteTransaction,
+    confirmTransaction,
   } = useTransactions(onClose);
 
-   const filteredTransactions = useMemo(() => {
-    return transactions.filter(tx => {
-      if (search.trim() !== '') {
-        const query = search.toLowerCase();
-        const matchesDesc = tx.description.toLowerCase().includes(query);
-        if (!matchesDesc) return false;
-      }
+  const filteredTransactions = useMemo(() => {
+    return transactions
+      .filter((tx) => {
+        if (search.trim() !== "") {
+          const query = search.toLowerCase();
+          const matchesDesc = tx.description.toLowerCase().includes(query);
+          if (!matchesDesc) return false;
+        }
 
-      if (activeTab === 'income' && tx.type !== 'CREDIT') return false;
-      if (activeTab === 'expense' && tx.type !== 'DEBIT') return false;
-      if (activeTab === 'pending' && tx.status !== 'PENDING') return false;
+        if (activeTab === "income" && tx.type !== "CREDIT") return false;
+        if (activeTab === "expense" && tx.type !== "DEBIT") return false;
+        if (activeTab === "pending" && tx.status !== "PENDING") return false;
 
-      // Filtro de tipo
-      if (txTypeFilter === 'income' && tx.type !== 'CREDIT') {
-        return false;
-      }
+        // Filtro de tipo
+        if (txTypeFilter === "income" && tx.type !== "CREDIT") {
+          return false;
+        }
 
-      if (txTypeFilter === 'expense' && tx.type !== 'DEBIT') {
-        return false;
-      }
+        if (txTypeFilter === "expense" && tx.type !== "DEBIT") {
+          return false;
+        }
 
-      // Filtro de status
-      if (txStatusFilter === 'paid' && tx.status !== 'COMPLETED') {
-        return false;
-      }
+        // Filtro de status
+        if (txStatusFilter === "paid" && tx.status !== "COMPLETED") {
+          return false;
+        }
 
-      if (txStatusFilter === 'pending' && tx.status !== 'PENDING') {
-        return false;
-      }
+        if (txStatusFilter === "pending" && tx.status !== "PENDING") {
+          return false;
+        }
 
-      // Filtro de carteira
-      if (walletFilter !== 'all' && tx.wallet.id !== walletFilter) {
-        return false;
-      }
+        // Filtro de carteira
+        if (walletFilter !== "all" && tx.wallet.id !== walletFilter) {
+          return false;
+        }
 
-      // Filtro de categoria
-      if (categoryFilter !== 'all' && tx.category.id !== categoryFilter) {
-        return false;
-      }
+        // Filtro de categoria
+        if (categoryFilter !== "all" && tx.category.id !== categoryFilter) {
+          return false;
+        }
 
-      return true;
-    }).sort((a, b) => {
-      if (sort === 'recent') return new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime();
-      if (sort === 'oldest') return new Date(a.registeredAt).getTime() - new Date(b.registeredAt).getTime();
-      if (sort === 'highest') return b.amount - a.amount;
-      if (sort === 'lowest') return a.amount - b.amount;
-      return 0;
-    });
-  }, [transactions, activeTab, txStatusFilter, txTypeFilter, walletFilter, categoryFilter, sort, search]);
+        return true;
+      })
+      .sort((a, b) => {
+        if (sort === "recent")
+          return (
+            new Date(b.registeredAt).getTime() -
+            new Date(a.registeredAt).getTime()
+          );
+        if (sort === "oldest")
+          return (
+            new Date(a.registeredAt).getTime() -
+            new Date(b.registeredAt).getTime()
+          );
+        if (sort === "highest") return b.amount - a.amount;
+        if (sort === "lowest") return a.amount - b.amount;
+        return 0;
+      });
+  }, [
+    transactions,
+    activeTab,
+    txStatusFilter,
+    txTypeFilter,
+    walletFilter,
+    categoryFilter,
+    sort,
+    search,
+  ]);
 
   return (
-    <div className={`h-full w-full transition-colors duration-300 ${styles.pageContainer}`}>
-      <div className={`w-full relative shadow-md overflow-hidden ${styles.headerBackground}`}>
-        <div className={`absolute inset-0 opacity-20 pointer-events-none ${styles.patternOverlay}`}></div>
-        <TransactionsHeader
-          currentMonth={currentMonth}
-          setCurrentMonth={setCurrentMonth}
-          onOpenAddModal={() => {}}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
-      </div>
+    <div className={pageStyles.page}>
+      <TransactionsHeader
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        onOpenAddModal={() => {
+          setSelectedTx(null);
+          setTxType("CREDIT");
+          setIsModalOpen(true);
+        }}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        viewNavigation={viewNavigation}
+      />
 
-      <main className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-12 animate-fade-in-up">
+      <main className={pageStyles.content}>
         <SummaryCards summary={summaryCard} />
 
         <TransactionsToolbar
@@ -154,23 +198,37 @@ export default function TransactionsPage() {
           setCategoryFilter={setCategoryFilter}
           sortBy={sort}
           setSortBy={setSort}
-          onResetFilters={() => {}}
+          onResetFilters={handleResetFilters}
           onOpenFilters={() => setIsFilterDrawerOpen(true)}
         />
 
-        <div className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}>          
-          <div className={`flex items-center justify-between mb-4 pb-3 ${styles.listHeader}`}>
-            <h2 className={`text-base font-bold flex items-center gap-2 ${styles.listTitle}`}>
+        <div
+          className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}
+        >
+          <div
+            className={`flex items-center justify-between mb-4 pb-3 ${styles.listHeader}`}
+          >
+            <h2
+              className={`text-base font-bold flex items-center gap-2 ${styles.listTitle}`}
+            >
               <FileText size={18} className={styles.accentIcon} />
               <span>Listagem de Transações</span>
             </h2>
-            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${styles.countBadge}`}>
-              {filteredTransactions.length} {filteredTransactions.length === 1 ? 'registro' : 'registros'}
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full ${styles.countBadge}`}
+            >
+              {filteredTransactions.length}{" "}
+              {filteredTransactions.length === 1 ? "registro" : "registros"}
             </span>
           </div>
 
           {filteredTransactions.length === 0 ? (
-            <EmptyState onAdd={() => {}} />
+            <EmptyState
+              onAdd={() => {
+                setSelectedTx(null);
+                setIsModalOpen(true);
+              }}
+            />
           ) : (
             <div className="flex flex-col gap-3">
               {filteredTransactions.map((tx) => (
@@ -178,7 +236,7 @@ export default function TransactionsPage() {
                   key={tx.id}
                   transaction={tx}
                   onSelect={(tx) => setSelectedTx(tx)}
-                  onConfirm={() => {}}
+                  onConfirm={confirmTransaction}
                 />
               ))}
             </div>
@@ -246,12 +304,14 @@ export default function TransactionsPage() {
         transaction={deletingTx}
       />
 
-      <TransactionModal
-        isOpen={isModalOpen}
-        onClose={onClose}
-        initialType={txType}
-        transaction={selectedTx}
-      />
+      {isModalOpen && (
+        <TransactionModal
+          isOpen={isModalOpen}
+          onClose={onClose}
+          initialType={txType}
+          transaction={selectedTx}
+        />
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import { useEffect, useState } from 'react';
 import type { TransactionResponse } from '../../../../models/transaction/TransactionResponse';
 import { formatRelativeDateTime } from '../../../../utils/FormatDate';
-import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 import { formatCurrency } from '../../utils/transactionUtils';
 import styles from './TransactionDetailsDrawer.module.css';
 
@@ -129,9 +129,9 @@ export const TransactionDetailsDrawer = ({
               </span>
               <span className={`font-semibold truncate ${styles.textMain}`}>
                 {transaction?.wallet.bank ? (
-                  <BankBrandMark bank={transaction?.wallet.bank} />
+                  <WalletBrand wallet={transaction?.wallet} />
                 ) : (
-                  <BankBrandMark wallet={transaction?.wallet} />
+                  <WalletBrand wallet={transaction?.wallet} />
                 )}
               </span>
             </div>

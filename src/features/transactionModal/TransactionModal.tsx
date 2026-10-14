@@ -1,10 +1,12 @@
-import type { TransactionResponse } from '../../models/transaction/TransactionResponse';
-import type { TransactionType } from '../../types/TransactionType';
-import TransactionForm from './components/TxForm/TxForm';
-import TransactionPreviewCard from './components/TxPreviewCard/TxPreviewCard';
-import useTransactionModal from './hooks/useTransactionModal';
+import type { TransactionResponse } from "../../models/transaction/TransactionResponse";
+import type { TransactionType } from "../../types/TransactionType";
+import TransactionForm from "./components/TxForm/TxForm";
+import TransactionPreviewCard from "./components/TxPreviewCard/TxPreviewCard";
+import useTransactionModal from "./hooks/useTransactionModal";
+import WalletPrerequisite from "./components/WalletPrerequisite";
+import useDialogFocus from "../../hooks/useDialogFocus";
 
-import styles from './TransactionModal.module.css';
+import styles from "./TransactionModal.module.css";
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -13,7 +15,12 @@ interface TransactionModalProps {
   transaction: TransactionResponse | null;
 }
 
-export function TransactionModal({ isOpen, onClose, initialType, transaction }: TransactionModalProps) {
+export function TransactionModal({
+  isOpen,
+  onClose,
+  initialType,
+  transaction,
+}: TransactionModalProps) {
   const {
     categories,
     wallets,
@@ -24,10 +31,35 @@ export function TransactionModal({ isOpen, onClose, initialType, transaction }: 
     changeCustomSelectCategory,
     changeCustomSelectWallet,
     saveOrUpdate,
-    isSaving
+    isSaving,
+    walletsLoading,
+    walletsError,
+    refetchWallets,
   } = useTransactionModal(transaction, initialType, onClose);
 
-  if (!isOpen) return null;  
+  const dialogRef = useDialogFocus(
+    isOpen &&
+      (Boolean(transaction) ||
+        (!walletsLoading && !walletsError && wallets.length > 0)),
+    onClose
+  );
+
+  if (!isOpen) return null;
+
+  if (
+    !transaction &&
+    (walletsLoading || walletsError || wallets.length === 0)
+  ) {
+    return (
+      <WalletPrerequisite
+        isLoading={walletsLoading}
+        isError={walletsError}
+        onRetry={() => void refetchWallets()}
+        onClose={onClose}
+        type={initialType}
+      />
+    );
+  }
 
   const handleSubmit = () => {
     saveOrUpdate();
@@ -36,10 +68,23 @@ export function TransactionModal({ isOpen, onClose, initialType, transaction }: 
   const isEditing = !!transaction;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-      <div className={`absolute inset-0 backdrop-blur-sm transition-opacity ${styles.overlay}`} onClick={onClose} />
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={
+        isEditing ? "Editar registro" : "Adicionar receita ou despesa"
+      }
+    >
+      <div
+        className={`absolute inset-0 backdrop-blur-sm transition-opacity ${styles.overlay}`}
+        onClick={onClose}
+      />
 
-      <div className={`relative w-full max-w-4xl rounded-[2rem] shadow-2xl animate-scale-in max-h-[95vh] flex flex-col lg:flex-row overflow-hidden border ${styles.modal}`}>
+      <div
+        className={`relative w-full max-w-4xl rounded-[2rem] shadow-2xl animate-scale-in max-h-[95vh] flex flex-col lg:flex-row overflow-hidden border ${styles.modal}`}
+      >
         <TransactionForm
           isEditing={isEditing}
           handleOnChange={handleOnChange}

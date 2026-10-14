@@ -1,9 +1,10 @@
-import { Edit2, History, MoreVertical, Trash2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
-import { WalletVisual } from '../WalletVisual/WalletVisual';
+import { Edit2, History, MoreVertical, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import type { WalletResponse } from "../../../../models/wallet/WalletResponse";
+import type { InvoiceResponse } from "../../../../models/invoice/InvoiceResponse";
+import { WalletVisual } from "../WalletVisual/WalletVisual";
 
-import styles from './WalletCard.module.css';
+import styles from "./WalletCard.module.css";
 
 interface Props {
   wallet: WalletResponse;
@@ -12,17 +13,26 @@ interface Props {
   onSelect?: (wallet: WalletResponse) => void;
   onHistory?: (wallet: WalletResponse) => void;
   isPreview: boolean;
+  previewInvoice?: InvoiceResponse;
 }
 
-export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect, onHistory, isPreview = false }) => {
+export const WalletCard: React.FC<Props> = ({
+  wallet,
+  onEdit,
+  onDelete,
+  onSelect,
+  onHistory,
+  isPreview = false,
+  previewInvoice,
+}) => {
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     if (!showMenu) return;
 
     const close = () => setShowMenu(false);
-    window.addEventListener('click', close);
-    return () => window.removeEventListener('click', close);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
   }, [showMenu]);
 
   const selectWallet = () => {
@@ -31,20 +41,32 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect
 
   return (
     <WalletVisual
-      className={styles.card}
+      className={`${styles.card} ${
+        isPreview && wallet.type === "CREDIT_CARD"
+          ? styles.creditCardPreview
+          : ""
+      }`}
       onClick={selectWallet}
       onKeyDown={(event) => {
-        if (event.target === event.currentTarget && !isPreview && (event.key === 'Enter' || event.key === ' ')) {
+        if (
+          event.target === event.currentTarget &&
+          !isPreview &&
+          (event.key === "Enter" || event.key === " ")
+        ) {
           event.preventDefault();
           selectWallet();
         }
       }}
-      role="button"
-      tabIndex={0}
+      role={isPreview ? undefined : "button"}
+      tabIndex={isPreview ? undefined : 0}
       wallet={wallet}
+      invoice={previewInvoice}
     >
       {!isPreview && (
-        <div className={styles.menu} onClick={(event) => event.stopPropagation()}>
+        <div
+          className={styles.menu}
+          onClick={(event) => event.stopPropagation()}
+        >
           <button
             aria-expanded={showMenu}
             aria-label={`Ações da carteira ${wallet.name}`}
@@ -57,7 +79,7 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect
 
           {showMenu && (
             <div className={styles.menuDropdown}>
-              {wallet.type === 'CREDIT_CARD' && onHistory && (
+              {wallet.type === "CREDIT_CARD" && onHistory && (
                 <button onClick={() => onHistory(wallet)} type="button">
                   <History aria-hidden="true" size={14} /> Histórico de faturas
                 </button>
@@ -65,7 +87,11 @@ export const WalletCard: React.FC<Props> = ({ wallet, onEdit, onDelete, onSelect
               <button onClick={() => onEdit(wallet)} type="button">
                 <Edit2 aria-hidden="true" size={14} /> Editar
               </button>
-              <button className={styles.deleteAction} onClick={() => onDelete(wallet)} type="button">
+              <button
+                className={styles.deleteAction}
+                onClick={() => onDelete(wallet)}
+                type="button"
+              >
                 <Trash2 aria-hidden="true" size={14} /> Excluir
               </button>
             </div>

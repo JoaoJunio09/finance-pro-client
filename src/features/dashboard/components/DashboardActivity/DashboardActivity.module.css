@@ -1,0 +1,244 @@
+.section,
+.loading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.card,
+.error {
+  min-width: 0;
+  padding: clamp(18px, 2vw, 26px);
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  background: var(--bg-surface);
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.heading h2 {
+  margin: 0;
+  font-size: clamp(16px, 1.7vw, 20px);
+  font-weight: 780;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+}
+
+.heading p,
+.chartNote {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.heading a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-block: 4px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--accent);
+}
+
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  margin-block: 23px 10px;
+}
+
+.totals > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.totals span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.totals strong {
+  font-size: clamp(19px, 2vw, 24px);
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.incomeDot,
+.expenseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--income);
+}
+
+.expenseDot {
+  background: var(--expense);
+}
+.income {
+  color: var(--income);
+}
+.expense {
+  color: var(--expense);
+}
+.chart {
+  width: 100%;
+  height: 235px;
+  min-width: 0;
+}
+.chartNote {
+  text-align: center;
+}
+.chartDetails {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.chartDetails summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.chartDetails table {
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.chartDetails th,
+.chartDetails td {
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--border-light);
+}
+.chartDetails td {
+  text-align: right;
+}
+.hiddenChart {
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.transactions {
+  padding: 0;
+  margin: 14px 0 0;
+  list-style: none;
+}
+.transaction {
+  display: grid;
+  grid-template-columns: 37px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 62px;
+  padding-block: 11px;
+  border-bottom: 1px solid var(--border-light);
+}
+.transaction:last-child {
+  border-bottom: 0;
+}
+.transactionIcon {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.transactionCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+.transactionCopy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 650;
+}
+.transactionCopy > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.transactionValue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.transactionValue strong {
+  font-size: 12px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.transactionValue > span {
+  font-size: 10px;
+}
+.pending {
+  color: var(--accent);
+}
+.completed {
+  color: var(--text-muted);
+}
+.empty {
+  display: flex;
+  min-height: 250px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.empty a,
+.error button {
+  color: var(--accent);
+  font-weight: 650;
+}
+.error button {
+  margin-top: 12px;
+}
+.loading > div {
+  min-height: 400px;
+  border-radius: 24px;
+  background: var(--bg-elevated);
+}
+
+@media (max-width: 1023px) {
+  .section,
+  .loading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 360px) {
+  .transaction {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    gap: 7px;
+  }
+  .transactionIcon {
+    width: 30px;
+    height: 30px;
+  }
+  .transactionValue strong {
+    font-size: 11px;
+  }
+}

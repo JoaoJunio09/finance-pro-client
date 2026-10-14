@@ -1,9 +1,10 @@
-import type { TransactionType } from '../../../../types/TransactionType';
-import QuickActionBtn from '../../../shared/QuickActions/QuickActionBtn';
-import { ACTIONS_MOBILE } from '../config/actions';
-import { handleOnClickBtnAction } from '../utils/handleActionClick';
+import type { TransactionType } from "../../../../types/TransactionType";
+import { useNavigate } from "react-router-dom";
+import QuickActionBtn from "../../../shared/QuickActions/QuickActionBtn";
+import { ACTIONS_MOBILE } from "../config/actions";
+import { handleOnClickBtnAction } from "../utils/handleActionClick";
 
-import styles from './QuickActionsMobile.module.css';
+import styles from "./QuickActionsMobile.module.css";
 
 interface QuickActionsMobileProps {
   isOpen: boolean;
@@ -16,23 +17,40 @@ export function QuickActionsMobile({
   isOpen,
   onToggle,
   handleOpenTxModal,
-  selectTxType
+  selectTxType,
 }: QuickActionsMobileProps) {
+  const navigate = useNavigate();
   return (
     <div className="lg:hidden">
       <div
-        className={`fixed inset-0 transition-all ease-in-out z-[60] ${styles.overlay} ${
-          isOpen ? 'duration-300 opacity-95 pointer-events-auto' : 'duration-500 delay-100 opacity-0 pointer-events-none'
+        className={`fixed inset-0 transition-all ease-in-out z-[60] ${
+          styles.overlay
+        } ${
+          isOpen
+            ? "duration-300 opacity-95 pointer-events-auto"
+            : "duration-500 delay-100 opacity-0 pointer-events-none"
         }`}
         onClick={onToggle}
       />
 
-      <div className="fixed inset-0 pointer-events-none z-[65]">
+      <div
+        className="fixed inset-0 pointer-events-none z-[65]"
+        inert={!isOpen}
+        aria-hidden={!isOpen}
+      >
         <div className="absolute w-full h-full max-w-md mx-auto left-0 right-0">
           {ACTIONS_MOBILE.map((action) => (
             <QuickActionBtn
               key={action.label}
-              onClick={() => handleOnClickBtnAction(action, selectTxType, handleOpenTxModal, onToggle)}
+              onClick={() =>
+                handleOnClickBtnAction(
+                  action,
+                  selectTxType,
+                  handleOpenTxModal,
+                  onToggle,
+                  navigate
+                )
+              }
               icon={action.icon}
               label={action.label}
               colorVar={action.colorVar}

@@ -1,26 +1,41 @@
-/* TransactionsHeader.module.css */
-
-.bgBase {
-  background-color: var(--bg-base);
+.period {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-
-.borderBottomBase {
-  border-bottom-color: var(--bg-base);
+.month {
+  font-size: 13px;
+  font-weight: 650;
+  text-transform: capitalize;
+  color: white;
 }
-
-.textMain {
-  color: var(--text-main);
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
-
-.textAccent {
-  color: var(--accent);
+.controls button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  min-height: 39px;
+  min-width: 39px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(31, 12, 63, 0.28);
+  color: white;
 }
-
-.scrollbarHide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.controls button:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
-
-.scrollbarHide::-webkit-scrollbar {
-  display: none;
+.controls button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+.navigation {
+  display: grid;
+  gap: 12px;
 }

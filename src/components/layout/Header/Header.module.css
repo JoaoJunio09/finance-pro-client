@@ -1,4 +1,6 @@
 .header {
 	background: var(--bg-surface);
 	border-color: var(--border-color);
+	backdrop-filter: blur(18px);
+	box-shadow: 0 5px 24px rgba(0, 0, 0, .08);
 }

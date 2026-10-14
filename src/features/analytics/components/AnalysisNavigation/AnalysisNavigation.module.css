@@ -1,0 +1,118 @@
+.navigation {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-block: 30px;
+}
+.option {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 13px;
+  border: 1px solid var(--border-light);
+  border-radius: 17px;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  transition: background 180ms ease, border-color 180ms ease,
+    transform 180ms ease;
+}
+.icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tone) 10%, transparent);
+  color: var(--tone);
+}
+.label {
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+.selection {
+  position: absolute;
+  right: 9px;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tone);
+  opacity: 0;
+}
+.option:hover {
+  transform: translateY(-2px);
+  color: var(--text-main);
+  border-color: color-mix(in srgb, var(--tone) 35%, transparent);
+}
+.option[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--tone) 50%, transparent);
+  background: color-mix(in srgb, var(--tone) 8%, var(--bg-surface));
+  color: var(--text-main);
+}
+.option[aria-current="page"] .icon {
+  background: var(--tone);
+  color: white;
+}
+.option[aria-current="page"] .selection {
+  opacity: 1;
+}
+.option:focus-visible {
+  outline: 2px solid var(--tone);
+  outline-offset: 3px;
+}
+.orange {
+  --tone: #e87532;
+}
+.green {
+  --tone: #27a77c;
+}
+.pink {
+  --tone: #d56b9c;
+}
+.blue {
+  --tone: #4d8fe6;
+}
+.violet {
+  --tone: var(--accent);
+}
+@media (max-width: 1100px) {
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+  }
+}
+@media (max-width: 639px) {
+  .navigation {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-block: 22px;
+  }
+  .option {
+    flex-direction: row;
+    padding: 12px;
+    gap: 9px;
+  }
+  .option:last-child {
+    grid-column: 1 / -1;
+  }
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+  .label {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+  .option:hover {
+    transform: none;
+  }
+}

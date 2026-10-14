@@ -1,93 +1,96 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import type { AccountCredentials } from "../models/auth/AccountCredentials";
 import type { Token } from "../models/auth/Token";
 import AuthService from "../services/AuthService";
 
 type AuthContextType = {
-	auth: Token | null;
+  auth: Token | null;
 
-	username: string | null;
+  username: string | null;
 
-	fullName: string | null;
+  fullName: string | null;
 
-	isAuthenticated: boolean;
+  isAuthenticated: boolean;
 
-	signIn(
-		credentials: AccountCredentials
-	): Promise<void>;
+  signIn(credentials: AccountCredentials): Promise<void>;
 
-	logout(): void;
+  logout(): void;
 
-	hasRole(role: string): boolean;
-}
+  hasRole(role: string): boolean;
+};
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 type AuthProviderProps = {
-	children: ReactNode
-}
+  children: ReactNode;
+};
 
 export function AuthProvider({ children }: AuthProviderProps) {
-	const [auth, setAuth] = useState<Token | null>(() => {
-		const stored = sessionStorage.getItem('auth');
-		return stored ? JSON.parse(stored) : null;
-	});
-	
-	const username = auth?.username ?? null;
-	const fullName = auth?.fullName ?? null;
+  const [auth, setAuth] = useState<Token | null>(() => {
+    const stored = sessionStorage.getItem("auth");
+    return stored ? JSON.parse(stored) : null;
+  });
 
-	const authService = useMemo(() => new AuthService(), []);
+  const username = auth?.username ?? null;
+  const fullName = auth?.fullName ?? null;
 
-	const navigate = useNavigate();
+  const authService = useMemo(() => new AuthService(), []);
 
-	async function signIn(credentials: AccountCredentials) {
-		const auth = await authService.signIn(credentials);
+  const navigate = useNavigate();
 
-		sessionStorage.setItem(
-			'auth',
-			JSON.stringify(auth)
-		)
-		setAuth(auth);	
+  async function signIn(credentials: AccountCredentials) {
+    const auth = await authService.signIn(credentials);
 
-		navigate('/dashboard');
-	}
-	
-	function logout() {
-		sessionStorage.removeItem('auth');
-		setAuth(null);
-	}
+    sessionStorage.setItem("auth", JSON.stringify(auth));
+    setAuth(auth);
 
-	function hasRole(role: string): boolean {
-		if (!auth) {
-			return false;
-		}
-		return auth.roles.includes(role);
-	}
+    navigate("/dashboard");
+  }
 
-	return (
-		<AuthContext.Provider
-			value={{
-				auth,
-				username,
-				fullName,
-				isAuthenticated: auth !== null,
-				signIn,
-				logout,
-				hasRole
-			}}
-		>
-			{children}
-		</AuthContext.Provider>
-	);
+  function logout() {
+    sessionStorage.removeItem("auth");
+    sessionStorage.removeItem("account");
+    sessionStorage.removeItem("accountOwner");
+    setAuth(null);
+  }
+
+  function hasRole(role: string): boolean {
+    if (!auth) {
+      return false;
+    }
+    return auth.roles.includes(role);
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        auth,
+        username,
+        fullName,
+        isAuthenticated: auth !== null,
+        signIn,
+        logout,
+        hasRole,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuthContext() {
-	const context = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-	if (!context) {
-		throw new Error("useAuthContext deve ser usado dentro de AuthProvider");
-	}
+  if (!context) {
+    throw new Error("useAuthContext deve ser usado dentro de AuthProvider");
+  }
 
-	return context;
+  return context;
 }

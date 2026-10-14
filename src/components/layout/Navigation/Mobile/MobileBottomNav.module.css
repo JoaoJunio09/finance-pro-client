@@ -1,37 +1,96 @@
 .navSolid {
-	background: var(--bg-surface);
-	border-top: 1px solid var(--border-color);
-	box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.destinations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 52px minmax(0, 1fr) minmax(
+      0,
+      1fr
+    );
+  align-items: center;
+  min-height: 76px;
+  max-width: 560px;
+  margin-inline: auto;
+  padding-inline: 6px;
+}
+
+.destination {
+  grid-row: 1;
+  display: flex;
+  min-width: 0;
+  min-height: 60px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 2px;
+  border-radius: 12px;
+  text-align: center;
+  transition: background 160ms ease;
+}
+
+.destination span {
+  max-width: 92px;
+  font-size: clamp(9px, 2.4vw, 11px);
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.destination[aria-current="page"] {
+  background: var(--accent-muted);
+}
+
+.quickButton {
+  grid-column: 3;
+  grid-row: 1;
+  position: relative;
+  top: -14px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-inline: auto;
+  border-radius: 50%;
+  box-shadow: 0 5px 18px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.destination:focus-visible,
+.quickButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .navTransparent {
-	background: transparent;
-	border-top: 1px solid transparent;
+  background: transparent;
+  border-top: 1px solid transparent;
 }
 
 .tabDefault {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .tabActive {
-	color: var(--accent);
+  color: var(--accent);
 }
 
 .centerBtnClosed {
-	background: linear-gradient(to top right, var(--accent), #9333EA);
-	color: #FFFFFF;
+  background: linear-gradient(to top right, var(--accent), #9333ea);
+  color: #ffffff;
 }
 .centerBtnClosed:hover {
-	transform: scale(1.05);
+  transform: scale(1.05);
 }
 .centerBtnClosed:active {
-	transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .centerBtnOpen {
-	z-index: 100;
-	background: var(--bg-elevated);
-	color: var(--text-main);
-	box-shadow: none;
-	border: 1px solid var(--border-light);
+  z-index: 100;
+  background: var(--bg-elevated);
+  color: var(--text-main);
+  box-shadow: none;
+  border: 1px solid var(--border-light);
 }

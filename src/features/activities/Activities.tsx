@@ -1,104 +1,65 @@
-import { useState } from 'react';
-import { ActivitiesHeader, type ActivitySubpage } from './components/ActivitiesHeader/ActivitiesHeader';
-import { CalendarView } from './components/CalendarView/CalendarView';
-import { DayDetailsDrawer } from './components/DayDetailsDrawer/DayDetailsDrawer';
-import { SimpleListView } from './components/SimpleListView/SimpleListView';
-import useActivities from './hooks/useActivities';
-import { getMonthName } from './utils/activityFormatters';
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarView } from "./components/CalendarView/CalendarView";
+import { DayDetailsDrawer } from "./components/DayDetailsDrawer/DayDetailsDrawer";
+import useActivities from "./hooks/useActivities";
+import flowStyles from "../financialLife/FinancialLife.module.css";
 
-import styles from './Activities.module.css';
-
-function Activities() {
-  const [currentSubpage, setCurrentSubpage] = useState<ActivitySubpage>('overview');
+export default function Activities({
+  embedded = false,
+}: {
+  embedded?: boolean;
+}) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const handleDayClick = (date: Date) => {
-    setSelectedDate(date);
-    setIsDrawerOpen(true);
-  };
-
-  const {
-    activities,
-    transactions,
-    transactionsPending,
-    recurrences,
-    currentMonth,
-    setCurrentMonth
-  } = useActivities();
-
-  console.log(activities)
-
-  const handleNewActivity = () => {
-    console.log('Nova atividade clicada!');
-  };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const { activities, currentMonth, setCurrentMonth } = useActivities();
+  const changeMonth = (offset: number) =>
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + offset, 1)
+    );
 
   return (
-    <section className="w-full">
-      <div className={`w-full ${styles.animateFadeInUp}`}>
-        <div className="w-full bg-gradient-to-br from-[#4C1D95] to-[#312E81] relative shadow-md overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20 pointer-events-none mix-blend-overlay"></div>
-          
-          <ActivitiesHeader 
-            currentSubpage={currentSubpage} 
-            setSubpage={setCurrentSubpage}
-            currentMonth={currentMonth}
-            setCurrentMonth={setCurrentMonth}
-            onNewActivity={handleNewActivity}
-          />
+    <section className={embedded ? undefined : flowStyles.content}>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h2 className="text-xl font-bold capitalize">
+          {currentMonth.toLocaleDateString("pt-BR", {
+            month: "long",
+            year: "numeric",
+          })}
+        </h2>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className={flowStyles.tab}
+            onClick={() => changeMonth(-1)}
+            aria-label="Mês anterior"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            type="button"
+            className={flowStyles.tab}
+            onClick={() => changeMonth(1)}
+            aria-label="Próximo mês"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
-
-        <main className={`relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-10 ${styles.animateFadeInUp}`}>
-          {currentSubpage === 'overview' && (
-            <CalendarView 
-              currentMonth={currentMonth}
-              activities={activities}
-              onDayClick={handleDayClick}
-            />
-          )}
-          
-          {currentSubpage === 'all' && (
-            <SimpleListView 
-              title="Todas as Atividades" 
-              desc={`Listagem cronológica do mês de ${getMonthName(currentMonth)}.`} 
-              activities={activities}
-            />
-          )}
-
-          {currentSubpage === 'transactions' && (
-            <SimpleListView 
-              title="Histórico Realizado" 
-              desc="Transações efetivadas com sucesso." 
-              activities={transactions} 
-            />
-          )}
-
-          {currentSubpage === 'recurrences' && (
-            <SimpleListView 
-              title="Recorrências Fixas" 
-              desc="Assinaturas e contas com cobrança programada mensalmente." 
-              activities={recurrences}
-            />
-          )}
-
-          {currentSubpage === 'pendings' && (
-            <SimpleListView 
-              title="Atividades Pendentes" 
-              desc="Movimentações agendadas que ainda não foram processadas." 
-              activities={transactionsPending} 
-            />
-          )}
-        </main>
       </div>
-
+      <CalendarView
+        currentMonth={currentMonth}
+        activities={activities}
+        onDayClick={(date) => {
+          setSelectedDate(date);
+          setDrawerOpen(true);
+        }}
+      />
       <DayDetailsDrawer
-        isOpen={isDrawerOpen} 
-        onClose={() => setIsDrawerOpen(false)} 
-        selectedDate={selectedDate} 
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        selectedDate={selectedDate}
         activities={activities}
       />
     </section>
   );
 }
-
-export default Activities;

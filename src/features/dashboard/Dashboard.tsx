@@ -1,69 +1,96 @@
+import type { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useState } from "react";
-import { BudgetOverview } from "./components/BudgetOverview/BudgetOverview";
+import type { FinancialSummaryResponse } from "../../models/account/FinancialSummaryResponse";
+import styles from "./Dashboard.module.css";
 import CoreMetrics from "./components/CoreMetrics/CoreMetrics";
+import DashboardActions from "./components/DashboardActions/DashboardActions";
+import DashboardActivity from "./components/DashboardActivity/DashboardActivity";
 import Greeting from "./components/Greeting/Greeting";
-import RecentTransactions from "./components/RecentTransactions/RecentTransactions";
-import TopCategories from "./components/TopCategories/TopCategories";
-import Wallets from "./components/Wallets/Wallets";
-import { WatchList } from "./components/WatchList/WatchList";
 import useDashboard from "./hooks/useDashboard";
 
 function Dashboard() {
   const [showBalance, setShowBalance] = useState(true);
-  const { dashboard, name } = useDashboard();
+  const {
+    dashboard,
+    name,
+    isLoading,
+    isError,
+    refetch,
+    activity,
+    activityLoading,
+    activityError,
+    refetchActivity,
+  } = useDashboard();
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 animate-fade-in-up">
+    <main className={styles.dashboard}>
       <Greeting
-        userName={name ?? ''}
+        userName={name ?? ""}
         showBalance={showBalance}
-        onToggleBalance={() => setShowBalance(!showBalance)}
+        onToggleBalance={() => setShowBalance((visible) => !visible)}
       />
 
-      <CoreMetrics
-        totalBalance={dashboard?.currentBalance ?? 0}
-        income={dashboard?.income ?? 0}
-        expense={dashboard?.expenses ?? 0}
-        availableToSpend={dashboard?.availableToSpend ?? 0}
-        showBalance={showBalance}
-      />
-
-      <Wallets
-        wallets={dashboard?.wallets ?? []}
-        showBalance={showBalance}
-      />
-
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <BudgetOverview
+      {isLoading ? (
+        <Loading />
+      ) : isError ? (
+        <Error refetch={refetch} />
+      ) : (
+        <CoreMetrics
+          totalBalance={dashboard?.currentBalance ?? 0}
           income={dashboard?.income ?? 0}
           expense={dashboard?.expenses ?? 0}
+          availableToSpend={dashboard?.availableToSpend ?? 0}
           showBalance={showBalance}
-          onAnalyzeFlow={() => {}}
         />
+      )}
 
-        <TopCategories
-          categories={dashboard?.expensesByCategory ?? []}
+      <div className={styles.activity}>
+        <DashboardActivity
+          activity={activity}
+          isLoading={activityLoading}
+          isError={activityError}
           showBalance={showBalance}
-          onViewAll={() => {}}
-          onCategoryClick={() => {}}
+          onRetry={() => void refetchActivity()}
         />
-      </section>
-
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <RecentTransactions
-          transactions={dashboard?.transactions ?? []}
-          showBalance={showBalance}
-          onViewAll={() => {}}
-          onTransactionClick={() => {}}
-        />
-
-        <WatchList
-          showBalance={showBalance}
-          onItemClick={() => {}}
-        />
-      </section>
-    </div>
+      </div>
+      <div className={styles.actions}>
+        <DashboardActions />
+      </div>
+    </main>
   );
-};
+}
 
 export default Dashboard;
+
+const Loading = () => {
+  return (
+    <div
+      className={styles.loading}
+      role="status"
+      aria-label="Carregando resumo financeiro"
+    >
+      <div />
+      <div />
+      <div />
+      <div />
+    </div>
+  )
+}
+
+const Error = ({ refetch }: { refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<NoInfer<FinancialSummaryResponse>, Error>> }) => {
+  return (
+     <div
+      className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-surface)] p-5"
+      role="alert"
+    >
+      <p>Não foi possível atualizar o resumo.</p>
+      <button
+        type="button"
+        className="mt-3 font-semibold text-[var(--accent)]"
+        onClick={() => void refetch()}
+      >
+        Tentar novamente
+      </button>
+    </div>
+  )
+}

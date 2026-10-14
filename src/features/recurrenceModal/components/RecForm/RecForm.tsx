@@ -5,7 +5,7 @@ import type { CategoryResponse } from '../../../../models/category/CategoryRespo
 import type { WalletResponse } from '../../../../models/wallet/WalletResponse';
 import type { ExecutionType } from '../../../../types/ExecutionType';
 import type { RecurrenceType } from '../../../../types/RecurrenceType';
-import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 import type { RecFormData } from '../../types/RecFormData';
 import styles from './RecForm.module.css';
 import { formatCurrencyDisplay } from '../../../../utils/FormatCurrency';
@@ -56,7 +56,7 @@ export function RecurrenceForm({
     </div>
   );
 
-  const renderWallet = (w: any) => <BankBrandMark bank={w.bank} wallet={w} size="md" />;
+  const renderWallet = (w: any) => <WalletBrand wallet={w} size="md" />;
 
   // Lógica de verificação de datas passadas
   const today = new Date();

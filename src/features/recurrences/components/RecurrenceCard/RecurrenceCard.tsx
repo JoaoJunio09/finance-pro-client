@@ -1,7 +1,7 @@
 import { AlertTriangle, Check, ChevronRight, Repeat, UserCheck, Zap } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
 import type { RecurrenceResponse } from '../../../../models/recurrence/RecurrenceResponse';
-import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 import { formatCurrency, formatDate, getDaysDifference, parseLocalDate, translateFrequency } from '../../utils/recurrenceUtils';
 import styles from './RecurrenceCard.module.css';
 
@@ -86,9 +86,9 @@ export const RecurrenceCard = ({
             <span>{item.category.name}</span>
             <span>•</span>
             {item.wallet.bank ? (
-              <BankBrandMark bank={item.wallet.bank} size='sm' />
+              <WalletBrand wallet={item.wallet} size='sm' />
             ) : (
-              <BankBrandMark wallet={item.wallet} size='sm' />
+              <WalletBrand wallet={item.wallet} size='sm' />
             )}
             <span>•</span>
             <span className="flex items-center gap-1">

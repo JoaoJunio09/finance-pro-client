@@ -1,5 +1,5 @@
 import { Calendar, Eye, RefreshCcw, Wallet } from 'lucide-react';
-import BankBrandMark from '../../../transactionModal/components/TxWalletBrandMark/TxWalletBrandMark';
+import WalletBrand from '../../../../components/shared/WalletBrand/WalletBrand';
 import type { RecFormData } from '../../types/RecFormData';
 import styles from './RecPreviewCard.module.css';
 
@@ -64,7 +64,7 @@ export function RecurrencePreviewCard({
           
           <div className="flex justify-between items-center text-xs font-medium">
             <span className={`flex items-center gap-1.5 ${styles.textMuted}`}><Wallet size={14} /> Carteira</span>
-            <BankBrandMark wallet={form.wallet} bank={form.wallet?.bank} size="sm" />
+            <WalletBrand wallet={form.wallet} size="sm" />
           </div>
           
           <div className="flex justify-between items-center text-xs font-medium mt-1">
