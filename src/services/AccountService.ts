@@ -47,7 +47,7 @@ class AccountService {
 
   public async getDashboard(id: string) {
     const response = await api.get<DashboardResponse>(
-      `${this.BASE_URL}/dashboard-activity/${id}`,
+      `${this.BASE_URL}/dashboard/${id}`,
       { headers: { Authorization: `Bearer ${this.accessToken}` } }
     );
     return response.data;
