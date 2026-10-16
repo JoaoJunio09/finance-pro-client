@@ -1,13 +1,12 @@
-import { TrendingUp } from 'lucide-react';
-
+import type { FinancialHealthStatus } from '../../../../models/account/financialHealth/FinancialHealthResponse';
+import { getFinancialHealthStatus } from '../../../../utils/analytics';
 import styles from './FinancialHealthGauge.module.css';
 
 export type HealthStatus = 'Excelente' | 'Muito Boa' | 'Boa' | 'Regular' | 'Crítica';
 
 interface FinancialHealthGaugeProps {
   score: number;
-  status: HealthStatus;
-  trendMonth: number;
+  status: FinancialHealthStatus;
 }
 
 // Faixas de score → tom semântico. Isolado aqui porque só o gauge precisa
@@ -26,7 +25,7 @@ const toneVarMap: Record<ReturnType<typeof getHealthTone>, string> = {
   expense: 'var(--expense)',
 };
 
-export function FinancialHealthGauge({ score, status, trendMonth }: FinancialHealthGaugeProps) {
+export function FinancialHealthGauge({ score, status }: FinancialHealthGaugeProps) {
   const radius = 54;
   const circumference = Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -62,14 +61,9 @@ export function FinancialHealthGauge({ score, status, trendMonth }: FinancialHea
             <span className={`text-xs font-bold ${styles.scoreMax}`}>/100</span>
           </div>
           <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border mt-1 shadow-sm ${styles.statusBadge}`}>
-            {status}
+            {getFinancialHealthStatus(status)}
           </span>
         </div>
-      </div>
-
-      <div className={`flex items-center gap-1.5 text-xs font-medium mt-2 px-3 py-1 rounded-full border ${styles.trendBadge}`}>
-        <TrendingUp size={13} />
-        <span>+{trendMonth}% este mês</span>
       </div>
     </div>
   );

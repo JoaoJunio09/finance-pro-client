@@ -1,5 +1,5 @@
+import { CalendarDays, RefreshCw } from "lucide-react";
 import { useState } from "react";
-import { CalendarDays, Info, RefreshCw } from "lucide-react";
 import {
   Navigate,
   useNavigate,
@@ -8,17 +8,16 @@ import {
 } from "react-router-dom";
 import { BackButton } from "../../components/ui/BackButton/BackButton";
 import { ANALYSIS_VIEWS, analysisPath } from "./analysisViews";
+import styles from "./Analytics.module.css";
 import AnalysisNavigation from "./components/AnalysisNavigation/AnalysisNavigation";
 import AnalysisSummary from "./components/AnalysisSummary/AnalysisSummary";
+import HealthExplanationModal from "./components/HealthExplanationModal/HealthExplanationModal";
 import CategoriesSubpage from "./components/SubPages/CategoriesSubpage/CategoriesSubpage";
 import EvolutionSubpage from "./components/SubPages/EvolutionSubpage/EvolutionSubpage";
 import HealthSubpage from "./components/SubPages/HealthSubpage/HealthSubpage";
-import ReportsSubpage from "./components/SubPages/ReportsSubpage/ReportsSubpage";
 import IncomeSubpage from "./components/SubPages/IncomeSubpage/IncomeSubpage";
-import HealthExplanationModal from "./components/HealthExplanationModal/HealthExplanationModal";
-import { healthPreview } from "./data/healthPreview";
+import ReportsSubpage from "./components/SubPages/ReportsSubpage/ReportsSubpage";
 import useAnalytics from "./hooks/useAnalytics";
-import styles from "./Analytics.module.css";
 
 export type * from "./types/analytics";
 
@@ -26,10 +25,22 @@ export default function Analytics() {
   const { topic } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const [healthExplanationOpen, setHealthExplanationOpen] = useState(false);
-  const { analytics, isLoading, isFetching, isError, refetch } = useAnalytics();
+
+  const {
+    analytics,
+    health,
+    isLoading,
+    isFetching,
+    isError,
+    refetch
+  } = useAnalytics();
+
   const viewId = topic ?? searchParams.get("visao") ?? "categorias";
+
   const selected = ANALYSIS_VIEWS.find((view) => view.id === viewId);
+
   const period = new Date().toLocaleDateString("pt-BR", {
     month: "long",
     year: "numeric",
@@ -106,20 +117,10 @@ export default function Analytics() {
               <IncomeSubpage transactions={analytics?.transactions ?? []} />
             )}
             {selected.id === "saude" && (
-              <>
-                <p className={styles.notice}>
-                  <Info size={16} aria-hidden="true" />
-                  <span>
-                    Prévia: o score e os indicadores de saúde exibidos aqui
-                    ainda são demonstrativos, não calculados a partir dos seus
-                    registros.
-                  </span>
-                </p>
-                <HealthSubpage
-                  health={healthPreview}
-                  onOpenHealthModal={() => setHealthExplanationOpen(true)}
-                />
-              </>
+              <HealthSubpage
+                health={health}
+                onOpenHealthModal={() => setHealthExplanationOpen(true)}
+              />
             )}
             {selected.id === "evolucao" && (
               <EvolutionSubpage evolution={analytics?.trajectory ?? []} />

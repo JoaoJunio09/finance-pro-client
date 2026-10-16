@@ -1,11 +1,17 @@
-import { AlertCircle, CheckCircle2, HelpCircle } from "lucide-react";
-import type { FinancialHealth } from "../../../Analytics";
+import {
+  AlertCircle,
+  CheckCircle2,
+  HelpCircle,
+  ListChecks,
+  Target,
+} from "lucide-react";
+import type { FinancialHealthResponse } from "../../../../../models/account/financialHealth/FinancialHealthResponse";
+import { getFinancialHealthStatus } from "../../../../../utils/analytics";
 import FinancialHealthGauge from "../../FinancialHealthGauge/FinancialHealthGauge";
-
 import styles from "./HealthSubpage.module.css";
 
 interface HealthSubpageProps {
-  health: FinancialHealth;
+  health?: FinancialHealthResponse;
   onOpenHealthModal: () => void;
 }
 
@@ -13,6 +19,7 @@ export function HealthSubpage({
   health,
   onOpenHealthModal,
 }: HealthSubpageProps) {
+  if (!health) return;
   return (
     <div className="flex flex-col gap-6 animate-fade-in-up">
       <div
@@ -22,10 +29,10 @@ export function HealthSubpage({
           <span
             className={`text-xs font-bold uppercase tracking-wider ${styles.eyebrow}`}
           >
-            Prévia dos indicadores
+            Indicadores do mês
           </span>
           <h2 className={`text-2xl font-extrabold ${styles.title}`}>
-            Sua Saúde Financeira está {health.status}
+            Sua Saúde Financeira está {getFinancialHealthStatus(health.status)}
           </h2>
           <p
             className={`text-xs sm:text-sm leading-relaxed ${styles.subtitle}`}
@@ -42,11 +49,7 @@ export function HealthSubpage({
           </button>
         </div>
 
-        <FinancialHealthGauge
-          score={health.score}
-          status={health.status}
-          trendMonth={health.trendMonth}
-        />
+        <FinancialHealthGauge score={health.score} status={health.status} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -60,14 +63,30 @@ export function HealthSubpage({
             Pontos Fortes Identificados
           </h3>
           <div className="flex flex-col gap-3">
-            {health.positiveInsights.map((item) => (
-              <div
-                key={item.id}
-                className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${styles.insightRow}`}
-              >
-                {item.text}
+            {health.identifiedStrengths.length > 0 ? (
+              health.identifiedStrengths.map((item) => (
+                <div
+                  key={item.text}
+                  className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${styles.insightRow}`}
+                >
+                  {item.text}
+                </div>
+              ))
+            ) : (
+              <div className={styles.emptyState}>
+                <span className={styles.emptyIcon}>
+                  <Target size={22} aria-hidden="true" />
+                </span>
+                <h4 className={styles.emptyTitle}>
+                  Nenhum ponto forte identificado
+                </h4>
+                <p className={styles.emptyDescription}>
+                  Os registros deste mês ainda não atenderam aos critérios de
+                  destaque do score. A metodologia mostra como cada hábito
+                  pontua.
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -81,14 +100,31 @@ export function HealthSubpage({
             Oportunidades de Otimização
           </h3>
           <div className="flex flex-col gap-3">
-            {health.attentionInsights.map((item) => (
+            {health.optimizationPointsIdentified.length > 0 ? (
+              health.optimizationPointsIdentified.map((item) => (
+                <div
+                  key={item.text}
+                  className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${styles.insightRow}`}
+                >
+                  {item.text}
+                </div>
+              ))
+            ) : (
               <div
-                key={item.id}
-                className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${styles.insightRow}`}
+                className={`${styles.emptyState} ${styles.emptyStatePositive}`}
               >
-                {item.text}
+                <span className={styles.emptyIcon}>
+                  <ListChecks size={22} aria-hidden="true" />
+                </span>
+                <h4 className={styles.emptyTitle}>
+                  Nenhum ponto de atenção identificado
+                </h4>
+                <p className={styles.emptyDescription}>
+                  O cálculo atual não encontrou melhorias a destacar nos seus
+                  registros deste mês. Continue acompanhando suas finanças.
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

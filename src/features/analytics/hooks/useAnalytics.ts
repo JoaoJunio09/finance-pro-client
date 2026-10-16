@@ -15,14 +15,23 @@ function useAnalytics(enabled = true) {
     retry: 3,
   });
 
+  const queryFinancialHealth = useQuery({
+    queryKey: ['financial-health', account?.id],
+    queryFn: () => accountService.getFinancialHealth(account?.id ?? ''),
+    enabled: enabled && Boolean(account?.id),
+    retry: 3
+  });
+
   const analytics = useMemo(() => queryAnalytics.data, [queryAnalytics.data]);
+  const health = useMemo(() => queryFinancialHealth.data, [queryFinancialHealth.data]);
 
   return {
     analytics,
-    isLoading: enabled && (!account?.id || queryAnalytics.isLoading),
-    isError: enabled && queryAnalytics.isError,
-    isFetching: queryAnalytics.isFetching,
-    refetch: queryAnalytics.refetch,
+    health,
+    isLoading: enabled && (!account?.id || queryAnalytics.isLoading || queryFinancialHealth.isLoading),
+    isError: enabled && queryAnalytics.isError || queryFinancialHealth.isError,
+    isFetching: queryAnalytics.isFetching || queryFinancialHealth.isFetching,
+    refetch: queryAnalytics.refetch || queryFinancialHealth.refetch,
   };
 }
 

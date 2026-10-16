@@ -1,66 +1,112 @@
 .overlay {
-	background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .modal {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
+  background: var(--bg-surface);
+  border-color: var(--border-color);
 }
 
 .dragHandle {
-	background: var(--border-hover);
+  background: var(--border-hover);
 }
 
 .header {
-	border-color: var(--border-light);
+  border-color: var(--border-light);
 }
 
 .headerIcon {
-	background: var(--accent-muted);
-	color: var(--accent);
+  background: var(--accent-muted);
+  color: var(--accent);
 }
 
 .headerTitle {
-	color: var(--text-main);
+  color: var(--text-main);
 }
 
 .headerSubtitle {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .closeBtn {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 .closeBtn:hover {
-	background: var(--bg-elevated);
+  background: var(--bg-elevated);
 }
 
 .intro {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .pillarRow {
-	background: var(--bg-elevated);
-	border-color: var(--border-light);
+  background: var(--bg-elevated);
+  border-color: var(--border-light);
 }
 
 .pillarTitle {
-	color: var(--text-main);
+  color: var(--text-main);
 }
 
 .pillarDesc {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .pillarWeight {
-	color: var(--accent);
-	background: var(--accent-muted);
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.rules {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.rules summary {
+  width: fit-content;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.rules summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.rules ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.625rem;
+  padding-left: 1rem;
+  list-style: disc;
+}
+
+.calculationNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.calculationNotes h4 {
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 .confirmBtn {
-	background: var(--accent);
-	color: #FFFFFF;
+  background: var(--accent);
+  color: #ffffff;
 }
 .confirmBtn:hover {
-	opacity: 0.9;
+  opacity: 0.9;
 }

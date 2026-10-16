@@ -1,45 +1,86 @@
 .heroCard {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
+  background: var(--bg-surface);
+  border-color: var(--border-color);
 }
 
 .eyebrow {
-	color: var(--accent);
+  color: var(--accent);
 }
 
 .title {
-	color: var(--text-main);
+  color: var(--text-main);
 }
 
 .subtitle {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .methodologyBtn {
-	background: var(--accent-muted);
-	color: var(--accent);
-	border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  background: var(--accent-muted);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .card {
-	background: var(--bg-surface);
-	border-color: var(--border-color);
+  background: var(--bg-surface);
+  border-color: var(--border-color);
 }
 
 .cardTitle {
-	color: var(--text-main);
+  color: var(--text-main);
 }
 
 .iconIncome {
-	color: var(--income);
+  color: var(--income);
 }
 
 .iconWarning {
-	color: var(--warning);
+  color: var(--warning);
 }
 
 .insightRow {
-	background: var(--bg-elevated);
-	border-color: var(--border-light);
-	color: var(--text-main);
+  background: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-main);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  background: var(--bg-elevated);
+}
+
+.emptyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.25rem;
+  border-radius: 0.875rem;
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.emptyStatePositive .emptyIcon {
+  background: color-mix(in srgb, var(--income) 12%, transparent);
+  color: var(--income);
+}
+
+.emptyTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.emptyDescription {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-muted);
 }

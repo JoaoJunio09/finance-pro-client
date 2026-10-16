@@ -3,6 +3,7 @@ import type { AccountResponse } from "../models/account/AccountResponse";
 import type { ActivitiesResponse } from "../models/account/ActivitiesResponse";
 import type { AnalyticsResponse } from "../models/account/AnalyticsResponse";
 import type { DashboardResponse } from "../models/account/DashboardResponse";
+import type { FinancialHealthResponse } from "../models/account/financialHealth/FinancialHealthResponse";
 import type { FinancialSummaryResponse } from "../models/account/FinancialSummaryResponse";
 import type { ParamsCategoryAPI } from "../models/account/ParamsCategoryAPI";
 import api from "./api";
@@ -92,6 +93,21 @@ class AccountService {
         throw new InternalServerError("Erro ao carregar as análises da conta");
       }
 
+      throw err;
+    }
+  }
+
+  public async getFinancialHealth(accountId: string) {
+    try {
+      const response = await api.get<FinancialHealthResponse>(
+        `${this.BASE_URL}/financial-health/${accountId}`,
+        { headers: { Authorization: `Bearer ${this.accessToken}` } }
+      );
+      return response.data;
+    } catch (err: any) {
+      if (err?.response?.status === 500) {
+        throw new InternalServerError("Erro ao carregar a Saúde Financeira do usuário");
+      }
       throw err;
     }
   }
