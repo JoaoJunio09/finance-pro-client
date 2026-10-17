@@ -29,6 +29,10 @@ const FinancialEducationPage = lazy(
   () => import("../pages/FinancialEducationPage")
 );
 const GoalsPage = lazy(() => import("../pages/GoalsPage"));
+const FinancialProfileQuizPage = lazy(
+  () => import("../pages/FinancialProfileQuizPage")
+);
+const FirstStepsPage = lazy(() => import("../pages/FirstStepsPage"));
 
 function LegacyAnalyticsRedirect() {
   const { hash } = useLocation();
@@ -61,6 +65,15 @@ function AppRoutes() {
         <Routes location={location}>
           <Route path="/" element={<SignInPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/primeiros-passos" element={<FirstStepsPage />} />
+          <Route
+            path="/validacao/primeiros-passos"
+            element={<Navigate to="/primeiros-passos" replace />}
+          />
+          <Route
+            path="/validacao/perfil-financeiro"
+            element={<FinancialProfileQuizPage />}
+          />
           <Route path="/vida-financeira" element={<FinancialLifePage />} />
           <Route
             path="/vida-financeira/transacoes/:mode?"
