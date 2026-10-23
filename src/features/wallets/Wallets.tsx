@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { WalletResponse } from "../../models/wallet/WalletResponse";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal/DeleteConfirmModal";
-import { FinancialSummary } from "./components/FinancialSummay/FinancialSummary";
+import { FinancialSummary } from "./components/FinancialSummary/FinancialSummary";
 import { WalletCard } from "./components/WalletCard/WalletCard";
 import WalletFormModal from "./components/WalletFormModal/WalletFormModal";
 import WalletsHeader from "./components/WalletsHeader/WalletsHeader";
@@ -18,15 +18,9 @@ export default function WalletsPage() {
   const navigate = useNavigate();
   const returnAction = searchParams.get("retorno");
   const [wallet, setWallet] = useState<WalletResponse | null>(null);
-  const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(
-    null
-  );
-  const [detailView, setDetailView] = useState<"details" | "history">(
-    "details"
-  );
-  const [walletDeleted, setWalletDeleted] = useState<WalletResponse | null>(
-    null
-  );
+  const [selectedWallet, setSelectedWallet] = useState<WalletResponse | null>(null);
+  const [detailView, setDetailView] = useState<"details" | "history">("details");
+  const [walletDeleted, setWalletDeleted] = useState<WalletResponse | null>(null);
   const [currentFilter, setCurrentFilter] = useState<WalletFilter>("all");
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(
@@ -92,9 +86,7 @@ export default function WalletsPage() {
   const filteredWallets = useMemo(() => {
     switch (currentFilter) {
       case "accounts":
-        return wallets.filter(
-          (w) => w.type === "CHECKING" || w.type === "SAVING"
-        );
+        return wallets.filter((w) => w.type === "CHECKING" || w.type === "SAVING");
       case "credit_cards":
         return wallets.filter((w) => w.type === "CREDIT_CARD");
       case "reserves":
@@ -149,9 +141,7 @@ export default function WalletsPage() {
               <div className={styles.emptyState}>
                 <WalletIcon size={32} aria-hidden="true" />
                 <span>Nenhuma carteira encontrada</span>
-                <small>
-                  Tente alterar o filtro ou adicione uma nova carteira.
-                </small>
+                <small>Tente alterar o filtro ou adicione uma nova carteira.</small>
               </div>
             )}
           </main>

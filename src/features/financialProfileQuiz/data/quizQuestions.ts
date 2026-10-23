@@ -1,20 +1,4 @@
-export type QuizDimension =
-  | "Segurança financeira"
-  | "Resiliência"
-  | "Organização e controle"
-  | "Regulação de impulsos"
-  | "Orientação para o futuro"
-  | "Equilíbrio e liberdade";
-
-export type QuizQuestion = {
-  id: number;
-  eyebrow: string;
-  title: string;
-  helper?: string;
-  dimension: QuizDimension;
-  layout?: "cards" | "scale";
-  options: string[];
-};
+import type { QuizQuestion } from "../types/quiz";
 
 const frequencyOptions = [
   "Nunca",
@@ -148,8 +132,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: 11,
     eyebrow: "Quando aparece algo que você quer",
-    title:
-      "Com que frequência você faz uma compra não planejada e depois se arrepende?",
+    title: "Com que frequência você faz uma compra não planejada e depois se arrepende?",
     dimension: "Regulação de impulsos",
     layout: "scale",
     options: frequencyOptions,

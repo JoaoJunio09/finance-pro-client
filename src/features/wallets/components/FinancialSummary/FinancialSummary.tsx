@@ -1,12 +1,7 @@
+import { formatCurrencyLabel as formatCurrency } from "../../../../utils/FormatCurrency";
 import { Landmark, ShieldCheck, TrendingUp } from "lucide-react";
 import type { WalletResponse } from "../../../../models/wallet/WalletResponse";
 import FinanceSummary from "../../../../components/shared/FinanceSummary/FinanceSummary";
-
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
 
 export function FinancialSummary({ wallets }: { wallets: WalletResponse[] }) {
   const total = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);

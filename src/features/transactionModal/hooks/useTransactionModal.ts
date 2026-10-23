@@ -172,7 +172,7 @@ function useTransactionModal(
     )
       return;
 
-    let isUpdate = transaction?.id;
+    const isUpdate = transaction?.id;
 
     const request: TransactionRequest = {
       id: form.id,

@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
-import styles from "./FirstSteps.module.css";
+import styles from "../../FirstSteps.module.css";
 
-const steps = ["Seu nome", "Seu ambiente", "Seu momento"];
+import { firstSteps } from "../../data/firstSteps";
 
 type FirstStepsProgressProps = {
   currentStep: number;
@@ -15,15 +15,21 @@ export default function FirstStepsProgress({
   return (
     <nav className={styles.progress} aria-label="Primeiros passos">
       <ol>
-        {steps.map((label, index) => (
-          <li key={label} data-current={index === currentStep} data-done={index < currentStep}>
+        {firstSteps.map((label, index) => (
+          <li
+            key={label}
+            data-current={index === currentStep}
+            data-done={index < currentStep}
+          >
             <button
               type="button"
               className={styles.stepButton}
               aria-current={index === currentStep ? "step" : undefined}
               disabled={index >= currentStep || !onBack}
               onClick={() => onBack?.(index)}
-              aria-label={`${index + 1} de 3: ${label}${index < currentStep ? ", voltar" : ""}`}
+              aria-label={`${index + 1} de ${firstSteps.length}: ${label}${
+                index < currentStep ? ", voltar" : ""
+              }`}
             >
               <span className={styles.stepNumber} aria-hidden="true">
                 {index < currentStep ? <Check size={13} /> : `0${index + 1}`}

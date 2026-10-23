@@ -28,12 +28,8 @@ export default function TransactionsPage({
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [txType, setTxType] = useState<TransactionType>("CREDIT");
 
-  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(
-    null
-  );
-  const [deletingTx, setDeletingTx] = useState<TransactionResponse | null>(
-    null
-  );
+  const [selectedTx, setSelectedTx] = useState<TransactionResponse | null>(null);
+  const [deletingTx, setDeletingTx] = useState<TransactionResponse | null>(null);
 
   const onClose = () => {
     setDeletingTx(null);
@@ -65,10 +61,6 @@ export default function TransactionsPage({
   const handleEditTransaction = (transaction: TransactionResponse) => {
     setSelectedTx(transaction);
     setIsModalOpen(true);
-  };
-
-  const handleDeleteTransaction = (transaction: TransactionResponse) => {
-    deleteTransaction(transaction);
   };
 
   const openDeleteConfirm = (transaction: TransactionResponse) => {
@@ -143,15 +135,9 @@ export default function TransactionsPage({
       })
       .sort((a, b) => {
         if (sort === "recent")
-          return (
-            new Date(b.registeredAt).getTime() -
-            new Date(a.registeredAt).getTime()
-          );
+          return new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime();
         if (sort === "oldest")
-          return (
-            new Date(a.registeredAt).getTime() -
-            new Date(b.registeredAt).getTime()
-          );
+          return new Date(a.registeredAt).getTime() - new Date(b.registeredAt).getTime();
         if (sort === "highest") return b.amount - a.amount;
         if (sort === "lowest") return a.amount - b.amount;
         return 0;
@@ -202,9 +188,7 @@ export default function TransactionsPage({
           onOpenFilters={() => setIsFilterDrawerOpen(true)}
         />
 
-        <div
-          className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}
-        >
+        <div className={`rounded-3xl p-4 sm:p-6 shadow-sm ${styles.listContainer}`}>
           <div
             className={`flex items-center justify-between mb-4 pb-3 ${styles.listHeader}`}
           >
@@ -235,38 +219,12 @@ export default function TransactionsPage({
                 <TransactionItemRow
                   key={tx.id}
                   transaction={tx}
-                  onSelect={(tx) => setSelectedTx(tx)}
+                  onSelect={setSelectedTx}
                   onConfirm={confirmTransaction}
                 />
               ))}
             </div>
           )}
-
-          {/* Controles de Paginação
-          {filteredTransactions.length > itemsPerPage && (
-            <div className={`flex items-center justify-between mt-6 pt-4 ${styles.paginationContainer}`}>
-              <span className={`text-xs ${styles.pageInfo}`}>
-                Página {currentPage} de {totalPages}
-              </span>
-
-              <div className="flex items-center gap-2">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  className={`p-2 rounded-xl transition-colors ${styles.pageButton}`}
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  className={`p-2 rounded-xl transition-colors ${styles.pageButton}`}
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-          )} */}
         </div>
       </main>
 
@@ -300,7 +258,7 @@ export default function TransactionsPage({
       <DeleteConfirmModal
         isOpen={!!deletingTx}
         onClose={() => setDeletingTx(null)}
-        onConfirm={handleDeleteTransaction}
+        onConfirm={deleteTransaction}
         transaction={deletingTx}
       />
 

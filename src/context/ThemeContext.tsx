@@ -6,7 +6,7 @@ import {
   type ReactNode
 } from "react";
 
-type ThemeName = 'dark' | 'light';
+export type ThemeName = 'dark' | 'light';
 
 type ThemeContextType = {
   theme: ThemeName;

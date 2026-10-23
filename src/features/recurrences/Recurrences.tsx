@@ -2,7 +2,6 @@ import { AlertTriangle, Calendar, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { RecurrenceResponse } from "../../models/recurrence/RecurrenceResponse";
-import type { RecurrenceType } from "../../types/RecurrenceType";
 import { RecurrenceModal } from "../recurrenceModal/RecurrenceModal";
 import { DetailsDrawer } from "./components/DetailsDrawer/DetailsDrawer";
 import { EmptyRecurrencesState } from "./components/EmptyState/EmptyState";
@@ -19,10 +18,10 @@ export function Recurrences() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [recModalOpen, setRecModalOpen] = useState(false);
-  const [recType] = useState<RecurrenceType>("CREDIT");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [selectedRecurrence, setSelectedRecurrence] =
-    useState<RecurrenceResponse | null>(null);
+  const [selectedRecurrence, setSelectedRecurrence] = useState<RecurrenceResponse | null>(
+    null
+  );
 
   const handleDelete = (id: string) => {
     console.log(id);
@@ -36,10 +35,6 @@ export function Recurrences() {
     }
 
     handleOnClose();
-  };
-
-  const handleConfirm = (recurrence: RecurrenceResponse) => {
-    confirm(recurrence);
   };
 
   const handleEdit = (recurrence: RecurrenceResponse) => {
@@ -76,19 +71,10 @@ export function Recurrences() {
         if (!matchesDesc) return false;
       }
 
-      if (filters.type === "CREDIT" && rec.type !== "CREDIT") return false;
-      if (filters.type === "DEBIT" && rec.type !== "DEBIT") return false;
-
-      if (filters.frequency === "BIWEEKLY" && rec.frequencyType !== "BIWEEKLY")
+      if (filters.type !== "ALL" && rec.type !== filters.type) return false;
+      if (filters.frequency !== "ALL" && rec.frequencyType !== filters.frequency)
         return false;
-      if (filters.frequency === "MONTHLY" && rec.frequencyType !== "MONTHLY")
-        return false;
-      if (filters.frequency === "YEARLY" && rec.frequencyType !== "YEARLY")
-        return false;
-
-      if (filters.status === "ACTIVE" && rec.status !== "ACTIVE") return false;
-      if (filters.status === "PAUSED" && rec.status !== "PAUSED") return false;
-      if (filters.status === "ENDED" && rec.status !== "ENDED") return false;
+      if (filters.status !== "ALL" && rec.status !== filters.status) return false;
 
       return true;
     });
@@ -144,7 +130,7 @@ export function Recurrences() {
                 description="Ações e lançamentos filtrados."
                 items={filteredRecurrences ?? []}
                 onSelect={setSelectedRecurrence}
-                onConfirm={handleConfirm}
+                onConfirm={confirm}
               />
             ) : (
               <>
@@ -155,7 +141,7 @@ export function Recurrences() {
                   description="Ações e lançamentos agendados para a data de hoje."
                   items={allRecurrences?.recurrencesDueToday ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={handleConfirm}
+                  onConfirm={confirm}
                 />
 
                 <RecurrenceSection
@@ -165,7 +151,7 @@ export function Recurrences() {
                   description="Compromissos vencidos que requerem atenção ou confirmação."
                   items={allRecurrences?.recurrencesOverdue ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={handleConfirm}
+                  onConfirm={confirm}
                 />
 
                 <RecurrenceSection
@@ -175,7 +161,7 @@ export function Recurrences() {
                   description="Compromissos e recebimentos previstos para datas futuras."
                   items={allRecurrences?.recurrencesUpcoming ?? []}
                   onSelect={setSelectedRecurrence}
-                  onConfirm={handleConfirm}
+                  onConfirm={confirm}
                 />
               </>
             )}
@@ -203,7 +189,7 @@ export function Recurrences() {
         <RecurrenceModal
           isOpen={recModalOpen || searchParams.get("nova") === "1"}
           onClose={handleOnClose}
-          initialType={recType}
+          initialType="CREDIT"
           recurrence={selectedRecurrence}
         />
       )}

@@ -137,7 +137,7 @@ function useWallets(
 
   function saveOrUpdate() {
     if (walletMutationSave.isPending || walletMutationUpdate.isPending) return;
-    let isUpdate = wallet?.id;
+    const isUpdate = wallet?.id;
 
     const request: WalletRequest = {
       id: form.id,

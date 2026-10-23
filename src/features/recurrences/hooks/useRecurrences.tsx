@@ -1,6 +1,6 @@
 import { refreshFinancialData } from "../../../utils/refreshFinancialData";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import showToast from "../../../components/ui/Toast/Toast";
 import { useAccountContext } from "../../../context/AccountContext";
 import useRecurrenceService from "../../../hooks/useRecurrenceService";
@@ -75,13 +75,8 @@ function useRecurrences() {
     recMutationActivate.mutate(recurrence.id);
   }
 
-  const allRecurrences = useMemo(
-    () => queryAllRecurrences.data,
-    [queryAllRecurrences.data]
-  );
-
   return {
-    allRecurrences,
+    allRecurrences: queryAllRecurrences.data,
     confirm,
     pause,
     activate,

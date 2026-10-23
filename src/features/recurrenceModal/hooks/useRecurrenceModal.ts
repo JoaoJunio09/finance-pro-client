@@ -170,7 +170,7 @@ function useRecurrenceModal(
       accountId: account?.id,
     };
 
-    let isUpdate = recurrence?.id;
+    const isUpdate = recurrence?.id;
 
     if (isUpdate) {
       recMutationUpdate.mutate(request);

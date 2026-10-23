@@ -17,7 +17,7 @@ const TransactionModal = lazy(
 export default function AppShell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const isChoiceScreen = pathname === "/vida-financeira";
-  
+
   const [quickActionsOpen, setQuickActionsOpen] = useState(false);
   const [transactionOpen, setTransactionOpen] = useState(false);
   const [transactionType, setTransactionType] = useState<TransactionType>("CREDIT");
@@ -41,7 +41,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-main)]">
-      {!isChoiceScreen && <Header handleOpenSidebar={() => undefined} />}
+      {!isChoiceScreen && <Header />}
       {!isChoiceScreen && account && <Breadcrumbs />}
       <div className="min-w-0 pb-24 lg:pb-10">
         {account ? (

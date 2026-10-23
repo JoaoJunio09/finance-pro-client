@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAccountContext } from "../../../context/AccountContext";
 import useAccountService from "../../../hooks/useAccountService";
-import { useMemo } from "react";
 
 function useAnalytics(enabled = true) {
   const { account } = useAccountContext();
@@ -16,20 +15,19 @@ function useAnalytics(enabled = true) {
   });
 
   const queryFinancialHealth = useQuery({
-    queryKey: ['financial-health', account?.id],
-    queryFn: () => accountService.getFinancialHealth(account?.id ?? ''),
+    queryKey: ["financial-health", account?.id],
+    queryFn: () => accountService.getFinancialHealth(account?.id ?? ""),
     enabled: enabled && Boolean(account?.id),
-    retry: 3
+    retry: 3,
   });
 
-  const analytics = useMemo(() => queryAnalytics.data, [queryAnalytics.data]);
-  const health = useMemo(() => queryFinancialHealth.data, [queryFinancialHealth.data]);
-
   return {
-    analytics,
-    health,
-    isLoading: enabled && (!account?.id || queryAnalytics.isLoading || queryFinancialHealth.isLoading),
-    isError: enabled && queryAnalytics.isError || queryFinancialHealth.isError,
+    analytics: queryAnalytics.data,
+    health: queryFinancialHealth.data,
+    isLoading:
+      enabled &&
+      (!account?.id || queryAnalytics.isLoading || queryFinancialHealth.isLoading),
+    isError: (enabled && queryAnalytics.isError) || queryFinancialHealth.isError,
     isFetching: queryAnalytics.isFetching || queryFinancialHealth.isFetching,
     refetch: queryAnalytics.refetch || queryFinancialHealth.refetch,
   };

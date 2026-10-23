@@ -1,3 +1,4 @@
+import { formatCurrencyLabel as formatCurrency } from "../../../../../utils/FormatCurrency";
 import {
   Bar,
   BarChart,
@@ -14,15 +15,6 @@ import styles from "./CashflowSubpage.module.css";
 
 interface CashflowSubpageProps {
   analytics?: AnalyticsResponse;
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
 }
 
 export function CashflowSubpage({ analytics }: CashflowSubpageProps) {
@@ -50,9 +42,7 @@ export function CashflowSubpage({ analytics }: CashflowSubpageProps) {
         />
       </div>
 
-      <div
-        className={`p-6 rounded-3xl flex flex-col gap-5 border ${styles.card}`}
-      >
+      <div className={`p-6 rounded-3xl flex flex-col gap-5 border ${styles.card}`}>
         <div className="flex justify-between items-center">
           <div>
             <h3 className={`text-base font-bold ${styles.cardTitle}`}>

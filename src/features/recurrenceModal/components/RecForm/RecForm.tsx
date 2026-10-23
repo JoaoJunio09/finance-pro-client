@@ -56,7 +56,7 @@ export function RecurrenceForm({
     </div>
   );
 
-  const renderWallet = (w: any) => <WalletBrand wallet={w} size="md" />;
+  const renderWallet = (w: WalletResponse) => <WalletBrand wallet={w} size="md" />;
 
   // Lógica de verificação de datas passadas
   const today = new Date();
